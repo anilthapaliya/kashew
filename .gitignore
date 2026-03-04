@@ -7,6 +7,11 @@
 .buildlog/
 .history
 
+# Added later
+.idea/
+.metadata
+kashew.iml
+pubspec.lock
 
 
 # Flutter repo-specific
