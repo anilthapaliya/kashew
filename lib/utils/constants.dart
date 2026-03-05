@@ -27,6 +27,7 @@ class Constants {
   static final String textPrimaryDarkColor = "#F5F5F5";
   static final String textSecondaryColor = "#6B7280";
   static final String dividerColor = "#E5E7EB";
-
+  static final String pureWhiteColor = "#FFFFFF";
+  static final String pureBlackColor = "#000000";
 
 }

@@ -88,4 +88,76 @@ class DatabaseHelper {
     );
   }
 
+  Future<int> insertTopic(TopicModel topic) async {
+
+    final db = await database;
+    return await db.insert(TopicModel.tableTopics, topic.toMap());
+  }
+
+  Future<List<TopicModel>> getTopics() async {
+
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query(TopicModel.tableTopics);
+    return List.generate(maps.length, (i) {
+      return TopicModel.fromMap(maps[i]);
+    });
+  }
+
+  Future<int> updateTopic(TopicModel topic) async {
+
+    final db = await database;
+    return await db.update(
+      TopicModel.tableTopics,
+      topic.toMap(),
+      where: '${TopicModel.colId} = ?',
+      whereArgs: [topic.id]
+    );
+  }
+
+  Future<int> deleteTopic(int id) async {
+
+    final db = await database;
+    return await db.delete(
+      TopicModel.tableTopics,
+      where: '${TopicModel.colId} = ?',
+      whereArgs: [id]
+    );
+  }
+
+  Future<int> insertExpense(ExpenseModel expense) async {
+
+    final db = await database;
+    return await db.insert(ExpenseModel.tableExpenses, expense.toMap());
+  }
+
+  Future<List<ExpenseModel>> getExpenses() async {
+
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query(ExpenseModel.tableExpenses);
+    return List.generate(maps.length, (i) {
+      return ExpenseModel.fromMap(maps[i]);
+    });
+  }
+
+  Future<int> updateExpense(ExpenseModel expense) async {
+
+    final db = await database;
+    return await db.update(
+      ExpenseModel.tableExpenses,
+      expense.toMap(),
+      where: '${ExpenseModel.colId} = ?',
+      whereArgs: [expense.id]
+    );
+  }
+
+  Future<int> deleteExpense(int id) async {
+
+    final db = await database;
+    return await db.delete(
+      ExpenseModel.tableExpenses,
+      where: '${ExpenseModel.colId} = ?',
+      whereArgs: [id]
+    );
+  }
+
 }

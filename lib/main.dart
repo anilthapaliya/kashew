@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kashew/utils/constants.dart';
+import 'package:kashew/utils/responsive.dart';
 import 'package:kashew/view_models/home_viewmodel.dart';
 import 'package:kashew/view_models/splash_viewmodel.dart';
 import 'package:kashew/views/splash_screen.dart';
@@ -20,6 +21,9 @@ class KashewApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    // Initialize the Responsive class.
+    R.init(context);
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
