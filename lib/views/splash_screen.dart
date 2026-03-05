@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widget_previews.dart';
 import 'package:kashew/utils/constants.dart';
 import 'package:kashew/utils/hex_color.dart';
 import 'package:kashew/utils/responsive.dart';
@@ -42,10 +43,10 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(Constants.imgLogo, width: R.w(20)),
-            SizedBox(height: R.h(5)),
-            Text(Constants.appTitle, style: TextStyle(fontFamily: Constants.fontTitle,
-                color: HexColor.fromHex(Constants.primaryColor), fontSize: R.sp(10), fontWeight: FontWeight.w600)),
+            Image.asset(Constants.imgLogo, width: R.w(120)),
+            SizedBox(height: R.h(20)),
+            /*Text(Constants.lblSubtitle.toUpperCase(), style: TextStyle(fontFamily: Constants.fontBody,
+                color: HexColor.fromHex(Constants.textSecondaryColor), fontSize: R.sp(15), fontWeight: FontWeight.w500)),*/
           ],
         ),
       ),

@@ -7,7 +7,7 @@ class SplashViewModel extends ChangeNotifier {
 
   Future<void> initializeApp() async {
 
-    await Future.delayed(const Duration(seconds: 3));
+    await Future.delayed(const Duration(seconds: 1));
     _initialized = true;
     notifyListeners();
   }
