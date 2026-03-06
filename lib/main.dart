@@ -1,18 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:kashew/utils/constants.dart';
 import 'package:kashew/utils/responsive.dart';
-import 'package:kashew/view_models/home_viewmodel.dart';
+import 'package:kashew/view_models/category_viewmodel.dart';
+import 'package:kashew/view_models/currency_viewmodel.dart';
+import 'package:kashew/view_models/topic_viewmodel.dart';
+import 'package:kashew/views/home/home_screen.dart';
 import 'package:kashew/view_models/splash_viewmodel.dart';
 import 'package:kashew/views/splash_screen.dart';
+import 'package:kashew/views/topic_detail_screen.dart';
 import 'package:provider/provider.dart';
 
 void main() {
   runApp(
       MultiProvider(providers: [
-        ChangeNotifierProvider(create: (_) => SplashViewModel())
+        ChangeNotifierProvider(create: (_) => SplashViewModel()),
+        ChangeNotifierProvider(create: (_) => CurrencyViewModel()),
+        ChangeNotifierProvider(create: (_) => CategoryViewModel()),
+        ChangeNotifierProvider(create: (_) => TopicViewModel()),
       ],
-          child: const KashewApp()
-      ));
+          child: const KashewApp())
+  );
 }
 
 class KashewApp extends StatelessWidget {
@@ -30,6 +37,7 @@ class KashewApp extends StatelessWidget {
       title: Constants.appTitle,
       routes: {
         Constants.home: (context) => const HomeScreen(),
+        Constants.topicDetails: (context) => const TopicDetailScreen(),
       },
       theme: ThemeData(
         useMaterial3: true,

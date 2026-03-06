@@ -6,6 +6,9 @@ class Constants {
   // Navigation Routes
   static final String splash = "/";
   static final String home = "/home";
+  static final String topicDetails = "/topic-details";
+  static final String expenseDetails = "/expense-details";
+  static final String settings = "/settings";
 
   // App Images
   static final String imgLogo = "assets/images/kashew_logo.png";
@@ -13,8 +16,10 @@ class Constants {
   // App Labels
   static final String lblAppBarHome = "My Expenses";
   static final String lblAppBarAddTopic = "Create New Topic";
+  static final String lblAppBarAddExpense = "Add Expense";
   static final String lblSubtitle = "Personal Expense Tracker";
   static final String lblTotalExpense = "Total Expense";
+  static final String lblMonthlyExpense = "Monthly Expense";
   static final String lblTopics = "Topics";
   static final String lblRecentExpenses = "Recent Expenses";
   static final String lblViewAll = "View All";
@@ -23,12 +28,34 @@ class Constants {
   static final String lblOptional = "Optional";
   static final String lblDescription = "Description";
   static final String lblTopicHelp = "Topics help you organize your budget and expenses effortlessly.";
+  static final String lblCurrency = "Currency";
+  static final String lblExpenseTitle = "Title";
+  static final String lblExpenses = "All Expenses";
+  static final String lblExpenseAmount = "Amount";
+  static final String lblCategory = "Category";
+  static final String lblNotes = "Notes";
+  static final String lblDate = "Date";
+  static final String lblTopic = "Topic";
+  static final String lblNoTopics = "No topics found!";
 
   static final String btnCreateTopic = "Create Topic";
+  static final String btnAddExpense = "Add Expense";
+
+  static final String menuEditTopic = "Edit Topic";
+  static final String menuDeleteTopic = "Delete Topic";
 
   static final String hintTopic =  "e.g., Trek to ABC";
   static final String hintDescription = "What's this topic about?";
   static final String hintToday = "Today";
+  static final String hintExpenseTitle = "What did you spend on?";
+  static final String hintNotes = "Add remarks or receipt details.";
+  static final String hintAmount = "0.00";
+  static final String hintLinkTopic = "Link to a topic";
+
+  static final String errTopicName = "Please enter a suitable topic.";
+
+  static final int success = 1;
+  static final int failure = -1;
 
   // Padding and Margin
   static final double stdMargin = 14;

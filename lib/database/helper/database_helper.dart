@@ -21,8 +21,7 @@ class DatabaseHelper {
           final String tableCategory =
               "CREATE TABLE IF NOT EXISTS ${CategoryModel.tableCategories} ("
               "${CategoryModel.colId} INTEGER PRIMARY KEY AUTOINCREMENT, "
-              "${CategoryModel.colCategoryName} TEXT NOT NULL,"
-              "${CategoryModel.colIcon} TEXT )";
+              "${CategoryModel.colCategoryName} TEXT NOT NULL )";
           final String tableTopic =
               "CREATE TABLE IF NOT EXISTS ${TopicModel.tableTopics} ("
               "${TopicModel.colId} INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -31,7 +30,7 @@ class DatabaseHelper {
           final String tableExpense =
               "CREATE TABLE IF NOT EXISTS ${ExpenseModel.tableExpenses} ("
               "${ExpenseModel.colId} INTEGER PRIMARY KEY AUTOINCREMENT, "
-              "${ExpenseModel.colTitle} TEXT NOT NULL"
+              "${ExpenseModel.colTitle} TEXT NOT NULL,"
               "${ExpenseModel.colAmount} REAL NOT NULL,"
               "${ExpenseModel.colDateTime} INTEGER NOT NULL,"
               "${ExpenseModel.colCategoryId} INTEGER,"
@@ -43,7 +42,23 @@ class DatabaseHelper {
           await db.execute(tableCategory);
           await db.execute(tableTopic);
           await db.execute(tableExpense);
+          await insertInitialCategories(db);
         });
+  }
+
+  Future<void> insertInitialCategories(Database db) async {
+
+    db.insert(CategoryModel.tableCategories, CategoryModel(categoryName: CategoryModel.catDining).toMap());
+    db.insert(CategoryModel.tableCategories, CategoryModel(categoryName: CategoryModel.catDrinking).toMap());
+    db.insert(CategoryModel.tableCategories, CategoryModel(categoryName: CategoryModel.catBeverage).toMap());
+    db.insert(CategoryModel.tableCategories, CategoryModel(categoryName: CategoryModel.catClothes).toMap());
+    db.insert(CategoryModel.tableCategories, CategoryModel(categoryName: CategoryModel.catGroceries).toMap());
+    db.insert(CategoryModel.tableCategories, CategoryModel(categoryName: CategoryModel.catGifts).toMap());
+    db.insert(CategoryModel.tableCategories, CategoryModel(categoryName: CategoryModel.catHealth).toMap());
+    db.insert(CategoryModel.tableCategories, CategoryModel(categoryName: CategoryModel.catRepair).toMap());
+    db.insert(CategoryModel.tableCategories, CategoryModel(categoryName: CategoryModel.catCharges).toMap());
+    db.insert(CategoryModel.tableCategories, CategoryModel(categoryName: CategoryModel.catTransport).toMap());
+    db.insert(CategoryModel.tableCategories, CategoryModel(categoryName: CategoryModel.catOthers).toMap());
   }
 
   Future<Database> get database async {
