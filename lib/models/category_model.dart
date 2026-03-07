@@ -25,7 +25,7 @@ class CategoryModel {
     );
   }
 
-  final Map<String, IconData> iconMap = {
+  static final Map<String, IconData> iconMap = {
     catDining: Icons.fastfood_rounded,
     catDrinking: Icons.wine_bar_rounded,
     catBeverage: Icons.coffee_rounded,

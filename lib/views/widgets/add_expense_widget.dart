@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kashew/models/category_model.dart';
+import 'package:kashew/models/topic_model.dart';
+import 'package:kashew/utils/common_utils.dart';
 import 'package:kashew/utils/constants.dart';
 import 'package:kashew/utils/hex_color.dart';
 import 'package:kashew/utils/responsive.dart';
@@ -7,20 +9,38 @@ import 'package:kashew/view_models/category_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 class AddExpenseWidget extends StatefulWidget {
-  const AddExpenseWidget({super.key});
+
+  final TopicModel? topicModel;
+  const AddExpenseWidget({super.key, this.topicModel});
 
   @override
   State<AddExpenseWidget> createState() => _AddExpenseWidgetState();
+
 }
 
 class _AddExpenseWidgetState extends State<AddExpenseWidget> {
 
+  late final TextEditingController titleController;
+  late final TextEditingController amountController;
+  late final TextEditingController dateController;
+  late final TextEditingController noteController;
+  late final TextEditingController topicController;
+  DateTime selectedDate = DateTime.now();
+
   @override
   void initState() {
+
     super.initState();
+    titleController = TextEditingController();
+    amountController = TextEditingController();
+    dateController = TextEditingController();
+    noteController = TextEditingController();
+    topicController = TextEditingController();
+
     Future.microtask(() {
       if (!mounted) return;
       context.read<CategoryViewModel>().loadCategories();
+      dateController.text = CommonUtils.getReadableDate(selectedDate);
     });
   }
 
@@ -57,6 +77,7 @@ class _AddExpenseWidgetState extends State<AddExpenseWidget> {
                 Text(Constants.lblExpenseTitle, textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontTitle,
                     fontSize: R.sp(12), fontWeight: FontWeight.bold, color: HexColor.fromHex(Constants.darkBgColor))),
                 TextField(
+                  controller: titleController,
                   decoration: InputDecoration(
                       hintText: Constants.hintExpenseTitle,
                       filled: true,
@@ -69,6 +90,7 @@ class _AddExpenseWidgetState extends State<AddExpenseWidget> {
                 Text(Constants.lblExpenseAmount, textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontTitle,
                     fontSize: R.sp(12), fontWeight: FontWeight.bold, color: HexColor.fromHex(Constants.darkBgColor))),
                 TextField(
+                  controller: amountController,
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                       hintText: Constants.hintToday,
@@ -78,7 +100,7 @@ class _AddExpenseWidgetState extends State<AddExpenseWidget> {
                       border: OutlineInputBorder(borderSide: BorderSide.none, borderRadius: BorderRadius.circular(4))),
                 ),
 
-                // Choose Category and Currency
+                // Choose Category and Date
                 SizedBox(height: R.h(20)),
                 Row(
                   children: [
@@ -137,7 +159,9 @@ class _AddExpenseWidgetState extends State<AddExpenseWidget> {
                     Expanded(
                       flex: 4,
                       child: TextField(
-                        keyboardType: TextInputType.number,
+                        controller: dateController,
+                        readOnly: true,
+                        onTap: _datePicker,
                         decoration: InputDecoration(
                             hintText: Constants.hintToday,
                             suffixIcon: Icon(Icons.calendar_month),
@@ -172,6 +196,9 @@ class _AddExpenseWidgetState extends State<AddExpenseWidget> {
                     Expanded(
                       flex: 10,
                       child: TextField(
+                        controller: topicController,
+                        onTap: () => Navigator.pushNamed(context, Constants.topicOnlyList),
+                        readOnly: true,
                         decoration: InputDecoration(
                             hintText: Constants.hintLinkTopic,
                             prefixIcon: Icon(Icons.link_rounded),
@@ -197,10 +224,11 @@ class _AddExpenseWidgetState extends State<AddExpenseWidget> {
                   ],
                 ),
                 TextField(
+                  controller: noteController,
                   keyboardType: TextInputType.multiline,
                   maxLines: 3,
                   minLines: 3,
-                  maxLength: 50,
+                  maxLength: 100,
                   decoration: InputDecoration(
                       hintText: Constants.hintNotes,
                       filled: true,
@@ -232,6 +260,24 @@ class _AddExpenseWidgetState extends State<AddExpenseWidget> {
             ),
           );
         });
+  }
+
+  Future<void> _datePicker() async {
+
+    final today = DateTime.now();
+    final firstDate = today.subtract(Duration(days: 30));
+    final lastDate = today.add(Duration(days: 30));
+    final date = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: firstDate,
+      lastDate: lastDate,
+    );
+
+    if (date != null) {
+      selectedDate = date;
+      dateController.text = CommonUtils.getReadableDate(selectedDate);
+    }
   }
 
 }

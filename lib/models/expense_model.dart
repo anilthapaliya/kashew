@@ -9,13 +9,13 @@ class ExpenseModel {
   static final String colTopicId = "topic_id";
   static final String colNote = "note";
 
-  final int? id;
-  final String title;
-  final double amount;
-  final int dbDateTime;
-  final int? categoryId;
-  final int? topicId;
-  final String? note;
+  int? id;
+  String title;
+  double amount;
+  int dbDateTime;
+  int? categoryId;
+  int? topicId;
+  String? note;
   final DateTime? readableDateTime;
 
   ExpenseModel({ this.id, required this.title, required this.amount,

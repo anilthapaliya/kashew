@@ -264,11 +264,14 @@ class _AddTopicWidgetState extends State<AddTopicWidget> {
 
   Future<void> _datePicker() async {
 
+    final today = DateTime.now();
+    final firstDate = today.subtract(Duration(days: 30));
+    final lastDate = today.add(Duration(days: 30));
     final date = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime(2000),
-        lastDate: DateTime(2100),
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: firstDate,
+      lastDate: lastDate,
     );
 
     if (date != null) {

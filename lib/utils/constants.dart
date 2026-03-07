@@ -9,6 +9,7 @@ class Constants {
   static final String topicDetails = "/topic-details";
   static final String expenseDetails = "/expense-details";
   static final String settings = "/settings";
+  static final String topicOnlyList = "/topic-only-list";
 
   // App Images
   static final String imgLogo = "assets/images/kashew_logo.png";
@@ -19,12 +20,14 @@ class Constants {
   static final String lblAppBarEditTopic = "Edit Topic";
   static final String lblAppBarAddExpense = "Add Expense";
   static final String lblAppBarSave = "Save";
+  static final String lblAppBarTopicList = "All Topics";
   static final String lblSubtitle = "Personal Expense Tracker";
   static final String lblTotalExpense = "Total Expense";
   static final String lblMonthlyExpense = "Monthly Expense";
   static final String lblTopics = "Topics";
   static final String lblRecentExpenses = "Recent Expenses";
   static final String lblViewAll = "View All";
+  static final String lblSettings = "Settings";
   static final String lblTopicName = "Topic Name";
   static final String lblStartDate = "Start Date";
   static final String lblOptional = "Optional";
@@ -39,6 +42,7 @@ class Constants {
   static final String lblDate = "Date";
   static final String lblTopic = "Topic";
   static final String lblNoTopics = "No topics found!";
+  static final String lblNoExpenses = "No expenses";
 
   static final String btnCreateTopic = "Create Topic";
   static final String btnAddExpense = "Add Expense";

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:kashew/models/expense_model.dart';
 import 'package:kashew/models/topic_model.dart';
 import 'package:kashew/utils/constants.dart';
 import 'package:kashew/utils/hex_color.dart';
 import 'package:kashew/utils/responsive.dart';
+import 'package:kashew/view_models/expense_viewmodel.dart';
 import 'package:kashew/view_models/topic_viewmodel.dart';
 import 'package:kashew/views/widgets/add_expense_widget.dart';
 import 'package:kashew/views/widgets/add_topic_widget.dart';
@@ -62,47 +64,106 @@ class _TopicDetailScreenState extends State<TopicDetailScreen> {
           ),
         ],
       ),
-      body: Consumer<TopicViewModel>(builder: (context, viewModel, child) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+      body: Consumer2<TopicViewModel, ExpenseViewModel>(
+          builder: (context, topicViewModel, expenseViewModel, child) {
 
-            // Top Summary Section
-            Container(
-              width: double.infinity,
-              margin: EdgeInsets.symmetric(vertical: R.h(30), horizontal: R.w((15))),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(Constants.lblTotalExpense.toUpperCase(),
-                      style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(12), fontWeight: FontWeight.w500)),
-                  Text('\$9867.4',
-                      style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(25), fontWeight: FontWeight.bold))
-                ],
-              ),
-            ),
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
 
-            // Topics Section
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: R.w(15), vertical: R.h(10)),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(Constants.lblExpenses, style: TextStyle(fontFamily: Constants.fontTitle, fontSize: R.sp(18), fontWeight: FontWeight.bold),),
-                  //Text(Constants.lblViewAll, style: TextStyle(fontFamily: Constants.fontTitle, fontSize: R.sp(12), fontWeight: FontWeight.bold, color: HexColor.fromHex(Constants.textSecondaryColor)),),
-                ],
-              ),
-            ),
+                // Top Summary Section
+                Container(
+                  width: double.infinity,
+                  margin: EdgeInsets.symmetric(vertical: R.h(30), horizontal: R.w((15))),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(Constants.lblTotalExpense.toUpperCase(),
+                          style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(12), fontWeight: FontWeight.w500)),
+                      Text('\$9867.4',
+                          style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(25), fontWeight: FontWeight.bold))
+                    ],
+                  ),
+                ),
 
-          ],
-        );
+                // Expenses Section
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: R.w(15), vertical: R.h(10)),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(Constants.lblExpenses, style: TextStyle(fontFamily: Constants.fontTitle, fontSize: R.sp(18), fontWeight: FontWeight.bold),),
+                      //Text(Constants.lblViewAll, style: TextStyle(fontFamily: Constants.fontTitle, fontSize: R.sp(12), fontWeight: FontWeight.bold, color: HexColor.fromHex(Constants.textSecondaryColor)),),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: R.w(15), vertical: R.h(5)),
+                      child: Column(
+                        children: [
+                          ... (expenseViewModel.isExpenseLoading) ? [const Center(child: CircularProgressIndicator())]:
+                          (expenseViewModel.expenses == null || expenseViewModel.expenses!.isEmpty) ?
+                          [noExpenseFound()] :
+                          List.generate(topicViewModel.topics!.length, (index) => expenseCard(expenseViewModel.expenses![index])).reversed,
+                        ]
+                      ),
+                    ),
+                  ),
+                ),
+
+              ],
+            );
       }),
       floatingActionButton: FloatingActionButton(
           onPressed: () => showAddExpensePopup(context),
           shape: const CircleBorder(),
           backgroundColor: HexColor.fromHex(Constants.primaryColor),
           child: Icon(Icons.add, color: HexColor.fromHex(Constants.warmWhiteColor))),
+    );
+  }
+
+  Widget expenseCard(ExpenseModel expense) {
+
+    return Card(
+      margin: EdgeInsets.only(bottom: R.w(10)),
+      elevation: 1,
+      color: HexColor.fromHex(Constants.pureWhiteColor),
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: R.h(15), horizontal: R.w(Constants.stdMargin)),
+        child: Row(
+          children: [
+            Container(
+              margin: EdgeInsets.only(right: R.w(10)),
+              width: R.w(30), height: R.h(30),
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(30), color: HexColor.fromHex(Constants.warmWhiteColor)),
+              child: Icon(Icons.emoji_food_beverage, color: HexColor.fromHex(Constants.darkBgColor), size: R.w(15)),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Uber Ride', style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(13), fontWeight: FontWeight.bold),),
+                Text('Transport, Today', style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(10), color: HexColor.fromHex(Constants.textSecondaryColor))),
+              ],
+            ),
+            Expanded(child: Container()),
+            Text('\$74', style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(12), fontWeight: FontWeight.bold, color: Colors.red)),
+
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget noExpenseFound() {
+
+    return Center(
+      child: Text(Constants.lblNoExpenses,
+          style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(12),
+              color: HexColor.fromHex(Constants.textSecondaryColor))),
     );
   }
 
@@ -113,7 +174,7 @@ class _TopicDetailScreenState extends State<TopicDetailScreen> {
         isScrollControlled: true,
         isDismissible: false,
         backgroundColor: HexColor.fromHex(Constants.warmWhiteColor),
-        builder: (context) => AddExpenseWidget());
+        builder: (context) => AddExpenseWidget(topicModel: topicModel));
   }
 
   void showTopicOptions(BuildContext context, TopicModel model) {

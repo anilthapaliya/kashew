@@ -9,6 +9,12 @@ class DatabaseHelper {
   static final String dbName = 'kashew.db';
   static final int dbVersion = 1;
   static Database? _database;
+  static DatabaseHelper? _dbHelper;
+
+  static DatabaseHelper get dbHelper {
+    _dbHelper ??= DatabaseHelper();
+    return _dbHelper!;
+  }
 
   Future<Database> _initDb() async {
 
@@ -44,23 +50,8 @@ class DatabaseHelper {
           await db.execute(tableCategory);
           await db.execute(tableTopic);
           await db.execute(tableExpense);
-          await insertInitialCategories(db);
+          await insertBatchCategories(db);
         });
-  }
-
-  Future<void> insertInitialCategories(Database db) async {
-
-    db.insert(CategoryModel.tableCategories, CategoryModel(categoryName: CategoryModel.catDining).toMap());
-    db.insert(CategoryModel.tableCategories, CategoryModel(categoryName: CategoryModel.catDrinking).toMap());
-    db.insert(CategoryModel.tableCategories, CategoryModel(categoryName: CategoryModel.catBeverage).toMap());
-    db.insert(CategoryModel.tableCategories, CategoryModel(categoryName: CategoryModel.catClothes).toMap());
-    db.insert(CategoryModel.tableCategories, CategoryModel(categoryName: CategoryModel.catGroceries).toMap());
-    db.insert(CategoryModel.tableCategories, CategoryModel(categoryName: CategoryModel.catGifts).toMap());
-    db.insert(CategoryModel.tableCategories, CategoryModel(categoryName: CategoryModel.catHealth).toMap());
-    db.insert(CategoryModel.tableCategories, CategoryModel(categoryName: CategoryModel.catRepair).toMap());
-    db.insert(CategoryModel.tableCategories, CategoryModel(categoryName: CategoryModel.catCharges).toMap());
-    db.insert(CategoryModel.tableCategories, CategoryModel(categoryName: CategoryModel.catTransport).toMap());
-    db.insert(CategoryModel.tableCategories, CategoryModel(categoryName: CategoryModel.catOthers).toMap());
   }
 
   Future<Database> get database async {
@@ -69,112 +60,49 @@ class DatabaseHelper {
     return _database!;
   }
 
+  Future<void> insertBatchCategories(Database db) async {
+
+    insertCategory(CategoryModel(categoryName: CategoryModel.catDining));
+    insertCategory(CategoryModel(categoryName: CategoryModel.catBeverage));
+    insertCategory(CategoryModel(categoryName: CategoryModel.catClothes));
+    insertCategory(CategoryModel(categoryName: CategoryModel.catGroceries));
+    insertCategory(CategoryModel(categoryName: CategoryModel.catGifts));
+    insertCategory(CategoryModel(categoryName: CategoryModel.catHealth));
+    insertCategory(CategoryModel(categoryName: CategoryModel.catRepair));
+    insertCategory(CategoryModel(categoryName: CategoryModel.catCharges));
+    insertCategory(CategoryModel(categoryName: CategoryModel.catTransport));
+    insertCategory(CategoryModel(categoryName: CategoryModel.catOthers));
+  }
+
   Future<int> insertCategory(CategoryModel category) async {
 
     final db = await database;
     return await db.insert(CategoryModel.tableCategories, category.toMap());
   }
 
-  Future<List<CategoryModel>> getCategories() async {
+  Future<int> insert(String table, Map<String, dynamic> data) async {
 
     final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query(CategoryModel.tableCategories);
-    return List.generate(maps.length, (i) {
-      return CategoryModel.fromMap(maps[i]);
-    });
+    return await db.insert(table, data);
   }
 
-  Future<int> updateCategory(CategoryModel category) async {
+  Future<List<Map<String, dynamic>>> query(String table,
+      {String? where, List<dynamic>? whereArgs, String? orderBy, int? limit}) async {
 
     final db = await database;
-    return await db.update(
-      CategoryModel.tableCategories,
-      category.toMap(),
-      where: '${CategoryModel.colId} = ?',
-      whereArgs: [category.id]
-    );
+    return await db.query(table, where: where, whereArgs: whereArgs, orderBy: orderBy, limit: limit);
   }
 
-  Future<int> deleteCategory(int id) async {
+  Future<int> update(String table, Map<String, dynamic> data, String where, List<dynamic> whereArgs) async {
 
     final db = await database;
-    return await db.delete(
-      CategoryModel.tableCategories,
-      where: '${CategoryModel.colId} = ?',
-      whereArgs: [id]
-    );
+    return await db.update(table, data, where: where, whereArgs: whereArgs);
   }
 
-  Future<int> insertTopic(TopicModel topic) async {
+  Future<int> delete(String table, String where, List<dynamic> whereArgs) async {
 
     final db = await database;
-    return await db.insert(TopicModel.tableTopics, topic.toMap());
-  }
-
-  Future<List<TopicModel>> getTopics() async {
-
-    final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query(TopicModel.tableTopics);
-    return List.generate(maps.length, (i) {
-      return TopicModel.fromMap(maps[i]);
-    });
-  }
-
-  Future<int> updateTopic(TopicModel topic) async {
-
-    final db = await database;
-    return await db.update(
-      TopicModel.tableTopics,
-      topic.toMap(),
-      where: '${TopicModel.colId} = ?',
-      whereArgs: [topic.id]
-    );
-  }
-
-  Future<int> deleteTopic(int id) async {
-
-    final db = await database;
-    return await db.delete(
-      TopicModel.tableTopics,
-      where: '${TopicModel.colId} = ?',
-      whereArgs: [id]
-    );
-  }
-
-  Future<int> insertExpense(ExpenseModel expense) async {
-
-    final db = await database;
-    return await db.insert(ExpenseModel.tableExpenses, expense.toMap());
-  }
-
-  Future<List<ExpenseModel>> getExpenses() async {
-
-    final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query(ExpenseModel.tableExpenses);
-    return List.generate(maps.length, (i) {
-      return ExpenseModel.fromMap(maps[i]);
-    });
-  }
-
-  Future<int> updateExpense(ExpenseModel expense) async {
-
-    final db = await database;
-    return await db.update(
-      ExpenseModel.tableExpenses,
-      expense.toMap(),
-      where: '${ExpenseModel.colId} = ?',
-      whereArgs: [expense.id]
-    );
-  }
-
-  Future<int> deleteExpense(int id) async {
-
-    final db = await database;
-    return await db.delete(
-      ExpenseModel.tableExpenses,
-      where: '${ExpenseModel.colId} = ?',
-      whereArgs: [id]
-    );
+    return await db.delete(table, where: where, whereArgs: whereArgs);
   }
 
 }

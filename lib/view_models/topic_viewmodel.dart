@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:kashew/database/helper/database_helper.dart';
+import 'package:kashew/database/repositories/topic_repository.dart';
 import 'package:kashew/models/topic_model.dart';
 import 'package:kashew/utils/common_utils.dart';
 import 'package:kashew/utils/constants.dart';
 
 class TopicViewModel extends ChangeNotifier {
 
-  DatabaseHelper dbHelper = DatabaseHelper();
+  TopicRepository topicRepo = TopicRepository();
   List<TopicModel>? topics;
   bool isTopicLoading = false;
   bool isTopicAdding = false;
@@ -19,7 +18,7 @@ class TopicViewModel extends ChangeNotifier {
     if (topics != null) return;
 
     isTopicLoading = true;
-    topics ??= await dbHelper.getTopics();
+    topics ??= await topicRepo.getAllTopics();
     notifyListeners();
     isTopicLoading = false;
   }
@@ -40,7 +39,7 @@ class TopicViewModel extends ChangeNotifier {
 
     model.name = CommonUtils.titleCase(model.name);
     //await Future.delayed(const Duration(seconds: 1)); // Remove delay later
-    final id = await dbHelper.insertTopic(model);
+    final id = await topicRepo.insertTopic(model);
 
     if (id > 0) {
       model.id = id;
@@ -70,7 +69,7 @@ class TopicViewModel extends ChangeNotifier {
     notifyListeners();
 
     model.name = CommonUtils.titleCase(model.name);
-    final count = await dbHelper.updateTopic(model);
+    final count = await topicRepo.updateTopic(model);
 
     if (count > 0) {
       int index = topics!.indexWhere((i) => i.id == model.id);
@@ -87,7 +86,7 @@ class TopicViewModel extends ChangeNotifier {
 
   Future<int> deleteTopic(int id) async {
 
-    final count = await dbHelper.deleteTopic(id);
+    final count = await topicRepo.deleteTopic(id);
 
     if (count > 0) {
       int index = topics!.indexWhere((i) => i.id == id);

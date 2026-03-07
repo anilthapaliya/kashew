@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:kashew/database/helper/database_helper.dart';
+import 'package:kashew/database/repositories/category_repository.dart';
 import 'package:kashew/models/category_model.dart';
 
 class CategoryViewModel extends ChangeNotifier {
 
-  final DatabaseHelper dbHelper = DatabaseHelper();
+  final CategoryRepository categoryRepo = CategoryRepository();
   List<CategoryModel>? categories;
   CategoryModel? selectedCategory;
 
@@ -12,7 +12,7 @@ class CategoryViewModel extends ChangeNotifier {
 
     if (categories != null) return;
 
-    categories ??= await dbHelper.getCategories();
+    categories ??= await categoryRepo.getCategories();
     selectedCategory = categories![0];
     notifyListeners();
   }
