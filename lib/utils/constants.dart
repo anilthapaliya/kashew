@@ -16,7 +16,9 @@ class Constants {
   // App Labels
   static final String lblAppBarHome = "My Expenses";
   static final String lblAppBarAddTopic = "Create New Topic";
+  static final String lblAppBarEditTopic = "Edit Topic";
   static final String lblAppBarAddExpense = "Add Expense";
+  static final String lblAppBarSave = "Save";
   static final String lblSubtitle = "Personal Expense Tracker";
   static final String lblTotalExpense = "Total Expense";
   static final String lblMonthlyExpense = "Monthly Expense";
@@ -51,6 +53,11 @@ class Constants {
   static final String hintNotes = "Add remarks or receipt details.";
   static final String hintAmount = "0.00";
   static final String hintLinkTopic = "Link to a topic";
+
+  static final String dialogDeleteTitle = "Delete Topic";
+  static final String dialogDeleteMessage = "Are you sure you want to delete this topic?\nAll related expenses will also be removed.";
+  static final String dialogDeleteConfirm = "Delete";
+  static final String dialogCancel = "Cancel";
 
   static final String errTopicName = "Please enter a suitable topic.";
 

@@ -39,11 +39,11 @@ class TopicViewModel extends ChangeNotifier {
     notifyListeners();
 
     model.name = CommonUtils.titleCase(model.name);
-    await Future.delayed(const Duration(seconds: 2));
-    //final id = await dbHelper.insertTopic(model);
-    final id = 0;
+    //await Future.delayed(const Duration(seconds: 1)); // Remove delay later
+    final id = await dbHelper.insertTopic(model);
 
     if (id > 0) {
+      model.id = id;
       topics!.add(model);
       isTopicAdding = false;
       notifyListeners();
@@ -52,6 +52,50 @@ class TopicViewModel extends ChangeNotifier {
 
     isTopicAdding = false;
     notifyListeners();
+    return Constants.failure;
+  }
+
+  Future<int> saveTopic(TopicModel model) async {
+
+    if (model.name.isEmpty || model.name.length < 3) {
+      isError = true;
+      errorMessage = Constants.errTopicName;
+      notifyListeners();
+      return Constants.failure;
+    }
+
+    isTopicAdding = true;
+    isError = false;
+    errorMessage = null;
+    notifyListeners();
+
+    model.name = CommonUtils.titleCase(model.name);
+    final count = await dbHelper.updateTopic(model);
+
+    if (count > 0) {
+      int index = topics!.indexWhere((i) => i.id == model.id);
+      if (index != -1) topics![index] = model;
+      isTopicAdding = false;
+      notifyListeners();
+      return Constants.success;
+    }
+
+    isTopicAdding = false;
+    notifyListeners();
+    return Constants.failure;
+  }
+
+  Future<int> deleteTopic(int id) async {
+
+    final count = await dbHelper.deleteTopic(id);
+
+    if (count > 0) {
+      int index = topics!.indexWhere((i) => i.id == id);
+      if (index != -1) topics!.removeAt(index);
+      notifyListeners();
+      return Constants.success;
+    }
+
     return Constants.failure;
   }
 

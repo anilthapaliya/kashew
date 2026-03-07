@@ -5,19 +5,16 @@ class CategoryModel {
   static final String tableCategories = "categories";
   static final String colId = "id";
   static final String colCategoryName = "category_name";
-  static final String colCategoryNote = "category_note";
 
   final int? id;
   final String categoryName;
-  final String? categoryNote;
 
-  CategoryModel({ this.id, required this.categoryName, this.categoryNote });
+  CategoryModel({ this.id, required this.categoryName, });
 
   Map<String, dynamic> toMap() {
     return {
       //colId : id,
       colCategoryName: categoryName,
-      colCategoryNote: colCategoryNote,
     };
   }
 
@@ -25,7 +22,6 @@ class CategoryModel {
     return CategoryModel(
       id: map[colId],
       categoryName: map[colCategoryName],
-      categoryNote: map[colCategoryNote],
     );
   }
 

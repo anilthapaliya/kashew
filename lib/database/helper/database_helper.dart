@@ -26,7 +26,9 @@ class DatabaseHelper {
               "CREATE TABLE IF NOT EXISTS ${TopicModel.tableTopics} ("
               "${TopicModel.colId} INTEGER PRIMARY KEY AUTOINCREMENT, "
               "${TopicModel.colName} TEXT NOT NULL,"
-              "${TopicModel.colDateTime} INTEGER NOT NULL )";
+              "${TopicModel.colDescription} TEXT,"
+              "${TopicModel.colDateTime} INTEGER NOT NULL,"
+              "${TopicModel.colCurrency} TEXT NOT NULL)";
           final String tableExpense =
               "CREATE TABLE IF NOT EXISTS ${ExpenseModel.tableExpenses} ("
               "${ExpenseModel.colId} INTEGER PRIMARY KEY AUTOINCREMENT, "

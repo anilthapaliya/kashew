@@ -9,11 +9,11 @@ class TopicModel {
   static final String colCurrency = "currency";
   static final String colDateTime = "date_time";
 
-  final int? id;
+  int? id;
   String name;
-  final String? description;
-  final String currency;
-  final int dbDateTime;
+  String? description;
+  String currency;
+  int dbDateTime;
 
   TopicModel({ this.id, required this.name, this.description, required this.currency,
     required this.dbDateTime });

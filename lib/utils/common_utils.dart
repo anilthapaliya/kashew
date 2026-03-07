@@ -13,9 +13,19 @@ class CommonUtils {
     final words = input.toLowerCase().split(' ');
 
     for (var i = 0; i < words.length; i++) {
-      if (i == 0 || !smallWords.contains(words[i])) {
-        // capitalize only the first letter
-        words[i] = words[i][0].toUpperCase() + words[i].substring(1);
+      final word = words[i];
+      // find first alphabetic character
+      final match = RegExp(r'[a-z]').firstMatch(word);
+      if (match == null) continue;
+
+      final letterIndex = match.start;
+      final pureWord = word.substring(letterIndex);
+
+      if (i == 0 || !smallWords.contains(pureWord)) {
+        words[i] =
+            word.substring(0, letterIndex) +
+                word[letterIndex].toUpperCase() +
+                word.substring(letterIndex + 1);
       }
     }
 

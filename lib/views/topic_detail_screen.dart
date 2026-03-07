@@ -3,7 +3,10 @@ import 'package:kashew/models/topic_model.dart';
 import 'package:kashew/utils/constants.dart';
 import 'package:kashew/utils/hex_color.dart';
 import 'package:kashew/utils/responsive.dart';
+import 'package:kashew/view_models/topic_viewmodel.dart';
 import 'package:kashew/views/widgets/add_expense_widget.dart';
+import 'package:kashew/views/widgets/add_topic_widget.dart';
+import 'package:provider/provider.dart';
 
 class TopicDetailScreen extends StatefulWidget {
   const TopicDetailScreen({super.key});
@@ -14,11 +17,29 @@ class TopicDetailScreen extends StatefulWidget {
 
 class _TopicDetailScreenState extends State<TopicDetailScreen> {
 
+  late TopicModel topicModel;
+  TopicViewModel? topicViewModel;
+  bool isReturnedFromUpdate = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    Future.microtask(() {
+      if (!mounted) return;
+      topicViewModel = context.read<TopicViewModel>();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
 
-    final TopicModel topicModel =
-    ModalRoute.of(context)!.settings.arguments as TopicModel;
+    if (!isReturnedFromUpdate) {
+      topicModel = ModalRoute
+          .of(context)!
+          .settings
+          .arguments as TopicModel;
+    }
 
     return Scaffold(
       backgroundColor: HexColor.fromHex(Constants.warmWhiteColor),
@@ -37,44 +58,46 @@ class _TopicDetailScreenState extends State<TopicDetailScreen> {
         actions: [
           IconButton(
             icon: Icon(Icons.more_vert),
-            onPressed: () => showTopicOptions(context),
+            onPressed: () => showTopicOptions(context, topicModel),
           ),
         ],
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+      body: Consumer<TopicViewModel>(builder: (context, viewModel, child) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
 
-          // Top Summary Section
-          Container(
-            width: double.infinity,
-            margin: EdgeInsets.symmetric(vertical: R.h(30), horizontal: R.w((15))),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(Constants.lblTotalExpense.toUpperCase(),
-                    style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(12), fontWeight: FontWeight.w500)),
-                Text('\$9867.4',
-                    style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(25), fontWeight: FontWeight.bold))
-              ],
+            // Top Summary Section
+            Container(
+              width: double.infinity,
+              margin: EdgeInsets.symmetric(vertical: R.h(30), horizontal: R.w((15))),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(Constants.lblTotalExpense.toUpperCase(),
+                      style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(12), fontWeight: FontWeight.w500)),
+                  Text('\$9867.4',
+                      style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(25), fontWeight: FontWeight.bold))
+                ],
+              ),
             ),
-          ),
 
-          // Topics Section
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: R.w(15), vertical: R.h(10)),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(Constants.lblExpenses, style: TextStyle(fontFamily: Constants.fontTitle, fontSize: R.sp(18), fontWeight: FontWeight.bold),),
-                //Text(Constants.lblViewAll, style: TextStyle(fontFamily: Constants.fontTitle, fontSize: R.sp(12), fontWeight: FontWeight.bold, color: HexColor.fromHex(Constants.textSecondaryColor)),),
-              ],
+            // Topics Section
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: R.w(15), vertical: R.h(10)),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(Constants.lblExpenses, style: TextStyle(fontFamily: Constants.fontTitle, fontSize: R.sp(18), fontWeight: FontWeight.bold),),
+                  //Text(Constants.lblViewAll, style: TextStyle(fontFamily: Constants.fontTitle, fontSize: R.sp(12), fontWeight: FontWeight.bold, color: HexColor.fromHex(Constants.textSecondaryColor)),),
+                ],
+              ),
             ),
-          ),
 
-        ],
-      ),
+          ],
+        );
+      }),
       floatingActionButton: FloatingActionButton(
           onPressed: () => showAddExpensePopup(context),
           shape: const CircleBorder(),
@@ -93,7 +116,9 @@ class _TopicDetailScreenState extends State<TopicDetailScreen> {
         builder: (context) => AddExpenseWidget());
   }
 
-  void showTopicOptions(BuildContext context) {
+  void showTopicOptions(BuildContext context, TopicModel model) {
+
+    final parentContext = context;
 
     showModalBottomSheet(
       context: context,
@@ -103,7 +128,7 @@ class _TopicDetailScreenState extends State<TopicDetailScreen> {
           top: Radius.circular(20),
         ),
       ),
-      builder: (context) {
+      builder: (sheetContext) {
 
         return SafeArea(
           child: Padding(
@@ -116,8 +141,8 @@ class _TopicDetailScreenState extends State<TopicDetailScreen> {
                   title: Text(Constants.menuEditTopic,
                       style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(15))),
                   onTap: () {
-                    Navigator.pop(context);
-                    //editTopic();
+                    Navigator.pop(sheetContext);
+                    showEditTopicPopup(sheetContext, model);
                   },
                 ),
                 ListTile(
@@ -126,9 +151,12 @@ class _TopicDetailScreenState extends State<TopicDetailScreen> {
                     Constants.menuDeleteTopic,
                     style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(15), color: Colors.red),
                   ),
-                  onTap: () {
-                    Navigator.pop(context);
-                    showDeleteDialog(context);
+                  onTap: () async {
+                    Navigator.pop(sheetContext);
+                    final result = await showDeleteDialog(parentContext);
+                    if (result != null && result && mounted) {
+                      Navigator.pop(parentContext);
+                    }
                   },
                 ),
                 const SizedBox(height: 10),
@@ -140,27 +168,25 @@ class _TopicDetailScreenState extends State<TopicDetailScreen> {
     );
   }
 
-  Future<void> showDeleteDialog(BuildContext context) async {
+  Future<bool?> showDeleteDialog(BuildContext context) async {
 
-    final bool? confirmed = await showDialog(
+    final bool? confirmed = await showDialog<bool>(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text("Delete Topic", style: TextStyle(fontFamily: Constants.fontTitle, fontWeight: FontWeight.bold, fontSize: R.sp(18))),
-          content: Text(
-              "Are you sure you want to delete this topic?\n"
-                  "All related expenses will also be removed.",
+          title: Text(Constants.dialogDeleteTitle, style: TextStyle(fontFamily: Constants.fontTitle, fontWeight: FontWeight.bold, fontSize: R.sp(18))),
+          content: Text(Constants.dialogDeleteMessage,
               style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(15))
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context, false),
-              child: Text("Cancel", style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(15))),
+              child: Text(Constants.dialogCancel, style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(15))),
             ),
             TextButton(
               onPressed: () => Navigator.pop(context, true),
               child: Text(
-                "Delete",
+                Constants.dialogDeleteConfirm,
                 style: TextStyle(fontFamily: Constants.fontBody, fontWeight: FontWeight.bold, fontSize: R.sp(15), color: Colors.red),
               ),
             ),
@@ -169,8 +195,26 @@ class _TopicDetailScreenState extends State<TopicDetailScreen> {
       },
     );
 
-    if (confirmed == true) {
-      //deleteTopic();
+    if (confirmed != null && confirmed && topicViewModel != null) {
+        topicViewModel!.deleteTopic(topicModel.id!);
+    }
+    return confirmed;
+  }
+
+  void showEditTopicPopup(BuildContext context, TopicModel model) async {
+
+    final updatedTopicModel = (await showModalBottomSheet<TopicModel>(
+        context: context,
+        isScrollControlled: true,
+        isDismissible: false,
+        backgroundColor: HexColor.fromHex(Constants.warmWhiteColor),
+        builder: (context) => AddTopicWidget(topicModel: model)));
+
+    if (updatedTopicModel != null) {
+      isReturnedFromUpdate = true;
+      setState(() {
+        topicModel = updatedTopicModel;
+      });
     }
   }
 

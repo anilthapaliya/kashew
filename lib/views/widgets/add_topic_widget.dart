@@ -13,10 +13,13 @@ import '../../utils/hex_color.dart';
 import '../../utils/responsive.dart';
 
 class AddTopicWidget extends StatefulWidget {
-  const AddTopicWidget({super.key});
+
+  final TopicModel? topicModel;
+  const AddTopicWidget({super.key, this.topicModel});
 
   @override
   State<AddTopicWidget> createState() => _AddTopicWidgetState();
+
 }
 
 class _AddTopicWidgetState extends State<AddTopicWidget> {
@@ -35,12 +38,18 @@ class _AddTopicWidgetState extends State<AddTopicWidget> {
     dateController = TextEditingController();
     descriptionController = TextEditingController();
 
+    if (widget.topicModel != null) {
+      topicController.text = widget.topicModel!.name;
+      dateController.text = widget.topicModel!.readableDateTime;
+      descriptionController.text = widget.topicModel!.description!;
+    }
+
     Future.microtask(() {
       if (!mounted) return;
       context.read<CurrencyViewModel>();
       context.read<CategoryViewModel>().loadCategories();
       topicViewModel = context.read<TopicViewModel>();
-      dateController.text = "${CommonUtils.getReadableDate(selectedDate)} (Today)";
+      if (widget.topicModel == null) dateController.text = "${CommonUtils.getReadableDate(selectedDate)} (Today)";
     });
   }
 
@@ -68,9 +77,27 @@ class _AddTopicWidgetState extends State<AddTopicWidget> {
                 children: [
                   IconButton(onPressed: () => Navigator.pop(context), icon: Icon(Icons.close)),
                   const Expanded(child: SizedBox()),
-                  Text(Constants.lblAppBarAddTopic, textAlign: TextAlign.center, style: TextStyle(fontFamily: Constants.fontTitle,
+                  Text(widget.topicModel != null ? Constants.lblAppBarEditTopic : Constants.lblAppBarAddTopic,
+                      textAlign: TextAlign.center, style: TextStyle(fontFamily: Constants.fontTitle,
                       fontSize: R.sp(16), fontWeight: FontWeight.bold, color: HexColor.fromHex(Constants.darkBgColor))),
                   const Expanded(child: SizedBox()),
+                  widget.topicModel != null ?
+                  InkWell(
+                    onTap: widget.topicModel != null ? () async {
+                      if (!topicVideModel.isTopicAdding) {
+                        TopicModel model = TopicModel(
+                            id: widget.topicModel!.id,
+                            name: topicController.text,
+                            description: descriptionController.text,
+                            currency: currencyViewModel.defaultCurrency!.code,
+                            dbDateTime: selectedDate.millisecondsSinceEpoch);
+                        int status = await topicVideModel.saveTopic(model);
+                        if (status == Constants.success && context.mounted) Navigator.pop(context, model);
+                      }
+                  } : null,
+                  child: Text(Constants.lblAppBarSave,
+                      textAlign: TextAlign.center, style: TextStyle(fontFamily: Constants.fontTitle,
+                          fontSize: R.sp(14), fontWeight: FontWeight.bold, color: HexColor.fromHex(Constants.textSecondaryColor))),) :
                   IconButton(onPressed: () {}, icon: Icon(Icons.circle, color: HexColor.fromHex(Constants.warmWhiteColor))),
                 ],
               ),
@@ -81,6 +108,7 @@ class _AddTopicWidgetState extends State<AddTopicWidget> {
                   fontSize: R.sp(12), fontWeight: FontWeight.bold, color: HexColor.fromHex(Constants.darkBgColor))),
               TextField(
                 controller: topicController,
+                enabled: !topicVideModel.isTopicAdding,
                 maxLength: 30,
                 decoration: InputDecoration(
                     hintText: Constants.hintTopic,
@@ -98,7 +126,7 @@ class _AddTopicWidgetState extends State<AddTopicWidget> {
               TextField(
                 controller: dateController,
                 readOnly: true,
-                onTap: _datePicker,
+                onTap: !topicVideModel.isTopicAdding ? _datePicker : null,
                 decoration: InputDecoration(
                     hintText: Constants.hintToday,
                     suffixIcon: Icon(Icons.calendar_month),
@@ -107,7 +135,7 @@ class _AddTopicWidgetState extends State<AddTopicWidget> {
                     border: OutlineInputBorder(borderSide: BorderSide.none, borderRadius: BorderRadius.circular(4))),
               ),
 
-              // Choose Category and Currency
+              // Choose Currency
               SizedBox(height: R.h(20)),
               Row(
                 children: [
@@ -130,9 +158,11 @@ class _AddTopicWidgetState extends State<AddTopicWidget> {
                   Expanded(
                     flex: 5,
                     child: DropdownMenu<CurrencyModel>(
-                      leadingIcon: currencyViewModel.defaultCurrency!.symbol != null ?
+                      enabled: !topicVideModel.isTopicAdding,
+                      leadingIcon: widget.topicModel != null ? Icon(CurrencyModel.iconMap[widget.topicModel!.currency], color: HexColor.fromHex(Constants.accentColor))
+                          : currencyViewModel.defaultCurrency!.symbol != null ?
                       Icon(currencyViewModel.defaultCurrency!.symbol, color: HexColor.fromHex(Constants.accentColor)) : null,
-                      hintText: currencyViewModel.defaultCurrency!.currency,
+                      hintText: widget.topicModel != null ? CurrencyModel.currencyMap[widget.topicModel!.currency] : currencyViewModel.defaultCurrency!.currency,
                       inputDecorationTheme: InputDecorationTheme(
                         filled: true,
                         fillColor: HexColor.fromHex(Constants.lightGrayColor),
@@ -170,6 +200,7 @@ class _AddTopicWidgetState extends State<AddTopicWidget> {
               ),
               TextField(
                 controller: descriptionController,
+                enabled: !topicVideModel.isTopicAdding,
                 keyboardType: TextInputType.multiline,
                 maxLines: 4,
                 minLines: 4,
@@ -182,7 +213,8 @@ class _AddTopicWidgetState extends State<AddTopicWidget> {
               ),
 
               // Button
-              SizedBox(height: R.h(70)),
+              if (widget.topicModel == null) SizedBox(height: R.h(70)),
+              if (widget.topicModel == null)
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton.icon(
@@ -215,7 +247,8 @@ class _AddTopicWidgetState extends State<AddTopicWidget> {
               ),
 
               // Help text
-              SizedBox(height: R.h(10)),
+              if (widget.topicModel == null) SizedBox(height: R.h(10)),
+              if (widget.topicModel == null)
               Center(
                 child: Text(Constants.lblTopicHelp, style: TextStyle(
                     fontFamily: Constants.fontBody, fontSize: R.sp(10), color: HexColor.fromHex(Constants.textSecondaryColor)

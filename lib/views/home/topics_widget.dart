@@ -46,7 +46,7 @@ class _TopicsWidgetState extends State<TopicsWidget> {
                   ... (topicViewModel.isTopicLoading) ? [const Center(child: CircularProgressIndicator())]:
                   (topicViewModel.topics == null || topicViewModel.topics!.isEmpty) ?
                   [noTopicFound()] :
-                  List.generate(topicViewModel.topics!.length, (index) => topicCard(topicViewModel.topics![index])),
+                  List.generate(topicViewModel.topics!.length, (index) => topicCard(topicViewModel.topics![index])).reversed,
                 ]);
           },
         ),
@@ -101,7 +101,7 @@ class _TopicsWidgetState extends State<TopicsWidget> {
                   child: Icon(Icons.flight, color: HexColor.fromHex(Constants.darkBgColor), size: R.w(15)),
                 ),
                 SizedBox(height: R.h(10)),
-                Text(model.name, overflow: TextOverflow.fade,
+                Text(model.name, overflow: TextOverflow.fade, maxLines: 2,
                   style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(12), fontWeight: FontWeight.bold),),
                 Text(CommonUtils.getReadableDateFromMs(model.dbDateTime), style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(10), color: HexColor.fromHex(Constants.textSecondaryColor))),
                 SizedBox(height: R.h(10)),
