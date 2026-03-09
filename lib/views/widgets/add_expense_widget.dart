@@ -22,14 +22,15 @@ class AddExpenseWidget extends StatefulWidget {
 
 class _AddExpenseWidgetState extends State<AddExpenseWidget> {
 
-  late final TopicViewModel topicViewModel;
-  late final ExpenseViewModel expenseViewModel;
+  TopicViewModel? topicViewModel;
+  ExpenseViewModel? expenseViewModel;
+
   late final TextEditingController titleController;
   late final TextEditingController amountController;
   late final TextEditingController dateController;
   late final TextEditingController noteController;
   late final TextEditingController topicController;
-  DateTime selectedDate = DateTime.now();
+  late DateTime selectedDate;
 
   @override
   void initState() {
@@ -40,17 +41,23 @@ class _AddExpenseWidgetState extends State<AddExpenseWidget> {
     dateController = TextEditingController();
     noteController = TextEditingController();
     topicController = TextEditingController();
+  }
 
-    Future.microtask(() {
-      if (!mounted) return;
-      topicViewModel = context.read<TopicViewModel>();
-      expenseViewModel = context.read<ExpenseViewModel>();
-      context.read<CategoryViewModel>().loadCategories();
-      dateController.text = CommonUtils.getReadableDate(selectedDate);
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    topicViewModel = context.read<TopicViewModel>();
+    expenseViewModel = context.read<ExpenseViewModel>();
+    context.read<CategoryViewModel>().loadCategories();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       if (widget.topicModel != null) {
-        topicViewModel.setSelectedTopic(widget.topicModel!);
+        topicViewModel!.setSelectedTopic(widget.topicModel!);
         topicController.text = widget.topicModel!.name;
       }
+      selectedDate = DateTime.now();
+      dateController.text = CommonUtils.getReadableDate(selectedDate);
     });
   }
 
@@ -59,10 +66,6 @@ class _AddExpenseWidgetState extends State<AddExpenseWidget> {
 
     return Consumer3<CategoryViewModel, TopicViewModel, ExpenseViewModel>(
           builder: (sheetContext, categoryViewModel, topicViewModel, expenseViewModel, child) {
-
-            if (topicViewModel.selectedTopic != null) {
-              topicController.text = topicViewModel.selectedTopic!.name;
-            }
 
             if (categoryViewModel.categories == null || categoryViewModel.categories!.isEmpty) {
               return const Center(child: CircularProgressIndicator());
@@ -93,6 +96,7 @@ class _AddExpenseWidgetState extends State<AddExpenseWidget> {
                       fontSize: R.sp(12), fontWeight: FontWeight.bold, color: HexColor.fromHex(Constants.darkBgColor))),
                   TextField(
                     controller: titleController,
+                    keyboardType: TextInputType.name,
                     decoration: InputDecoration(
                         hintText: Constants.hintExpenseTitle,
                         errorText: expenseViewModel.isError ? expenseViewModel.errorTitle : null,
@@ -219,7 +223,7 @@ class _AddExpenseWidgetState extends State<AddExpenseWidget> {
                           onTap: () async {
                             final result = await Navigator.pushNamed(context, Constants.topicOnlyList);
                             if (result != null && result is TopicModel) {
-                              topicViewModel.setSelectedTopic(result);
+                              topicViewModel.setSelectedTopic(result, notify: true);
                             }
                           },
                           readOnly: true,
@@ -301,11 +305,12 @@ class _AddExpenseWidgetState extends State<AddExpenseWidget> {
   Future<void> _datePicker() async {
 
     final today = DateTime.now();
-    final firstDate = today.subtract(Duration(days: 30));
+    var firstDate = today.subtract(Duration(days: 30));
     final lastDate = today.add(Duration(days: 30));
+
     final date = await showDatePicker(
       context: context,
-      initialDate: DateTime.now(),
+      initialDate: firstDate,
       firstDate: firstDate,
       lastDate: lastDate,
     );
@@ -319,11 +324,10 @@ class _AddExpenseWidgetState extends State<AddExpenseWidget> {
   @override
   void dispose() {
 
-    topicViewModel.setSelectedTopic(null);
+    //topicViewModel.setSelectedTopic(null);
     titleController.dispose();
     amountController.dispose();
     dateController.dispose();
-    expenseViewModel.expenses = null;
 
     super.dispose();
   }

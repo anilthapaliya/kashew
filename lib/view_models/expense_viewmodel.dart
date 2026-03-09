@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:kashew/models/expense_model.dart';
 import 'package:kashew/database/repositories/expense_repository.dart';
+import 'package:kashew/utils/common_utils.dart';
 import 'package:kashew/utils/constants.dart';
 
 class ExpenseViewModel extends ChangeNotifier {
 
   ExpenseRepository expenseRepo = ExpenseRepository();
+  int? _currentTopicId;
   List<ExpenseModel>? expenses;
   bool isExpenseLoading = false;
   bool isExpenseAdding = false;
   bool isError = false;
   String? errorTitle = "";
   String? errorAmount = "";
+
+  void setCurrentTopicId(int topicId) {
+    _currentTopicId = topicId;
+  }
 
   Future<void> loadRecentExpenses() async {
 
@@ -54,7 +60,7 @@ class ExpenseViewModel extends ChangeNotifier {
       return Constants.failure;
     }
 
-    ExpenseModel expense = ExpenseModel(title: title, amount: doubleAmount, dbDateTime: date.millisecondsSinceEpoch, categoryId: categoryId, topicId: topicId, note: note);
+    ExpenseModel expense = ExpenseModel(title: CommonUtils.capitalizeFirst(title), amount: doubleAmount, dbDateTime: date.millisecondsSinceEpoch, categoryId: categoryId, topicId: topicId, note: CommonUtils.capitalizeFirst(note));
     return await addExpense(expense);
   }
 
@@ -65,9 +71,12 @@ class ExpenseViewModel extends ChangeNotifier {
 
     final id = await expenseRepo.insertExpense(expense);
     if (id > 0) {
-      expenses ??= [];
-      expense.id = id;
-      expenses!.add(expense);
+      if (_currentTopicId == expense.topicId) {
+        expenses ??= [];
+        expense.id = id;
+        expenses!.add(expense);
+      }
+
       isError = false;
       isExpenseAdding = false;
       notifyListeners();

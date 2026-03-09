@@ -10,22 +10,30 @@ class CommonUtils {
 
     if (input.isEmpty) return input;
 
-    final words = input.toLowerCase().split(' ');
+    final words = input.split(' ');
 
     for (var i = 0; i < words.length; i++) {
       final word = words[i];
+
+      // Preserve acronyms like MBC, USA
+      if (word == word.toUpperCase()) continue;
+
       // find first alphabetic character
-      final match = RegExp(r'[a-z]').firstMatch(word);
+      final match = RegExp(r'[A-Za-z]').firstMatch(word);
       if (match == null) continue;
 
       final letterIndex = match.start;
-      final pureWord = word.substring(letterIndex);
+      final pureWord = word.substring(letterIndex).toLowerCase();
 
       if (i == 0 || !smallWords.contains(pureWord)) {
         words[i] =
             word.substring(0, letterIndex) +
                 word[letterIndex].toUpperCase() +
-                word.substring(letterIndex + 1);
+                word.substring(letterIndex + 1).toLowerCase();
+      } else {
+        words[i] =
+            word.substring(0, letterIndex) +
+                word.substring(letterIndex).toLowerCase();
       }
     }
 
@@ -40,6 +48,12 @@ class CommonUtils {
   static String getReadableDateFromMs(int date) {
 
     return DateFormat('d MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(date));
+  }
+
+  static String capitalizeFirst(String text) {
+
+    if (text.isEmpty) return text;
+    return text[0].toUpperCase() + text.substring(1);
   }
 
 }

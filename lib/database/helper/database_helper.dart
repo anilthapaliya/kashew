@@ -68,7 +68,7 @@ class DatabaseHelper {
 
     await db.insert(CategoryModel.tableCategories, CategoryModel(id: Constants.defaultCategoryId, categoryName: CategoryModel.catOthers).toMap());
     await db.insert(CategoryModel.tableCategories, CategoryModel(categoryName: CategoryModel.catDining).toMap());
-    await db.insert(CategoryModel.tableCategories, CategoryModel(categoryName: CategoryModel.catDining).toMap());
+    await db.insert(CategoryModel.tableCategories, CategoryModel(categoryName: CategoryModel.catDrinking).toMap());
     await db.insert(CategoryModel.tableCategories, CategoryModel(categoryName: CategoryModel.catBeverage).toMap());
     await db.insert(CategoryModel.tableCategories, CategoryModel(categoryName: CategoryModel.catClothes).toMap());
     await db.insert(CategoryModel.tableCategories, CategoryModel(categoryName: CategoryModel.catGroceries).toMap());

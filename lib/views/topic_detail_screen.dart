@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kashew/models/expense_model.dart';
 import 'package:kashew/models/topic_model.dart';
+import 'package:kashew/utils/common_utils.dart';
 import 'package:kashew/utils/constants.dart';
 import 'package:kashew/utils/hex_color.dart';
 import 'package:kashew/utils/responsive.dart';
@@ -40,6 +41,7 @@ class _TopicDetailScreenState extends State<TopicDetailScreen> {
     if (!_expensesLoaded) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         expenseViewModel!.loadExpenses(topicModel.id!);
+        expenseViewModel!.setCurrentTopicId(topicModel.id!);
         _expensesLoaded = true;
       });
     }
@@ -151,7 +153,7 @@ class _TopicDetailScreenState extends State<TopicDetailScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(expense.title, style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(13), fontWeight: FontWeight.bold),),
-                Text(expense.readableDateTime.toString(), style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(10), color: HexColor.fromHex(Constants.textSecondaryColor))),
+                Text(CommonUtils.getReadableDateFromMs(expense.dbDateTime), style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(10), color: HexColor.fromHex(Constants.textSecondaryColor))),
               ],
             ),
             Expanded(child: Container()),

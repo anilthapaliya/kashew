@@ -120,7 +120,7 @@ class _AddTopicWidgetState extends State<AddTopicWidget> {
               ),
 
               // Start date
-              SizedBox(height: R.h(20)),
+              /*SizedBox(height: R.h(20)),
               Text(Constants.lblStartDate, textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontTitle,
                   fontSize: R.sp(12), fontWeight: FontWeight.bold, color: HexColor.fromHex(Constants.darkBgColor))),
               TextField(
@@ -130,6 +130,31 @@ class _AddTopicWidgetState extends State<AddTopicWidget> {
                 decoration: InputDecoration(
                     hintText: Constants.hintToday,
                     suffixIcon: Icon(Icons.calendar_month),
+                    filled: true,
+                    fillColor: HexColor.fromHex(Constants.lightGrayColor),
+                    border: OutlineInputBorder(borderSide: BorderSide.none, borderRadius: BorderRadius.circular(4))),
+              ),*/
+
+              // Description
+              SizedBox(height: R.h(20)),
+              Row(
+                children: [
+                  Text(Constants.lblDescription, textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontTitle,
+                      fontSize: R.sp(12), fontWeight: FontWeight.bold, color: HexColor.fromHex(Constants.darkBgColor))),
+                  const Expanded(child: SizedBox()),
+                  Text(Constants.lblOptional, textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontTitle,
+                      fontSize: R.sp(10), color: HexColor.fromHex(Constants.darkBgColor))),
+                ],
+              ),
+              TextField(
+                controller: descriptionController,
+                enabled: !topicVideModel.isTopicAdding,
+                keyboardType: TextInputType.multiline,
+                maxLines: 4,
+                minLines: 4,
+                maxLength: 100,
+                decoration: InputDecoration(
+                    hintText: Constants.hintDescription,
                     filled: true,
                     fillColor: HexColor.fromHex(Constants.lightGrayColor),
                     border: OutlineInputBorder(borderSide: BorderSide.none, borderRadius: BorderRadius.circular(4))),
@@ -185,31 +210,6 @@ class _AddTopicWidgetState extends State<AddTopicWidget> {
                   ),
                   Expanded(flex: 5, child: SizedBox()),
                 ],
-              ),
-
-              // Description
-              SizedBox(height: R.h(20)),
-              Row(
-                children: [
-                  Text(Constants.lblDescription, textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontTitle,
-                      fontSize: R.sp(12), fontWeight: FontWeight.bold, color: HexColor.fromHex(Constants.darkBgColor))),
-                  const Expanded(child: SizedBox()),
-                  Text(Constants.lblOptional, textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontTitle,
-                      fontSize: R.sp(10), color: HexColor.fromHex(Constants.darkBgColor))),
-                ],
-              ),
-              TextField(
-                controller: descriptionController,
-                enabled: !topicVideModel.isTopicAdding,
-                keyboardType: TextInputType.multiline,
-                maxLines: 4,
-                minLines: 4,
-                maxLength: 100,
-                decoration: InputDecoration(
-                    hintText: Constants.hintDescription,
-                    filled: true,
-                    fillColor: HexColor.fromHex(Constants.lightGrayColor),
-                    border: OutlineInputBorder(borderSide: BorderSide.none, borderRadius: BorderRadius.circular(4))),
               ),
 
               // Button
