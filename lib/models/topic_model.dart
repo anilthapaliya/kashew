@@ -1,4 +1,5 @@
 import 'package:kashew/utils/common_utils.dart';
+import 'package:kashew/utils/constants.dart';
 
 class TopicModel {
 
@@ -8,15 +9,17 @@ class TopicModel {
   static final String colDescription = "topic_description";
   static final String colCurrency = "currency";
   static final String colDateTime = "date_time";
+  static final String colIsSystem = "is_system";
 
   int? id;
   String name;
   String? description;
-  String currency;
+  String? currency;
   int dbDateTime;
+  int? isSystem;
 
-  TopicModel({ this.id, required this.name, this.description, required this.currency,
-    required this.dbDateTime });
+  TopicModel({ this.id, required this.name, this.description,
+    this.currency, required this.dbDateTime, this.isSystem = 0 });
 
   Map<String, dynamic> toMap() {
     return {
@@ -24,7 +27,8 @@ class TopicModel {
       colName: name,
       colDescription: description,
       colCurrency: currency,
-      colDateTime: dbDateTime
+      colDateTime: dbDateTime,
+      colIsSystem: isSystem
     };
   }
 
@@ -35,6 +39,7 @@ class TopicModel {
         description: map[colDescription],
         currency: map[colCurrency],
         dbDateTime: map[colDateTime],
+        isSystem: map[colIsSystem],
     );
   }
 

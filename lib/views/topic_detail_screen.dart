@@ -21,27 +21,32 @@ class _TopicDetailScreenState extends State<TopicDetailScreen> {
 
   late TopicModel topicModel;
   TopicViewModel? topicViewModel;
+  ExpenseViewModel? expenseViewModel;
   bool isReturnedFromUpdate = false;
+  bool _expensesLoaded = false;
 
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
 
-    Future.microtask(() {
-      if (!mounted) return;
-      topicViewModel = context.read<TopicViewModel>();
-    });
+    expenseViewModel = context.read<ExpenseViewModel>();
+    topicViewModel = context.read<TopicViewModel>();
+
+    if (!isReturnedFromUpdate) {
+      topicModel = ModalRoute
+          .of(context)!.settings.arguments as TopicModel;
+    }
+
+    if (!_expensesLoaded) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        expenseViewModel!.loadExpenses(topicModel.id!);
+        _expensesLoaded = true;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-
-    if (!isReturnedFromUpdate) {
-      topicModel = ModalRoute
-          .of(context)!
-          .settings
-          .arguments as TopicModel;
-    }
 
     return Scaffold(
       backgroundColor: HexColor.fromHex(Constants.warmWhiteColor),
@@ -108,7 +113,7 @@ class _TopicDetailScreenState extends State<TopicDetailScreen> {
                           ... (expenseViewModel.isExpenseLoading) ? [const Center(child: CircularProgressIndicator())]:
                           (expenseViewModel.expenses == null || expenseViewModel.expenses!.isEmpty) ?
                           [noExpenseFound()] :
-                          List.generate(topicViewModel.topics!.length, (index) => expenseCard(expenseViewModel.expenses![index])).reversed,
+                          List.generate(expenseViewModel.expenses!.length, (index) => expenseCard(expenseViewModel.expenses![index])).reversed,
                         ]
                       ),
                     ),
@@ -145,12 +150,12 @@ class _TopicDetailScreenState extends State<TopicDetailScreen> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Uber Ride', style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(13), fontWeight: FontWeight.bold),),
-                Text('Transport, Today', style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(10), color: HexColor.fromHex(Constants.textSecondaryColor))),
+                Text(expense.title, style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(13), fontWeight: FontWeight.bold),),
+                Text(expense.readableDateTime.toString(), style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(10), color: HexColor.fromHex(Constants.textSecondaryColor))),
               ],
             ),
             Expanded(child: Container()),
-            Text('\$74', style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(12), fontWeight: FontWeight.bold, color: Colors.red)),
+            Text(expense.amount.toString(), style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(12), fontWeight: FontWeight.bold, color: Colors.red)),
 
           ],
         ),
@@ -198,20 +203,23 @@ class _TopicDetailScreenState extends State<TopicDetailScreen> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 ListTile(
-                  leading: const Icon(Icons.edit),
+                  leading: Icon(Icons.edit, color: (model.isSystem == Constants.wahr) ? HexColor.fromHex(Constants.textSecondaryColor) : HexColor.fromHex(Constants.darkBgColor)),
                   title: Text(Constants.menuEditTopic,
-                      style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(15))),
+                      style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(15), color: (model.isSystem == Constants.wahr) ? HexColor.fromHex(Constants.textSecondaryColor) : HexColor.fromHex(Constants.darkBgColor))),
+                  enabled: (model.isSystem == Constants.wahr) ? false : true,
                   onTap: () {
                     Navigator.pop(sheetContext);
                     showEditTopicPopup(sheetContext, model);
                   },
                 ),
                 ListTile(
-                  leading: const Icon(Icons.delete, color: Colors.red),
+                  leading: Icon(Icons.delete, color: (model.isSystem == Constants.wahr) ? HexColor.fromHex(Constants.textSecondaryColor) : Colors.red),
                   title: Text(
                     Constants.menuDeleteTopic,
-                    style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(15), color: Colors.red),
+                    style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(15),
+                        color: (model.isSystem == Constants.wahr) ? HexColor.fromHex(Constants.textSecondaryColor) :  Colors.red),
                   ),
+                  enabled: (model.isSystem == Constants.wahr) ? false : true,
                   onTap: () async {
                     Navigator.pop(sheetContext);
                     final result = await showDeleteDialog(parentContext);
@@ -277,6 +285,13 @@ class _TopicDetailScreenState extends State<TopicDetailScreen> {
         topicModel = updatedTopicModel;
       });
     }
+  }
+
+  @override
+  void dispose() {
+
+    if (expenseViewModel != null) expenseViewModel!.expenses = null;
+    super.dispose();
   }
 
 }

@@ -1,3 +1,5 @@
+import 'package:kashew/models/category_model.dart';
+
 class Constants {
 
   static final String appTitle = 'KASHew';
@@ -64,9 +66,18 @@ class Constants {
   static final String dialogCancel = "Cancel";
 
   static final String errTopicName = "Please enter a suitable topic.";
+  static final String errExpenseTitle = "Please enter a suitable title.";
+  static final String errExpenseAmount = "Please enter a valid amount.";
 
+  static final int maxAmountThreshold = 9999999999;
   static final int success = 1;
   static final int failure = -1;
+  static final int wahr = 1;
+  static final int falsch = 0;
+  static final String defaultTopic = "General";
+  static final int defaultTopicId = 1;
+  static final String defaultCategory = CategoryModel.catOthers;
+  static final int defaultCategoryId = 1;
 
   // Padding and Margin
   static final double stdMargin = 14;

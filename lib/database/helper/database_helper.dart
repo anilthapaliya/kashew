@@ -1,6 +1,8 @@
 import 'package:kashew/models/category_model.dart';
+import 'package:kashew/models/currency_model.dart';
 import 'package:kashew/models/expense_model.dart';
 import 'package:kashew/models/topic_model.dart';
+import 'package:kashew/utils/constants.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -27,14 +29,15 @@ class DatabaseHelper {
           final String tableCategory =
               "CREATE TABLE IF NOT EXISTS ${CategoryModel.tableCategories} ("
               "${CategoryModel.colId} INTEGER PRIMARY KEY AUTOINCREMENT, "
-              "${CategoryModel.colCategoryName} TEXT NOT NULL )";
+              "${CategoryModel.colCategoryName} TEXT NOT NULL)";
           final String tableTopic =
               "CREATE TABLE IF NOT EXISTS ${TopicModel.tableTopics} ("
               "${TopicModel.colId} INTEGER PRIMARY KEY AUTOINCREMENT, "
               "${TopicModel.colName} TEXT NOT NULL,"
               "${TopicModel.colDescription} TEXT,"
               "${TopicModel.colDateTime} INTEGER NOT NULL,"
-              "${TopicModel.colCurrency} TEXT NOT NULL)";
+              "${TopicModel.colCurrency} TEXT,"
+              "${TopicModel.colIsSystem} INTEGER DEFAULT ${Constants.falsch})";
           final String tableExpense =
               "CREATE TABLE IF NOT EXISTS ${ExpenseModel.tableExpenses} ("
               "${ExpenseModel.colId} INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -43,7 +46,7 @@ class DatabaseHelper {
               "${ExpenseModel.colDateTime} INTEGER NOT NULL,"
               "${ExpenseModel.colCategoryId} INTEGER,"
               "${ExpenseModel.colTopicId} INTEGER,"
-              "${ExpenseModel.colNote} TEXT ,"
+              "${ExpenseModel.colNote} TEXT,"
               "FOREIGN KEY(${ExpenseModel.colCategoryId}) REFERENCES ${CategoryModel.tableCategories}(${CategoryModel.colId}),"
               "FOREIGN KEY(${ExpenseModel.colTopicId}) REFERENCES ${TopicModel.tableTopics}(${TopicModel.colId}))";
 
@@ -51,6 +54,7 @@ class DatabaseHelper {
           await db.execute(tableTopic);
           await db.execute(tableExpense);
           await insertBatchCategories(db);
+          await insertDefaultTopic(db);
         });
   }
 
@@ -62,22 +66,30 @@ class DatabaseHelper {
 
   Future<void> insertBatchCategories(Database db) async {
 
-    insertCategory(CategoryModel(categoryName: CategoryModel.catDining));
-    insertCategory(CategoryModel(categoryName: CategoryModel.catBeverage));
-    insertCategory(CategoryModel(categoryName: CategoryModel.catClothes));
-    insertCategory(CategoryModel(categoryName: CategoryModel.catGroceries));
-    insertCategory(CategoryModel(categoryName: CategoryModel.catGifts));
-    insertCategory(CategoryModel(categoryName: CategoryModel.catHealth));
-    insertCategory(CategoryModel(categoryName: CategoryModel.catRepair));
-    insertCategory(CategoryModel(categoryName: CategoryModel.catCharges));
-    insertCategory(CategoryModel(categoryName: CategoryModel.catTransport));
-    insertCategory(CategoryModel(categoryName: CategoryModel.catOthers));
+    await db.insert(CategoryModel.tableCategories, CategoryModel(id: Constants.defaultCategoryId, categoryName: CategoryModel.catOthers).toMap());
+    await db.insert(CategoryModel.tableCategories, CategoryModel(categoryName: CategoryModel.catDining).toMap());
+    await db.insert(CategoryModel.tableCategories, CategoryModel(categoryName: CategoryModel.catDining).toMap());
+    await db.insert(CategoryModel.tableCategories, CategoryModel(categoryName: CategoryModel.catBeverage).toMap());
+    await db.insert(CategoryModel.tableCategories, CategoryModel(categoryName: CategoryModel.catClothes).toMap());
+    await db.insert(CategoryModel.tableCategories, CategoryModel(categoryName: CategoryModel.catGroceries).toMap());
+    await db.insert(CategoryModel.tableCategories, CategoryModel(categoryName: CategoryModel.catGifts).toMap());
+    await db.insert(CategoryModel.tableCategories, CategoryModel(categoryName: CategoryModel.catHealth).toMap());
+    await db.insert(CategoryModel.tableCategories, CategoryModel(categoryName: CategoryModel.catRepair).toMap());
+    await db.insert(CategoryModel.tableCategories, CategoryModel(categoryName: CategoryModel.catCharges).toMap());
+    await db.insert(CategoryModel.tableCategories, CategoryModel(categoryName: CategoryModel.catTransport).toMap());
   }
 
-  Future<int> insertCategory(CategoryModel category) async {
+  Future<void> insertDefaultTopic(Database db) async {
 
-    final db = await database;
-    return await db.insert(CategoryModel.tableCategories, category.toMap());
+    Map<String, dynamic> values = {
+      TopicModel.colId: Constants.defaultTopicId,
+      TopicModel.colName: Constants.defaultTopic,
+      TopicModel.colDescription: "All general and uncategorized expenses.",
+      TopicModel.colDateTime: DateTime.now().millisecondsSinceEpoch,
+      TopicModel.colCurrency: CurrencyModel.xxx,
+      TopicModel.colIsSystem: Constants.wahr,
+    };
+    await db.insert(TopicModel.tableTopics, values);
   }
 
   Future<int> insert(String table, Map<String, dynamic> data) async {

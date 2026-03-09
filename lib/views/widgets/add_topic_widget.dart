@@ -284,8 +284,8 @@ class _AddTopicWidgetState extends State<AddTopicWidget> {
   void dispose() {
 
     topicController.dispose();
-    descriptionController.dispose();
     dateController.dispose();
+    descriptionController.dispose();
     super.dispose();
   }
 

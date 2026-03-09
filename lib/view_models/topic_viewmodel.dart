@@ -8,10 +8,19 @@ class TopicViewModel extends ChangeNotifier {
 
   TopicRepository topicRepo = TopicRepository();
   List<TopicModel>? topics;
+  TopicModel? _selectedTopic;
   bool isTopicLoading = false;
   bool isTopicAdding = false;
   bool isError = false;
   String? errorMessage = "";
+
+  TopicModel? get selectedTopic => _selectedTopic;
+
+  void setSelectedTopic(TopicModel? model, {bool notify = false}) {
+
+    _selectedTopic = model;
+    if (notify) notifyListeners();
+  }
 
   Future<void> loadTopics() async {
 

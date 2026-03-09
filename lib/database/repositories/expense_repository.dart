@@ -21,7 +21,7 @@ class ExpenseRepository {
   Future<List<ExpenseModel>> getExpensesById(int topicId) async {
 
     final List<Map<String, dynamic>> maps = await dbHelper.query(ExpenseModel.tableExpenses,
-        where: '${ExpenseModel.colId} = ?', whereArgs: [topicId]);
+        where: '${ExpenseModel.colTopicId} = ?', whereArgs: [topicId]);
     return List.generate(maps.length, (i) {
       return ExpenseModel.fromMap(maps[i]);
     });

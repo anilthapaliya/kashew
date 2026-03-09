@@ -73,7 +73,7 @@ class _TopicListScreenState extends State<TopicListScreen> {
 
     return InkWell(
       onTap: () {
-
+        Navigator.pop(context, topic);
       },
       child: Container(
         padding: EdgeInsets.symmetric(vertical: R.h(15), horizontal: R.w(20)),
