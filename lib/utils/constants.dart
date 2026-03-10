@@ -60,10 +60,12 @@ class Constants {
   static final String hintAmount = "0.00";
   static final String hintLinkTopic = "Link to a topic";
 
-  static final String dialogDeleteTitle = "Delete Topic";
-  static final String dialogDeleteMessage = "Are you sure you want to delete this topic?\nAll related expenses will also be removed.";
+  static final String dialogTopicDeleteTitle = "Delete Topic";
+  static final String dialogTopicDeleteMessage = "Are you sure you want to delete this topic?\nAll related expenses will also be removed.";
   static final String dialogDeleteConfirm = "Delete";
   static final String dialogCancel = "Cancel";
+  static final String dialogExpenseDeleteTitle = "Delete Expense";
+  static final String dialogExpenseDeleteMessage = "Are you sure you want to delete this expense entry?";
 
   static final String errTopicName = "Please enter a suitable topic.";
   static final String errExpenseTitle = "Please enter a suitable title.";

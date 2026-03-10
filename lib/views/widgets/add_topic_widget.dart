@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:kashew/models/currency_model.dart';
 import 'package:kashew/models/topic_model.dart';
 import 'package:kashew/utils/common_utils.dart';
@@ -7,14 +6,13 @@ import 'package:kashew/view_models/category_viewmodel.dart';
 import 'package:kashew/view_models/currency_viewmodel.dart';
 import 'package:kashew/view_models/topic_viewmodel.dart';
 import 'package:provider/provider.dart';
-import '../../models/category_model.dart';
 import '../../utils/constants.dart';
 import '../../utils/hex_color.dart';
 import '../../utils/responsive.dart';
 
 class AddTopicWidget extends StatefulWidget {
 
-  final TopicModel? topicModel;
+  final TopicModel? topicModel; // Needed to edit and delete a topic.
   const AddTopicWidget({super.key, this.topicModel});
 
   @override
@@ -37,18 +35,24 @@ class _AddTopicWidgetState extends State<AddTopicWidget> {
     topicController = TextEditingController();
     dateController = TextEditingController();
     descriptionController = TextEditingController();
+  }
 
-    if (widget.topicModel != null) {
-      topicController.text = widget.topicModel!.name;
-      dateController.text = widget.topicModel!.readableDateTime;
-      descriptionController.text = widget.topicModel!.description!;
-    }
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
 
-    Future.microtask(() {
-      if (!mounted) return;
-      context.read<CurrencyViewModel>();
-      context.read<CategoryViewModel>().loadCategories();
-      topicViewModel = context.read<TopicViewModel>();
+    context.read<CurrencyViewModel>();
+    context.read<CategoryViewModel>().loadCategories();
+    topicViewModel = context.read<TopicViewModel>();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+
+      if (widget.topicModel != null) {
+        topicController.text = widget.topicModel!.name;
+        dateController.text = widget.topicModel!.readableDateTime;
+        descriptionController.text = widget.topicModel!.description!;
+      }
+
       if (widget.topicModel == null) dateController.text = "${CommonUtils.getReadableDate(selectedDate)} (Today)";
     });
   }
@@ -98,7 +102,7 @@ class _AddTopicWidgetState extends State<AddTopicWidget> {
                   child: Text(Constants.lblAppBarSave,
                       textAlign: TextAlign.center, style: TextStyle(fontFamily: Constants.fontTitle,
                           fontSize: R.sp(14), fontWeight: FontWeight.bold, color: HexColor.fromHex(Constants.textSecondaryColor))),) :
-                  IconButton(onPressed: () {}, icon: Icon(Icons.circle, color: HexColor.fromHex(Constants.warmWhiteColor))),
+                  IconButton(onPressed: null, icon: Icon(Icons.circle, color: HexColor.fromHex(Constants.warmWhiteColor))),
                 ],
               ),
 

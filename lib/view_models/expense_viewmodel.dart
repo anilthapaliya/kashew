@@ -89,14 +89,59 @@ class ExpenseViewModel extends ChangeNotifier {
     return Constants.failure;
   }
 
-  Future<void> updateExpense(ExpenseModel expense) async {
+  Future<int> updateExpenseByValue(int expenseId, String title, String amount, DateTime date, String note, int categoryId, int topicId) async {
 
-    await expenseRepo.updateExpense(expense, expense.id!);
+    if (title.isEmpty) {
+      isError = true;
+      errorTitle = Constants.errExpenseTitle;
+      notifyListeners();
+      return Constants.failure;
+    }
+
+    double doubleAmount;
+    try {
+      doubleAmount = double.parse(amount).toDouble();
+      if (doubleAmount <= 0 || doubleAmount > Constants.maxAmountThreshold) throw Exception();
+    } on Exception {
+      doubleAmount = 0;
+      isError = true;
+      errorAmount = Constants.errExpenseAmount;
+      notifyListeners();
+      return Constants.failure;
+    }
+
+    ExpenseModel expense = ExpenseModel(id: expenseId, title: CommonUtils.capitalizeFirst(title), amount: doubleAmount, dbDateTime: date.millisecondsSinceEpoch, categoryId: categoryId, topicId: topicId, note: CommonUtils.capitalizeFirst(note));
+    return await updateExpense(expense);
   }
 
-  Future<void> deleteExpense(int expenseId) async {
+  Future<int> updateExpense(ExpenseModel expense) async {
 
-    await expenseRepo.deleteExpense(expenseId);
+    int count = await expenseRepo.updateExpense(expense, expense.id!);
+    if (count > 0) {
+      int index = expenses!.indexWhere((i) => i.id == expense.id);
+      if (index != -1) expenses![index] = expense;
+      isError = false;
+      notifyListeners();
+      return Constants.success;
+    }
+
+    isError = false;
+    notifyListeners();
+    return Constants.failure;
+  }
+
+  Future<int> deleteExpense(int expenseId) async {
+
+    int result = await expenseRepo.deleteExpense(expenseId);
+
+    if (result > 0) {
+      int index = expenses!.indexWhere((i) => i.id == expenseId);
+      if (index != -1) expenses!.removeAt(index);
+      notifyListeners();
+      return Constants.success;
+    }
+
+    return Constants.failure;
   }
 
 }

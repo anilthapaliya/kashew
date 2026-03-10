@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kashew/models/category_model.dart';
+import 'package:kashew/models/expense_model.dart';
 import 'package:kashew/models/topic_model.dart';
 import 'package:kashew/utils/common_utils.dart';
 import 'package:kashew/utils/constants.dart';
@@ -12,8 +13,9 @@ import 'package:provider/provider.dart';
 
 class AddExpenseWidget extends StatefulWidget {
 
-  TopicModel? topicModel;
-  AddExpenseWidget({super.key, this.topicModel});
+  final TopicModel? topicModel;
+  final ExpenseModel? expenseModel; // Needed to edit an expense.
+  const AddExpenseWidget({super.key, this.topicModel, this.expenseModel});
 
   @override
   State<AddExpenseWidget> createState() => _AddExpenseWidgetState();
@@ -22,6 +24,7 @@ class AddExpenseWidget extends StatefulWidget {
 
 class _AddExpenseWidgetState extends State<AddExpenseWidget> {
 
+  CategoryViewModel? categoryViewModel;
   TopicViewModel? topicViewModel;
   ExpenseViewModel? expenseViewModel;
 
@@ -47,16 +50,27 @@ class _AddExpenseWidgetState extends State<AddExpenseWidget> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
+    categoryViewModel = context.read<CategoryViewModel>();
     topicViewModel = context.read<TopicViewModel>();
     expenseViewModel = context.read<ExpenseViewModel>();
     context.read<CategoryViewModel>().loadCategories();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
+
       if (widget.topicModel != null) {
         topicViewModel!.setSelectedTopic(widget.topicModel!);
         topicController.text = widget.topicModel!.name;
       }
       selectedDate = DateTime.now();
+
+      if (widget.expenseModel != null) {
+        titleController.text = widget.expenseModel!.title;
+        amountController.text = widget.expenseModel!.amount.toString();
+        selectedDate = DateTime.fromMillisecondsSinceEpoch(widget.expenseModel!.dbDateTime);
+        noteController.text = widget.expenseModel!.note!;
+        categoryViewModel!.selectCategoryById(widget.expenseModel!.categoryId!);
+      }
+
       dateController.text = CommonUtils.getReadableDate(selectedDate);
     });
   }
@@ -86,7 +100,25 @@ class _AddExpenseWidgetState extends State<AddExpenseWidget> {
                       Text(Constants.lblAppBarAddExpense, textAlign: TextAlign.center, style: TextStyle(fontFamily: Constants.fontTitle,
                           fontSize: R.sp(16), fontWeight: FontWeight.bold, color: HexColor.fromHex(Constants.darkBgColor))),
                       const Expanded(child: SizedBox()),
-                      IconButton(onPressed: () {}, icon: Icon(Icons.circle, color: HexColor.fromHex(Constants.warmWhiteColor))),
+                      widget.expenseModel != null ?
+                      InkWell(
+                        onTap: widget.expenseModel != null ? () async {
+                          if (!expenseViewModel.isExpenseAdding) {
+                            String title = titleController.text;
+                            String amount = amountController.text;
+                            DateTime date = selectedDate;
+                            String note = noteController.text;
+                            int categoryId = (categoryViewModel.selectedCategory != null)
+                                ? categoryViewModel.selectedCategory!.id! : Constants.defaultCategoryId;
+                            int topicId = widget.topicModel!.id!;
+                            int result = await expenseViewModel.updateExpenseByValue(widget.expenseModel!.id!, title, amount, date, note, categoryId, topicId);
+                            if (result == Constants.success && mounted) Navigator.pop(sheetContext);
+                          }
+                        } : null,
+                        child: Text(Constants.lblAppBarSave,
+                            textAlign: TextAlign.center, style: TextStyle(fontFamily: Constants.fontTitle,
+                                fontSize: R.sp(14), fontWeight: FontWeight.bold, color: HexColor.fromHex(Constants.textSecondaryColor))),) :
+                      IconButton(onPressed: null, icon: Icon(Icons.circle, color: HexColor.fromHex(Constants.warmWhiteColor))),
                     ],
                   ),
 
@@ -176,9 +208,7 @@ class _AddExpenseWidgetState extends State<AddExpenseWidget> {
                           },
                         ),
                       ),
-
                       Expanded(flex: 1, child: SizedBox()),
-
                       Expanded(
                         flex: 4,
                         child: TextField(
@@ -220,6 +250,7 @@ class _AddExpenseWidgetState extends State<AddExpenseWidget> {
                         flex: 10,
                         child: TextField(
                           controller: topicController,
+                          enabled: (widget.expenseModel == null) ? true : false,
                           onTap: () async {
                             final result = await Navigator.pushNamed(context, Constants.topicOnlyList);
                             if (result != null && result is TopicModel) {
@@ -264,7 +295,10 @@ class _AddExpenseWidgetState extends State<AddExpenseWidget> {
                         border: OutlineInputBorder(borderSide: BorderSide.none, borderRadius: BorderRadius.circular(4))),
                   ),
 
+                  // Button
+                  if (widget.expenseModel == null)
                   SizedBox(height: R.h(70)),
+                  if (widget.expenseModel == null)
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton.icon(
@@ -305,7 +339,7 @@ class _AddExpenseWidgetState extends State<AddExpenseWidget> {
   Future<void> _datePicker() async {
 
     final today = DateTime.now();
-    var firstDate = today.subtract(Duration(days: 30));
+    var firstDate = today; //today.subtract(Duration(days: 30));
     final lastDate = today.add(Duration(days: 30));
 
     final date = await showDatePicker(
@@ -324,7 +358,6 @@ class _AddExpenseWidgetState extends State<AddExpenseWidget> {
   @override
   void dispose() {
 
-    //topicViewModel.setSelectedTopic(null);
     titleController.dispose();
     amountController.dispose();
     dateController.dispose();

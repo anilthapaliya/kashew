@@ -23,4 +23,22 @@ class CategoryViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void selectCategoryById(int categoryId) {
+
+    if (categories != null) {
+      selectedCategory = categories!.firstWhere((cat) => cat.id == categoryId);
+      notifyListeners();
+    }
+  }
+
+  IconData getIconByCategoryId(int categoryId) {
+
+    if (categories != null) {
+      final cat = categories!.firstWhere((cat) => cat.id == categoryId);
+      return cat.icon;
+    }
+
+    return Icons.help;
+  }
+
 }
