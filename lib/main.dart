@@ -5,11 +5,13 @@ import 'package:kashew/view_models/category_viewmodel.dart';
 import 'package:kashew/view_models/currency_viewmodel.dart';
 import 'package:kashew/view_models/expense_viewmodel.dart';
 import 'package:kashew/view_models/topic_viewmodel.dart';
+import 'package:kashew/views/currency_only_list_screen.dart';
 import 'package:kashew/views/home/home_screen.dart';
 import 'package:kashew/view_models/splash_viewmodel.dart';
+import 'package:kashew/views/settings_screen.dart';
 import 'package:kashew/views/splash_screen.dart';
 import 'package:kashew/views/topic_detail_screen.dart';
-import 'package:kashew/views/topic_list_screen.dart';
+import 'package:kashew/views/topic_only_list_screen.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -42,6 +44,8 @@ class KashewApp extends StatelessWidget {
         Constants.home: (context) => const HomeScreen(),
         Constants.topicDetails: (context) => const TopicDetailScreen(),
         Constants.topicOnlyList: (context) => const TopicListScreen(),
+        Constants.settings: (context) => const SettingsScreen(),
+        Constants.currencyOnlyList: (context) => const CurrencyListScreen(),
       },
       theme: ThemeData(
         useMaterial3: true,

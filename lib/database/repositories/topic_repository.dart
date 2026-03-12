@@ -10,9 +10,18 @@ class TopicRepository {
     return await dbHelper.insert(TopicModel.tableTopics, topic.toMap());
   }
 
+  Future<List<TopicModel>> getLatestTopics() async {
+
+    final List<Map<String, dynamic>> maps = await dbHelper
+        .query(TopicModel.tableTopics, orderBy: "${TopicModel.colLastUpdated} DESC", limit: 10);
+    return List.generate(maps.length, (i) {
+      return TopicModel.fromMap(maps[i]);
+    });
+  }
+
   Future<List<TopicModel>> getAllTopics() async {
 
-    final List<Map<String, dynamic>> maps = await dbHelper.query(TopicModel.tableTopics);
+    final List<Map<String, dynamic>> maps = await dbHelper.query(TopicModel.tableTopics, orderBy: "${TopicModel.colLastUpdated} DESC");
     return List.generate(maps.length, (i) {
       return TopicModel.fromMap(maps[i]);
     });

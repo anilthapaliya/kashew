@@ -1,6 +1,7 @@
 import 'package:kashew/models/category_model.dart';
 import 'package:kashew/models/currency_model.dart';
 import 'package:kashew/models/expense_model.dart';
+import 'package:kashew/models/settings_model.dart';
 import 'package:kashew/models/topic_model.dart';
 import 'package:kashew/utils/constants.dart';
 import 'package:sqflite/sqflite.dart';
@@ -37,7 +38,8 @@ class DatabaseHelper {
               "${TopicModel.colDescription} TEXT,"
               "${TopicModel.colDateTime} INTEGER NOT NULL,"
               "${TopicModel.colCurrency} TEXT,"
-              "${TopicModel.colIsSystem} INTEGER DEFAULT ${Constants.falsch})";
+              "${TopicModel.colIsSystem} INTEGER DEFAULT ${Constants.falsch},"
+              "${TopicModel.colLastUpdated} INTEGER NOT NULL)";
           final String tableExpense =
               "CREATE TABLE IF NOT EXISTS ${ExpenseModel.tableExpenses} ("
               "${ExpenseModel.colId} INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -50,11 +52,18 @@ class DatabaseHelper {
               "FOREIGN KEY(${ExpenseModel.colCategoryId}) REFERENCES ${CategoryModel.tableCategories}(${CategoryModel.colId}),"
               "FOREIGN KEY(${ExpenseModel.colTopicId}) REFERENCES ${TopicModel.tableTopics}(${TopicModel.colId}))";
 
+          final String tableSettings =
+              "CREATE TABLE IF NOT EXISTS ${SettingsModel.tableSettings} ("
+              "${SettingsModel.colKey} TEXT PRIMARY KEY,"
+              "${SettingsModel.colValue} TEXT NOT NULL)";
+
           await db.execute(tableCategory);
           await db.execute(tableTopic);
           await db.execute(tableExpense);
+          await db.execute(tableSettings);
           await insertBatchCategories(db);
           await insertDefaultTopic(db);
+          await insertDefaultCurrency(db);
         });
   }
 
@@ -86,16 +95,26 @@ class DatabaseHelper {
       TopicModel.colName: Constants.defaultTopic,
       TopicModel.colDescription: "All general and uncategorized expenses.",
       TopicModel.colDateTime: DateTime.now().millisecondsSinceEpoch,
+      TopicModel.colLastUpdated: DateTime.now().millisecondsSinceEpoch,
       TopicModel.colCurrency: CurrencyModel.xxx,
       TopicModel.colIsSystem: Constants.wahr,
     };
     await db.insert(TopicModel.tableTopics, values);
   }
 
-  Future<int> insert(String table, Map<String, dynamic> data) async {
+  Future<void> insertDefaultCurrency(Database db) async {
+
+    Map<String, String> values = {
+      SettingsModel.colKey: Constants.settingsCurrency,
+      SettingsModel.colValue: CurrencyModel.npr,
+    };
+    await db.insert(SettingsModel.tableSettings, values);
+  }
+
+  Future<int> insert(String table, Map<String, dynamic> data, {ConflictAlgorithm? conflictAlgorithm}) async {
 
     final db = await database;
-    return await db.insert(table, data);
+    return await db.insert(table, data, conflictAlgorithm: conflictAlgorithm);
   }
 
   Future<List<Map<String, dynamic>>> query(String table,

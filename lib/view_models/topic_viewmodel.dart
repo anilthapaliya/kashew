@@ -24,12 +24,18 @@ class TopicViewModel extends ChangeNotifier {
 
   Future<void> loadTopics() async {
 
-    if (topics != null) return;
-
     isTopicLoading = true;
-    topics ??= await topicRepo.getAllTopics();
+    topics = await topicRepo.getLatestTopics();
     notifyListeners();
     isTopicLoading = false;
+  }
+
+  Future<void> updateLastUpdated(TopicModel model) async {
+
+    model.lastUpdated = DateTime.now().millisecondsSinceEpoch;
+    await topicRepo.updateTopic(model);
+    await loadTopics();
+    notifyListeners();
   }
 
   Future<int> addTopic(TopicModel model) async {
@@ -53,6 +59,7 @@ class TopicViewModel extends ChangeNotifier {
     if (id > 0) {
       model.id = id;
       topics!.add(model);
+      topics!.sort((a, b) => a.lastUpdated.compareTo(b.lastUpdated));
       isTopicAdding = false;
       notifyListeners();
       return Constants.success;

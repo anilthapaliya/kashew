@@ -21,23 +21,29 @@ class CurrencyModel {
     usd: Icons.attach_money,
     gbp: Icons.currency_pound,
     yen: Icons.currency_yen,
+    inr: Icons.currency_rupee,
+    aud: Icons.attach_money,
     xxx: Icons.payments
   };
 
   static final Map<String, String> currencyMap = {
     eur: "Euro",
     usd: "US Dollar",
-    gbp: "GBP",
+    gbp: "Pound Sterling",
     yen: "Yen",
     npr: "NRs",
+    inr: "Rupee",
+    aud: "Australian Dollar",
     xxx: "XXX"
   };
 
   static final String eur = "EUR";
   static final String usd = "USD";
   static final String gbp = "GBP";
-  static final String npr = "NPR";
   static final String yen = "YEN";
+  static final String npr = "NPR";
+  static final String inr = "INR";
+  static final String aud = "AUD";
   static final String xxx = "XXX";
 
 }

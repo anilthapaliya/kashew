@@ -56,4 +56,21 @@ class CommonUtils {
     return text[0].toUpperCase() + text.substring(1);
   }
 
+  static String formatDateHeader(DateTime date) {
+
+    DateTime now = DateTime.now();
+
+    if (isSameDay(date, now)) return "Today";
+    if (isSameDay(date, now.subtract(Duration(days: 1)))) return "Yesterday";
+    if (date.year == now.year) return DateFormat("MMM d").format(date);
+    return DateFormat("MMM d, yyyy").format(date);
+  }
+
+  static bool isSameDay(DateTime a, DateTime b) {
+
+    return a.year == b.year &&
+        a.month == b.month &&
+        a.day == b.day;
+  }
+
 }

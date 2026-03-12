@@ -94,7 +94,8 @@ class _AddTopicWidgetState extends State<AddTopicWidget> {
                             name: topicController.text,
                             description: descriptionController.text,
                             currency: currencyViewModel.defaultCurrency!.code,
-                            dbDateTime: selectedDate.millisecondsSinceEpoch);
+                            dbDateTime: selectedDate.millisecondsSinceEpoch,
+                            lastUpdated: DateTime.now().millisecondsSinceEpoch);
                         int status = await topicVideModel.saveTopic(model);
                         if (status == Constants.success && context.mounted) Navigator.pop(context, model);
                       }
@@ -228,6 +229,7 @@ class _AddTopicWidgetState extends State<AddTopicWidget> {
                         description: descriptionController.text,
                         currency: currencyViewModel.defaultCurrency!.code,
                         dbDateTime: selectedDate.millisecondsSinceEpoch,
+                        lastUpdated: DateTime.now().millisecondsSinceEpoch
                       );
                       int status = await topicViewModel!.addTopic(model);
                       if (status == Constants.success && context.mounted) {

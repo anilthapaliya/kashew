@@ -46,7 +46,7 @@ class _TopicsWidgetState extends State<TopicsWidget> {
                   ... (topicViewModel.isTopicLoading) ? [const Center(child: CircularProgressIndicator())]:
                   (topicViewModel.topics == null || topicViewModel.topics!.isEmpty) ?
                   [noTopicFound()] :
-                  List.generate(topicViewModel.topics!.length, (index) => topicCard(topicViewModel.topics![index])).reversed,
+                  List.generate(topicViewModel.topics!.length, (index) => topicCard(topicViewModel.topics![index])),
                 ]);
           },
         ),

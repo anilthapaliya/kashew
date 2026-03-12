@@ -12,6 +12,7 @@ class Constants {
   static final String expenseDetails = "/expense-details";
   static final String settings = "/settings";
   static final String topicOnlyList = "/topic-only-list";
+  static final String currencyOnlyList = "/currency-only-list";
 
   // App Images
   static final String imgLogo = "assets/images/kashew_logo.png";
@@ -23,6 +24,7 @@ class Constants {
   static final String lblAppBarAddExpense = "Add Expense";
   static final String lblAppBarSave = "Save";
   static final String lblAppBarTopicList = "All Topics";
+  static final String lblAppBarSettings = "Settings";
   static final String lblSubtitle = "Personal Expense Tracker";
   static final String lblTotalExpense = "Total Expense";
   static final String lblMonthlyExpense = "Monthly Expense";
@@ -45,6 +47,11 @@ class Constants {
   static final String lblTopic = "Topic";
   static final String lblNoTopics = "No topics found!";
   static final String lblNoExpenses = "No expenses";
+  static final String lblPreferences = "Preferences";
+  static final String lblAppearance = "Appearance";
+  static final String lblCurrencySettings = "Currency Settings";
+  static final String lblAboutApp = "About App";
+  static final String lblHelpSupport = "Help & Support";
 
   static final String btnCreateTopic = "Create Topic";
   static final String btnAddExpense = "Add Expense";
@@ -70,6 +77,9 @@ class Constants {
   static final String errTopicName = "Please enter a suitable topic.";
   static final String errExpenseTitle = "Please enter a suitable title.";
   static final String errExpenseAmount = "Please enter a valid amount.";
+
+  // Settings key-value pair
+  static final String settingsCurrency = "currency";
 
   static final int maxAmountThreshold = 9999999999;
   static final int success = 1;

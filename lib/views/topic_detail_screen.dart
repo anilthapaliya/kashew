@@ -12,6 +12,7 @@ import 'package:kashew/view_models/expense_viewmodel.dart';
 import 'package:kashew/view_models/topic_viewmodel.dart';
 import 'package:kashew/views/widgets/add_expense_widget.dart';
 import 'package:kashew/views/widgets/add_topic_widget.dart';
+import 'package:kashew/views/widgets/date_header.dart';
 import 'package:provider/provider.dart';
 
 class TopicDetailScreen extends StatefulWidget {
@@ -93,7 +94,7 @@ class _TopicDetailScreenState extends State<TopicDetailScreen> {
                     children: [
                       Text(Constants.lblTotalExpense.toUpperCase(),
                           style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(12), fontWeight: FontWeight.w500)),
-                      Text('\$9867.4',
+                      Text(expenseViewModel.getTotalExpenses(topicModel.id!).toString(),
                           style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(25), fontWeight: FontWeight.bold))
                     ],
                   ),
@@ -111,61 +112,74 @@ class _TopicDetailScreenState extends State<TopicDetailScreen> {
                   ),
                 ),
                 Expanded(
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: R.w(15), vertical: R.h(5)),
-                      child: Column(
-                        children: [
-                          ... (expenseViewModel.isExpenseLoading) ? [const Center(child: CircularProgressIndicator())]:
-                          (expenseViewModel.expenses == null || expenseViewModel.expenses!.isEmpty) ?
-                          [noExpenseFound()] :
-                          List.generate(expenseViewModel.expenses!.length,
-                                  (index) {
-                            final expense = expenseViewModel.expenses![index];
-                            return Slidable(
-                              key: ValueKey(expense.id),
-                              endActionPane: ActionPane(
-                                motion: const DrawerMotion(),
-                                children: [
-                                  CustomSlidableAction(
-                                    flex: 1,
-                                    autoClose: true,
-                                    onPressed: (context) => showEditExpensePopup(expense),
-                                    child: Container(
-                                      margin: EdgeInsets.only(bottom: R.h(10), left: R.w(3), right: R.w(3)),
-                                      decoration: BoxDecoration(
-                                        color: Colors.blue,
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      child: Center(
-                                        child: Icon(Icons.edit, size: R.w(25), color: HexColor.fromHex(Constants.pureWhiteColor)),
-                                      ),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: R.w(15), vertical: R.h(5)),
+                    child: (expenseViewModel.isExpenseLoading) ? const Center(child: CircularProgressIndicator()):
+                    (expenseViewModel.groupExpenses == null || expenseViewModel.groupExpenses!.isEmpty) ?
+                    noExpenseFound() :
+                    ListView.builder(
+                        itemCount: expenseViewModel.groupExpenses!.length,
+                        itemBuilder: (context, index) {
+                          final group = expenseViewModel.groupExpenses![index];
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              DateHeader(date: group.date),
+                              Card(
+                                margin: EdgeInsets.only(bottom: R.h(10)),
+                                elevation: 0,
+                                color: HexColor.fromHex(Constants.pureWhiteColor),
+                                child: Column(
+                                  children: [
+                                    ListView.separated(
+                                      itemCount: group.expenses.length,
+                                      shrinkWrap: true,
+                                      separatorBuilder: (context, index) => Divider(height: 1, indent: R.w(20), endIndent: R.w(20), color: HexColor.fromHex(Constants.dividerColor)),
+                                      itemBuilder: (context, index) {
+                                        final expense = group.expenses[index];
+                                        return Slidable(
+                                          key: ValueKey(expense.id),
+                                          endActionPane: ActionPane(
+                                              motion: const DrawerMotion(),
+                                              children: [
+                                                CustomSlidableAction(
+                                                  flex: 1,
+                                                  autoClose: true,
+                                                  onPressed: (context) => showEditExpensePopup(expense),
+                                                  child: Container(
+                                                      margin: EdgeInsets.only(bottom: R.h(10), left: R.w(3), right: R.w(3)),
+                                                      decoration: BoxDecoration(
+                                                          color: Colors.blue,
+                                                          borderRadius: BorderRadius.circular(20)),
+                                                      child: Center(
+                                                        child: Icon(Icons.edit, size: R.w(25), color: HexColor.fromHex(Constants.pureWhiteColor)),
+                                                      )),
+                                                ),
+                                                CustomSlidableAction(
+                                                  flex: 1,
+                                                  autoClose: true,
+                                                  onPressed: (context) => showExpenseDeleteDialog(context, expense),
+                                                  child: Container(
+                                                      margin: EdgeInsets.only(bottom: R.h(10), left: R.w(3), right: R.w(3)),
+                                                      decoration: BoxDecoration(
+                                                          color: Colors.red,
+                                                          borderRadius: BorderRadius.circular(20)),
+                                                      child: Center(
+                                                        child: Icon(Icons.delete, size: R.w(25), color: HexColor.fromHex(Constants.pureWhiteColor)),
+                                                      )),
+                                                ),
+                                              ]
+                                          ),
+                                          child: expenseCard(expense, categoryViewModel!.getIconByCategoryId(expense.categoryId!)),
+                                        );
+                                      },
                                     ),
-                                  ),
-                                  CustomSlidableAction(
-                                    flex: 1,
-                                    autoClose: true,
-                                    onPressed: (context) => showExpenseDeleteDialog(context, expense),
-                                    child: Container(
-                                      margin: EdgeInsets.only(bottom: R.h(10), left: R.w(3), right: R.w(3)),
-                                      decoration: BoxDecoration(
-                                        color: Colors.red,
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      child: Center(
-                                        child: Icon(Icons.delete, size: R.w(25), color: HexColor.fromHex(Constants.pureWhiteColor)),
-                                      ),
-                                    ),
-                                  ),
-                                ]
+                                  ]
+                                )
                               ),
-                              child: expenseCard(expense, categoryViewModel!.getIconByCategoryId(expense.categoryId!)),
-                            );
-                          }).reversed.toList(),
-                        ]
-                      ),
-                    ),
+                            ],
+                          );
+                        }),
                   ),
                 ),
 
@@ -182,31 +196,26 @@ class _TopicDetailScreenState extends State<TopicDetailScreen> {
 
   Widget expenseCard(ExpenseModel expense, IconData icon) {
 
-    return Card(
-      margin: EdgeInsets.only(bottom: R.h(10)),
-      elevation: 0,
-      color: HexColor.fromHex(Constants.pureWhiteColor),
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: R.h(15), horizontal: R.w(Constants.stdMargin)),
-        child: Row(
-          children: [
-            Container(
-              margin: EdgeInsets.only(right: R.w(10)),
-              width: R.w(30), height: R.h(30),
-              decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), color: HexColor.fromHex(Constants.warmWhiteColor)),
-              child: Icon(icon, color: HexColor.fromHex(Constants.darkBgColor), size: R.w(15)),
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(expense.title, style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(13), fontWeight: FontWeight.bold),),
-                Text(CommonUtils.getReadableDateFromMs(expense.dbDateTime), style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(10), color: HexColor.fromHex(Constants.textSecondaryColor))),
-              ],
-            ),
-            Expanded(child: Container()),
-            Text(expense.amount.toString(), style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(12), fontWeight: FontWeight.bold, color: Colors.red)),
-          ],
-        ),
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: R.h(15), horizontal: R.w(Constants.stdMargin)),
+      child: Row(
+        children: [
+          Container(
+            margin: EdgeInsets.only(right: R.w(10)),
+            width: R.w(30), height: R.h(30),
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), color: HexColor.fromHex(Constants.warmWhiteColor)),
+            child: Icon(icon, color: HexColor.fromHex(Constants.darkBgColor), size: R.w(15)),
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(expense.title, style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(13), fontWeight: FontWeight.bold),),
+              Text(CommonUtils.getReadableDateFromMs(expense.dbDateTime), style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(10), color: HexColor.fromHex(Constants.textSecondaryColor))),
+            ],
+          ),
+          Expanded(child: Container()),
+          Text(expense.amount.toString(), style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(12), fontWeight: FontWeight.bold, color: Colors.red)),
+        ],
       ),
     );
   }
@@ -381,7 +390,7 @@ class _TopicDetailScreenState extends State<TopicDetailScreen> {
   @override
   void dispose() {
 
-    if (expenseViewModel != null) expenseViewModel!.expenses = null;
+    if (expenseViewModel != null) expenseViewModel!.groupExpenses = null;
     super.dispose();
   }
 

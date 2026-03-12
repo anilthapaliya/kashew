@@ -255,6 +255,7 @@ class _AddExpenseWidgetState extends State<AddExpenseWidget> {
                             final result = await Navigator.pushNamed(context, Constants.topicOnlyList);
                             if (result != null && result is TopicModel) {
                               topicViewModel.setSelectedTopic(result, notify: true);
+                              topicController.text = result.name;
                             }
                           },
                           readOnly: true,
@@ -313,7 +314,10 @@ class _AddExpenseWidgetState extends State<AddExpenseWidget> {
                               ? categoryViewModel.selectedCategory!.id! : Constants.defaultCategoryId;
 
                           int result = await expenseViewModel.addExpenseByValue(title, amount, date, note, categoryId, topicId);
-                          if (result == Constants.success && mounted) Navigator.pop(sheetContext);
+                          if (result == Constants.success && mounted) {
+                            await topicViewModel.updateLastUpdated(topicViewModel.selectedTopic!);
+                            Navigator.pop(sheetContext);
+                          }
                         },
                         icon: Icon(Icons.arrow_forward_rounded, size: R.w(20)),
                         style: ElevatedButton.styleFrom(
@@ -339,12 +343,17 @@ class _AddExpenseWidgetState extends State<AddExpenseWidget> {
   Future<void> _datePicker() async {
 
     final today = DateTime.now();
-    var firstDate = today; //today.subtract(Duration(days: 30));
-    final lastDate = today.add(Duration(days: 30));
+    var firstDate = today.subtract(Duration(days: 7));
+    var initialDate = today;
+    if (widget.topicModel != null) {
+      initialDate =
+          DateTime.fromMillisecondsSinceEpoch(widget.topicModel!.dbDateTime);
+    }
 
+    final lastDate = today.add(Duration(days: 30));
     final date = await showDatePicker(
       context: context,
-      initialDate: firstDate,
+      initialDate: initialDate,
       firstDate: firstDate,
       lastDate: lastDate,
     );
