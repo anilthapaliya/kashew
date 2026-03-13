@@ -3,6 +3,7 @@ import 'package:kashew/models/topic_model.dart';
 import 'package:kashew/utils/common_utils.dart';
 import 'package:kashew/utils/constants.dart';
 import 'package:kashew/utils/hex_color.dart';
+import 'package:kashew/utils/localization_extension.dart';
 import 'package:kashew/utils/responsive.dart';
 import 'package:kashew/view_models/topic_viewmodel.dart';
 import 'package:kashew/views/widgets/add_topic_widget.dart';
@@ -116,7 +117,7 @@ class _TopicsWidgetState extends State<TopicsWidget> {
 
   Widget noTopicFound() {
 
-    return Text(Constants.lblNoTopics,
+    return Text(context.lang.lblNoTopics,
         style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(12),
             color: HexColor.fromHex(Constants.textSecondaryColor)));
   }

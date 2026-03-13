@@ -3,6 +3,7 @@ import 'package:flutter/widget_previews.dart';
 import 'package:kashew/utils/constants.dart';
 import 'package:kashew/utils/hex_color.dart';
 import 'package:kashew/utils/responsive.dart';
+import 'package:kashew/view_models/language_viewmodel.dart';
 import 'package:kashew/view_models/splash_viewmodel.dart';
 import 'package:provider/provider.dart';
 
@@ -24,6 +25,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Future.microtask(() async {
 
       if (!mounted) return;
+      Provider.of<LanguageViewmodel>(context, listen: false).loadLanguage();
       final viewModel = Provider.of<SplashViewModel>(context, listen: false);
       await viewModel.initializeApp();
 

@@ -6,6 +6,7 @@ import 'package:kashew/models/topic_model.dart';
 import 'package:kashew/utils/common_utils.dart';
 import 'package:kashew/utils/constants.dart';
 import 'package:kashew/utils/hex_color.dart';
+import 'package:kashew/utils/localization_extension.dart';
 import 'package:kashew/utils/responsive.dart';
 import 'package:kashew/view_models/category_viewmodel.dart';
 import 'package:kashew/view_models/expense_viewmodel.dart';
@@ -92,7 +93,7 @@ class _TopicDetailScreenState extends State<TopicDetailScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text(Constants.lblTotalExpense.toUpperCase(),
+                      Text(context.lang.lblTotalExpense.toUpperCase(),
                           style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(12), fontWeight: FontWeight.w500)),
                       Text(expenseViewModel.getTotalExpenses(topicModel.id!).toString(),
                           style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(25), fontWeight: FontWeight.bold))
@@ -106,7 +107,7 @@ class _TopicDetailScreenState extends State<TopicDetailScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(Constants.lblExpenses, style: TextStyle(fontFamily: Constants.fontTitle, fontSize: R.sp(18), fontWeight: FontWeight.bold),),
+                      Text(context.lang.lblExpenses, style: TextStyle(fontFamily: Constants.fontTitle, fontSize: R.sp(18), fontWeight: FontWeight.bold),),
                       //Text(Constants.lblViewAll, style: TextStyle(fontFamily: Constants.fontTitle, fontSize: R.sp(12), fontWeight: FontWeight.bold, color: HexColor.fromHex(Constants.textSecondaryColor)),),
                     ],
                   ),
@@ -223,7 +224,7 @@ class _TopicDetailScreenState extends State<TopicDetailScreen> {
   Widget noExpenseFound() {
 
     return Center(
-      child: Text(Constants.lblNoExpenses,
+      child: Text(context.lang.lblNoExpenses,
           style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(12),
               color: HexColor.fromHex(Constants.textSecondaryColor))),
     );
@@ -251,7 +252,7 @@ class _TopicDetailScreenState extends State<TopicDetailScreen> {
               children: [
                 ListTile(
                   leading: Icon(Icons.edit, color: (model.isSystem == Constants.wahr) ? HexColor.fromHex(Constants.textSecondaryColor) : HexColor.fromHex(Constants.darkBgColor)),
-                  title: Text(Constants.menuEditTopic,
+                  title: Text(context.lang.menuEditTopic,
                       style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(15), color: (model.isSystem == Constants.wahr) ? HexColor.fromHex(Constants.textSecondaryColor) : HexColor.fromHex(Constants.darkBgColor))),
                   enabled: (model.isSystem == Constants.wahr) ? false : true,
                   onTap: () {
@@ -262,7 +263,7 @@ class _TopicDetailScreenState extends State<TopicDetailScreen> {
                 ListTile(
                   leading: Icon(Icons.delete, color: (model.isSystem == Constants.wahr) ? HexColor.fromHex(Constants.textSecondaryColor) : Colors.red),
                   title: Text(
-                    Constants.menuDeleteTopic,
+                    context.lang.menuDeleteTopic,
                     style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(15),
                         color: (model.isSystem == Constants.wahr) ? HexColor.fromHex(Constants.textSecondaryColor) :  Colors.red),
                   ),
@@ -307,19 +308,19 @@ class _TopicDetailScreenState extends State<TopicDetailScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text(Constants.dialogTopicDeleteTitle, style: TextStyle(fontFamily: Constants.fontTitle, fontWeight: FontWeight.bold, fontSize: R.sp(18))),
-          content: Text(Constants.dialogTopicDeleteMessage,
+          title: Text(context.lang.dialogTopicDeleteTitle, style: TextStyle(fontFamily: Constants.fontTitle, fontWeight: FontWeight.bold, fontSize: R.sp(18))),
+          content: Text(context.lang.dialogTopicDeleteMessage,
               style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(15))
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context, false),
-              child: Text(Constants.dialogCancel, style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(15))),
+              child: Text(context.lang.dialogCancel, style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(15))),
             ),
             TextButton(
               onPressed: () => Navigator.pop(context, true),
               child: Text(
-                Constants.dialogDeleteConfirm,
+                context.lang.dialogDeleteConfirm,
                 style: TextStyle(fontFamily: Constants.fontBody, fontWeight: FontWeight.bold, fontSize: R.sp(15), color: Colors.red),
               ),
             ),
@@ -360,19 +361,19 @@ class _TopicDetailScreenState extends State<TopicDetailScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text(Constants.dialogExpenseDeleteTitle, style: TextStyle(fontFamily: Constants.fontTitle, fontWeight: FontWeight.bold, fontSize: R.sp(18))),
-          content: Text(Constants.dialogExpenseDeleteMessage,
+          title: Text(context.lang.dialogExpenseDeleteTitle, style: TextStyle(fontFamily: Constants.fontTitle, fontWeight: FontWeight.bold, fontSize: R.sp(18))),
+          content: Text(context.lang.dialogExpenseDeleteMessage,
               style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(15))
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context, false),
-              child: Text(Constants.dialogCancel, style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(15))),
+              child: Text(context.lang.dialogCancel, style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(15))),
             ),
             TextButton(
               onPressed: () => Navigator.pop(context, true),
               child: Text(
-                Constants.dialogDeleteConfirm,
+                context.lang.dialogDeleteConfirm,
                 style: TextStyle(fontFamily: Constants.fontBody, fontWeight: FontWeight.bold, fontSize: R.sp(15), color: Colors.red),
               ),
             ),

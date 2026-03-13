@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:kashew/l10n/app_localizations.dart';
 import 'package:kashew/models/currency_model.dart';
 import 'package:kashew/utils/constants.dart';
 import 'package:kashew/utils/hex_color.dart';
+import 'package:kashew/utils/localization_extension.dart';
 import 'package:kashew/utils/responsive.dart';
 import 'package:kashew/view_models/currency_viewmodel.dart';
+import 'package:kashew/view_models/language_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -22,7 +25,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       backgroundColor: HexColor.fromHex(Constants.warmWhiteColor),
       appBar: AppBar(
         centerTitle: true,
-        title: Text(Constants.lblAppBarSettings, overflow: TextOverflow.fade,
+        title: Text(context.lang.lblAppBarSettings, overflow: TextOverflow.fade,
             textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontTitle,
                 fontSize: R.sp(16), fontWeight: FontWeight.bold, color: HexColor.fromHex(Constants.darkBgColor))),
       ),
@@ -40,7 +43,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   children: [
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: R.w(20)),
-                      child: Text(Constants.lblPreferences, overflow: TextOverflow.fade,
+                      child: Text(context.lang.lblPreferences, overflow: TextOverflow.fade,
                           textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontBody,
                               fontSize: R.sp(14), color: HexColor.fromHex(Constants.darkBgColor))),
                     ),
@@ -58,7 +61,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   children: [
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: R.w(20)),
-                      child: Text(Constants.lblAboutApp, overflow: TextOverflow.fade,
+                      child: Text(context.lang.lblAboutApp, overflow: TextOverflow.fade,
                           textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontBody,
                               fontSize: R.sp(14), color: HexColor.fromHex(Constants.darkBgColor))),
                     ),
@@ -80,11 +83,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
         color: HexColor.fromHex(Constants.pureWhiteColor),
         child: Column(
           children: [
-            settingsRow(Constants.lblAppearance, Icons.dark_mode, null, changeAppearance),
+            settingsRow(context.lang.lblAppearance, Icons.dark_mode, null, changeAppearance),
             Divider(height: 1, indent: R.w(5), endIndent: R.w(5), color: HexColor.fromHex(Constants.dividerColor)),
             Consumer<CurrencyViewModel>(builder: (context, currencyViewModel, child) {
-              return settingsRow(Constants.lblCurrencySettings,
-                  Icons.money, sideWidget(currencyViewModel.defaultCurrency!.currency!), showCurrencyList);
+              return settingsRow(context.lang.lblCurrencySettings, Icons.money,
+                  sideWidget(currencyViewModel.defaultCurrency!.currency!), showCurrencyList);
+            }),
+            Consumer<LanguageViewmodel>(builder: (context, languageViewModel, child) {
+              return settingsRow(context.lang.lblLanguage, Icons.language,
+                  sideWidget(languageViewModel.locale.languageCode), showLanguageList);
             }),
           ],
         )
@@ -99,9 +106,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
         color: HexColor.fromHex(Constants.pureWhiteColor),
         child: Column(
           children: [
-            settingsRow(Constants.lblHelpSupport, Icons.help, null, (){}),
+            settingsRow(context.lang.lblHelpSupport, Icons.help, null, (){}),
             Divider(height: 1, indent: R.w(10), endIndent: R.w(10), color: HexColor.fromHex(Constants.dividerColor)),
-            settingsRow("App Version ${Constants.appVersion}", Icons.info, null, changeAppearance),
+            settingsRow("App Version ${context.lang.appVersion}", Icons.info, null, changeAppearance),
           ],
         )
     );
@@ -157,7 +164,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   void showCurrencyList() async {
 
-    final currency = await Navigator.pushNamed(context, Constants.currencyOnlyList);
+    Navigator.pushNamed(context, Constants.currencyOnlyList);
+  }
+
+  void showLanguageList() async {
+
+    Navigator.pushNamed(context, Constants.languageOnlyList);
   }
 
 }

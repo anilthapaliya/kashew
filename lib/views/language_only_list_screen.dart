@@ -1,29 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:kashew/models/currency_model.dart';
+import 'package:kashew/models/language_model.dart';
 import 'package:kashew/utils/constants.dart';
 import 'package:kashew/utils/hex_color.dart';
 import 'package:kashew/utils/localization_extension.dart';
 import 'package:kashew/utils/responsive.dart';
-import 'package:kashew/view_models/currency_viewmodel.dart';
+import 'package:kashew/view_models/language_viewmodel.dart';
 import 'package:provider/provider.dart';
 
-class CurrencyListScreen extends StatefulWidget {
-  const CurrencyListScreen({super.key});
+class LanguageListScreen extends StatefulWidget {
+  const LanguageListScreen({super.key});
 
   @override
-  State<CurrencyListScreen> createState() => _CurrencyListScreenState();
+  State<LanguageListScreen> createState() => _LanguageListScreenState();
 }
 
-class _CurrencyListScreenState extends State<CurrencyListScreen> {
+class _LanguageListScreenState extends State<LanguageListScreen> {
 
-  late CurrencyViewModel currencyViewModel;
+  late LanguageViewmodel languageViewmodel;
 
   @override
   void didChangeDependencies() {
-    super.didChangeDependencies();
 
-    currencyViewModel = Provider.of<CurrencyViewModel>(context, listen: false);
-    currencyViewModel.loadDefaultCurrency();
+    super.didChangeDependencies();
+    languageViewmodel = Provider.of<LanguageViewmodel>(context, listen: false);
   }
 
   @override
@@ -32,7 +31,7 @@ class _CurrencyListScreenState extends State<CurrencyListScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(context.lang.lblAppBarCurrencyList, overflow: TextOverflow.fade,
+        title: Text(context.lang.lblAppBarLanguageList, overflow: TextOverflow.fade,
             textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontTitle,
                 fontSize: R.sp(16), fontWeight: FontWeight.bold, color: HexColor.fromHex(Constants.darkBgColor))),
       ),
@@ -49,13 +48,13 @@ class _CurrencyListScreenState extends State<CurrencyListScreen> {
           children: [
             Padding(
               padding: EdgeInsets.symmetric(horizontal: R.w(20)),
-              child: Text(context.lang.lblCurrencies, overflow: TextOverflow.fade,
+              child: Text(context.lang.lblLanguage, overflow: TextOverflow.fade,
                   textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontBody,
                       fontSize: R.sp(14), fontWeight: FontWeight.bold, color: HexColor.fromHex(Constants.darkBgColor))),
             ),
             SizedBox(height: R.h(10)),
-            Consumer<CurrencyViewModel>(
-                builder: (context, currencyViewModel, child) {
+            Consumer<LanguageViewmodel>(
+                builder: (context, languageViewModel, child) {
                   return Card(
                     elevation: 0,
                     color: HexColor.fromHex(Constants.pureWhiteColor),
@@ -65,9 +64,9 @@ class _CurrencyListScreenState extends State<CurrencyListScreen> {
                         children: [
                           ListView.separated(
                               shrinkWrap: true,
-                              itemCount: currencyViewModel.currencies.length,
+                              itemCount: languageViewModel.languages.length,
                               itemBuilder: (context, index) {
-                                return singleTopic(currencyViewModel.currencies[index]);
+                                return singleTopic(languageViewModel.languages[index]);
                               },
                               separatorBuilder: (context, index) =>
                                   Divider(height: 1, indent: R.w(20), endIndent: R.w(20), color: HexColor.fromHex(Constants.dividerColor))),
@@ -80,20 +79,20 @@ class _CurrencyListScreenState extends State<CurrencyListScreen> {
     );
   }
 
-  Widget singleTopic(CurrencyModel currency) {
+  Widget singleTopic(LanguageModel language) {
 
     return InkWell(
       onTap: () {
-        currencyViewModel.setDefaultCurrency(currency);
-        Navigator.pop(context, currency);
+        languageViewmodel.changeLanguage(language.code);
+        Navigator.pop(context, language);
       },
       child: Container(
         padding: EdgeInsets.symmetric(vertical: R.h(15), horizontal: R.w(20)),
         child: Row(
           children: [
-            Icon(currency.symbol!, color: HexColor.fromHex(Constants.textSecondaryColor)),
-            SizedBox(width: R.w(20)),
-            Text("${currency.currency!} (${currency.code})", overflow: TextOverflow.fade,
+            //Icon(language.symbol!, color: HexColor.fromHex(Constants.textSecondaryColor)),
+            //SizedBox(width: R.w(20)),
+            Text(language.language, overflow: TextOverflow.fade,
                 textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontBody,
                     fontSize: R.sp(14), color: HexColor.fromHex(Constants.darkBgColor))),
           ],

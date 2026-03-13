@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kashew/models/topic_model.dart';
 import 'package:kashew/utils/constants.dart';
 import 'package:kashew/utils/hex_color.dart';
+import 'package:kashew/utils/localization_extension.dart';
 import 'package:kashew/utils/responsive.dart';
 import 'package:kashew/view_models/topic_viewmodel.dart';
 import 'package:provider/provider.dart';
@@ -21,7 +22,7 @@ class _TopicListScreenState extends State<TopicListScreen> {
     return Scaffold(
       appBar: AppBar(
           centerTitle: true,
-          title: Text(Constants.lblAppBarTopicList, overflow: TextOverflow.fade,
+          title: Text(context.lang.lblAppBarTopicList, overflow: TextOverflow.fade,
               textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontTitle,
                   fontSize: R.sp(16), fontWeight: FontWeight.bold, color: HexColor.fromHex(Constants.darkBgColor))),
         ),
@@ -38,7 +39,7 @@ class _TopicListScreenState extends State<TopicListScreen> {
           children: [
             Padding(
               padding: EdgeInsets.symmetric(horizontal: R.w(20)),
-              child: Text(Constants.lblTopics, overflow: TextOverflow.fade,
+              child: Text(context.lang.lblTopics, overflow: TextOverflow.fade,
                   textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontBody,
                       fontSize: R.sp(14), fontWeight: FontWeight.bold, color: HexColor.fromHex(Constants.darkBgColor))),
             ),

@@ -5,6 +5,7 @@ import 'package:kashew/models/topic_model.dart';
 import 'package:kashew/utils/common_utils.dart';
 import 'package:kashew/utils/constants.dart';
 import 'package:kashew/utils/hex_color.dart';
+import 'package:kashew/utils/localization_extension.dart';
 import 'package:kashew/utils/responsive.dart';
 import 'package:kashew/view_models/category_viewmodel.dart';
 import 'package:kashew/view_models/expense_viewmodel.dart';
@@ -97,7 +98,7 @@ class _AddExpenseWidgetState extends State<AddExpenseWidget> {
                     children: [
                       IconButton(onPressed: () => Navigator.pop(context), icon: Icon(Icons.close)),
                       const Expanded(child: SizedBox()),
-                      Text(Constants.lblAppBarAddExpense, textAlign: TextAlign.center, style: TextStyle(fontFamily: Constants.fontTitle,
+                      Text(context.lang.lblAppBarAddExpense, textAlign: TextAlign.center, style: TextStyle(fontFamily: Constants.fontTitle,
                           fontSize: R.sp(16), fontWeight: FontWeight.bold, color: HexColor.fromHex(Constants.darkBgColor))),
                       const Expanded(child: SizedBox()),
                       widget.expenseModel != null ?
@@ -111,11 +112,11 @@ class _AddExpenseWidgetState extends State<AddExpenseWidget> {
                             int categoryId = (categoryViewModel.selectedCategory != null)
                                 ? categoryViewModel.selectedCategory!.id! : Constants.defaultCategoryId;
                             int topicId = widget.topicModel!.id!;
-                            int result = await expenseViewModel.updateExpenseByValue(widget.expenseModel!.id!, title, amount, date, note, categoryId, topicId);
+                            int result = await expenseViewModel.updateExpenseByValue(context.lang, widget.expenseModel!.id!, title, amount, date, note, categoryId, topicId);
                             if (result == Constants.success && mounted) Navigator.pop(sheetContext);
                           }
                         } : null,
-                        child: Text(Constants.lblAppBarSave,
+                        child: Text(context.lang.lblAppBarSave,
                             textAlign: TextAlign.center, style: TextStyle(fontFamily: Constants.fontTitle,
                                 fontSize: R.sp(14), fontWeight: FontWeight.bold, color: HexColor.fromHex(Constants.textSecondaryColor))),) :
                       IconButton(onPressed: null, icon: Icon(Icons.circle, color: HexColor.fromHex(Constants.warmWhiteColor))),
@@ -124,13 +125,13 @@ class _AddExpenseWidgetState extends State<AddExpenseWidget> {
 
                   // Expense Title
                   SizedBox(height: R.h(40)),
-                  Text(Constants.lblExpenseTitle, textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontTitle,
+                  Text(context.lang.lblExpenseTitle, textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontTitle,
                       fontSize: R.sp(12), fontWeight: FontWeight.bold, color: HexColor.fromHex(Constants.darkBgColor))),
                   TextField(
                     controller: titleController,
                     keyboardType: TextInputType.name,
                     decoration: InputDecoration(
-                        hintText: Constants.hintExpenseTitle,
+                        hintText: context.lang.hintExpenseTitle,
                         errorText: expenseViewModel.isError ? expenseViewModel.errorTitle : null,
                         filled: true,
                         fillColor: HexColor.fromHex(Constants.lightGrayColor),
@@ -139,13 +140,13 @@ class _AddExpenseWidgetState extends State<AddExpenseWidget> {
 
                   // Expense Amount
                   SizedBox(height: R.h(20)),
-                  Text(Constants.lblExpenseAmount, textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontTitle,
+                  Text(context.lang.lblExpenseAmount, textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontTitle,
                       fontSize: R.sp(12), fontWeight: FontWeight.bold, color: HexColor.fromHex(Constants.darkBgColor))),
                   TextField(
                     controller: amountController,
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
-                        hintText: Constants.hintAmount,
+                        hintText: context.lang.hintAmount,
                         errorText: expenseViewModel.isError ? expenseViewModel.errorAmount : null,
                         suffixIcon: Icon(Icons.payments),
                         filled: true,
@@ -161,10 +162,10 @@ class _AddExpenseWidgetState extends State<AddExpenseWidget> {
                           flex: 5,
                           child: Row(
                             children: [
-                              Text(Constants.lblCategory, textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontTitle,
+                              Text(context.lang.lblCategory, textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontTitle,
                                   fontSize: R.sp(12), fontWeight: FontWeight.bold, color: HexColor.fromHex(Constants.darkBgColor))),
                               const Expanded(child: SizedBox()),
-                              Text(Constants.lblOptional, textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontTitle,
+                              Text(context.lang.lblOptional, textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontTitle,
                                   fontSize: R.sp(10), color: HexColor.fromHex(Constants.darkBgColor))),
                             ],
                           )),
@@ -173,7 +174,7 @@ class _AddExpenseWidgetState extends State<AddExpenseWidget> {
                           flex: 4,
                           child: Row(
                             children: [
-                              Text(Constants.lblDate, textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontTitle,
+                              Text(context.lang.lblDate, textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontTitle,
                                   fontSize: R.sp(12), fontWeight: FontWeight.bold, color: HexColor.fromHex(Constants.darkBgColor))),
                               const Expanded(child: SizedBox()),
                             ],
@@ -216,7 +217,7 @@ class _AddExpenseWidgetState extends State<AddExpenseWidget> {
                           readOnly: true,
                           onTap: _datePicker,
                           decoration: InputDecoration(
-                              hintText: Constants.hintToday,
+                              hintText: context.lang.hintToday,
                               suffixIcon: Icon(Icons.calendar_month),
                               filled: true,
                               fillColor: HexColor.fromHex(Constants.lightGrayColor),
@@ -234,10 +235,10 @@ class _AddExpenseWidgetState extends State<AddExpenseWidget> {
                           flex: 10,
                           child: Row(
                             children: [
-                              Text(Constants.lblTopic, textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontTitle,
+                              Text(context.lang.lblTopic, textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontTitle,
                                   fontSize: R.sp(12), fontWeight: FontWeight.bold, color: HexColor.fromHex(Constants.darkBgColor))),
                               const Expanded(child: SizedBox()),
-                              Text(Constants.lblOptional, textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontTitle,
+                              Text(context.lang.lblOptional, textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontTitle,
                                   fontSize: R.sp(10), color: HexColor.fromHex(Constants.darkBgColor))),
                             ],
                           )),
@@ -260,7 +261,7 @@ class _AddExpenseWidgetState extends State<AddExpenseWidget> {
                           },
                           readOnly: true,
                           decoration: InputDecoration(
-                              hintText: Constants.hintLinkTopic,
+                              hintText: context.lang.hintLinkTopic,
                               prefixIcon: Icon(Icons.link_rounded),
                               suffixIcon: Icon(Icons.keyboard_arrow_right_rounded),
                               filled: true,
@@ -276,10 +277,10 @@ class _AddExpenseWidgetState extends State<AddExpenseWidget> {
                   SizedBox(height: R.h(20)),
                   Row(
                     children: [
-                      Text(Constants.lblNotes, textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontTitle,
+                      Text(context.lang.lblNotes, textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontTitle,
                           fontSize: R.sp(12), fontWeight: FontWeight.bold, color: HexColor.fromHex(Constants.darkBgColor))),
                       const Expanded(child: SizedBox()),
-                      Text(Constants.lblOptional, textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontTitle,
+                      Text(context.lang.lblOptional, textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontTitle,
                           fontSize: R.sp(10), color: HexColor.fromHex(Constants.darkBgColor))),
                     ],
                   ),
@@ -290,7 +291,7 @@ class _AddExpenseWidgetState extends State<AddExpenseWidget> {
                     minLines: 3,
                     maxLength: 100,
                     decoration: InputDecoration(
-                        hintText: Constants.hintNotes,
+                        hintText: context.lang.hintNotes,
                         filled: true,
                         fillColor: HexColor.fromHex(Constants.lightGrayColor),
                         border: OutlineInputBorder(borderSide: BorderSide.none, borderRadius: BorderRadius.circular(4))),
@@ -313,7 +314,7 @@ class _AddExpenseWidgetState extends State<AddExpenseWidget> {
                           int categoryId = (categoryViewModel.selectedCategory != null)
                               ? categoryViewModel.selectedCategory!.id! : Constants.defaultCategoryId;
 
-                          int result = await expenseViewModel.addExpenseByValue(title, amount, date, note, categoryId, topicId);
+                          int result = await expenseViewModel.addExpenseByValue(context.lang, title, amount, date, note, categoryId, topicId);
                           if (result == Constants.success && mounted) {
                             await topicViewModel.updateLastUpdated(topicViewModel.selectedTopic!);
                             Navigator.pop(sheetContext);
@@ -329,7 +330,7 @@ class _AddExpenseWidgetState extends State<AddExpenseWidget> {
                                 borderRadius: BorderRadius.circular(8)
                             )
                         ),
-                        label: Text(Constants.btnAddExpense, style: TextStyle(
+                        label: Text(context.lang.btnAddExpense, style: TextStyle(
                             fontFamily: Constants.fontBody, fontSize: R.sp(16), fontWeight: FontWeight.bold))
                     ),
                   ),

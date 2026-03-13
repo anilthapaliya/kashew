@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kashew/database/repositories/topic_repository.dart';
+import 'package:kashew/l10n/app_localizations.dart';
 import 'package:kashew/models/topic_model.dart';
 import 'package:kashew/utils/common_utils.dart';
 import 'package:kashew/utils/constants.dart';
@@ -38,11 +39,11 @@ class TopicViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<int> addTopic(TopicModel model) async {
+  Future<int> addTopic(AppLocalizations lang, TopicModel model) async {
 
     if (model.name.isEmpty || model.name.length < 3) {
       isError = true;
-      errorMessage = Constants.errTopicName;
+      errorMessage = lang.errTopicName;
       notifyListeners();
       return Constants.failure;
     }
@@ -70,11 +71,11 @@ class TopicViewModel extends ChangeNotifier {
     return Constants.failure;
   }
 
-  Future<int> saveTopic(TopicModel model) async {
+  Future<int> saveTopic(AppLocalizations lang, TopicModel model) async {
 
     if (model.name.isEmpty || model.name.length < 3) {
       isError = true;
-      errorMessage = Constants.errTopicName;
+      errorMessage = lang.errTopicName;
       notifyListeners();
       return Constants.failure;
     }

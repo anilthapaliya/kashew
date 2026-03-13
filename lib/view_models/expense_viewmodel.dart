@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kashew/l10n/app_localizations.dart';
 import 'package:kashew/models/expense_group_model.dart';
 import 'package:kashew/models/expense_model.dart';
 import 'package:kashew/database/repositories/expense_repository.dart';
@@ -70,11 +71,11 @@ class ExpenseViewModel extends ChangeNotifier {
     return groups;
   }
 
-  Future<int> addExpenseByValue(String title, String amount, DateTime date, String note, int categoryId, int topicId) async {
+  Future<int> addExpenseByValue(AppLocalizations lang, String title, String amount, DateTime date, String note, int categoryId, int topicId) async {
 
     if (title.isEmpty) {
       isError = true;
-      errorTitle = Constants.errExpenseTitle;
+      errorTitle = lang.errExpenseTitle;
       notifyListeners();
       return Constants.failure;
     }
@@ -86,7 +87,7 @@ class ExpenseViewModel extends ChangeNotifier {
     } on Exception {
       doubleAmount = 0;
       isError = true;
-      errorAmount = Constants.errExpenseAmount;
+      errorAmount = lang.errExpenseAmount;
       notifyListeners();
       return Constants.failure;
     }
@@ -120,11 +121,11 @@ class ExpenseViewModel extends ChangeNotifier {
     return Constants.failure;
   }
 
-  Future<int> updateExpenseByValue(int expenseId, String title, String amount, DateTime date, String note, int categoryId, int topicId) async {
+  Future<int> updateExpenseByValue(AppLocalizations lang, int expenseId, String title, String amount, DateTime date, String note, int categoryId, int topicId) async {
 
     if (title.isEmpty) {
       isError = true;
-      errorTitle = Constants.errExpenseTitle;
+      errorTitle = lang.errExpenseTitle;
       notifyListeners();
       return Constants.failure;
     }
@@ -136,7 +137,7 @@ class ExpenseViewModel extends ChangeNotifier {
     } on Exception {
       doubleAmount = 0;
       isError = true;
-      errorAmount = Constants.errExpenseAmount;
+      errorAmount = lang.errExpenseAmount;
       notifyListeners();
       return Constants.failure;
     }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kashew/models/currency_model.dart';
 import 'package:kashew/models/topic_model.dart';
 import 'package:kashew/utils/common_utils.dart';
+import 'package:kashew/utils/localization_extension.dart';
 import 'package:kashew/view_models/category_viewmodel.dart';
 import 'package:kashew/view_models/currency_viewmodel.dart';
 import 'package:kashew/view_models/topic_viewmodel.dart';
@@ -81,7 +82,7 @@ class _AddTopicWidgetState extends State<AddTopicWidget> {
                 children: [
                   IconButton(onPressed: () => Navigator.pop(context), icon: Icon(Icons.close)),
                   const Expanded(child: SizedBox()),
-                  Text(widget.topicModel != null ? Constants.lblAppBarEditTopic : Constants.lblAppBarAddTopic,
+                  Text(widget.topicModel != null ? context.lang.lblAppBarEditTopic : context.lang.lblAppBarAddTopic,
                       textAlign: TextAlign.center, style: TextStyle(fontFamily: Constants.fontTitle,
                       fontSize: R.sp(16), fontWeight: FontWeight.bold, color: HexColor.fromHex(Constants.darkBgColor))),
                   const Expanded(child: SizedBox()),
@@ -96,11 +97,11 @@ class _AddTopicWidgetState extends State<AddTopicWidget> {
                             currency: currencyViewModel.defaultCurrency!.code,
                             dbDateTime: selectedDate.millisecondsSinceEpoch,
                             lastUpdated: DateTime.now().millisecondsSinceEpoch);
-                        int status = await topicVideModel.saveTopic(model);
+                        int status = await topicVideModel.saveTopic(context.lang, model);
                         if (status == Constants.success && context.mounted) Navigator.pop(context, model);
                       }
                   } : null,
-                  child: Text(Constants.lblAppBarSave,
+                  child: Text(context.lang.lblAppBarSave,
                       textAlign: TextAlign.center, style: TextStyle(fontFamily: Constants.fontTitle,
                           fontSize: R.sp(14), fontWeight: FontWeight.bold, color: HexColor.fromHex(Constants.textSecondaryColor))),) :
                   IconButton(onPressed: null, icon: Icon(Icons.circle, color: HexColor.fromHex(Constants.warmWhiteColor))),
@@ -109,14 +110,14 @@ class _AddTopicWidgetState extends State<AddTopicWidget> {
 
               // Topic
               SizedBox(height: R.h(40)),
-              Text(Constants.lblTopicName, textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontTitle,
+              Text(context.lang.lblTopicName, textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontTitle,
                   fontSize: R.sp(12), fontWeight: FontWeight.bold, color: HexColor.fromHex(Constants.darkBgColor))),
               TextField(
                 controller: topicController,
                 enabled: !topicVideModel.isTopicAdding,
                 maxLength: 30,
                 decoration: InputDecoration(
-                    hintText: Constants.hintTopic,
+                    hintText: context.lang.hintTopic,
                     errorText: (topicViewModel != null && topicViewModel!.isError) ? topicViewModel!.errorMessage : null,
                     errorStyle: TextStyle(fontFamily: Constants.fontBody, color: Colors.red, fontSize: R.sp(10)),
                     filled: true,
@@ -144,10 +145,10 @@ class _AddTopicWidgetState extends State<AddTopicWidget> {
               SizedBox(height: R.h(20)),
               Row(
                 children: [
-                  Text(Constants.lblDescription, textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontTitle,
+                  Text(context.lang.lblDescription, textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontTitle,
                       fontSize: R.sp(12), fontWeight: FontWeight.bold, color: HexColor.fromHex(Constants.darkBgColor))),
                   const Expanded(child: SizedBox()),
-                  Text(Constants.lblOptional, textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontTitle,
+                  Text(context.lang.lblOptional, textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontTitle,
                       fontSize: R.sp(10), color: HexColor.fromHex(Constants.darkBgColor))),
                 ],
               ),
@@ -159,7 +160,7 @@ class _AddTopicWidgetState extends State<AddTopicWidget> {
                 minLines: 4,
                 maxLength: 100,
                 decoration: InputDecoration(
-                    hintText: Constants.hintDescription,
+                    hintText: context.lang.hintDescription,
                     filled: true,
                     fillColor: HexColor.fromHex(Constants.lightGrayColor),
                     border: OutlineInputBorder(borderSide: BorderSide.none, borderRadius: BorderRadius.circular(4))),
@@ -173,10 +174,10 @@ class _AddTopicWidgetState extends State<AddTopicWidget> {
                       flex: 5,
                       child: Row(
                         children: [
-                          Text(Constants.lblCurrency, textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontTitle,
+                          Text(context.lang.lblCurrency, textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontTitle,
                               fontSize: R.sp(12), fontWeight: FontWeight.bold, color: HexColor.fromHex(Constants.darkBgColor))),
                           const Expanded(child: SizedBox()),
-                          Text(Constants.lblOptional, textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontTitle,
+                          Text(context.lang.lblOptional, textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontTitle,
                               fontSize: R.sp(10), color: HexColor.fromHex(Constants.darkBgColor))),
                         ],
                       )),
@@ -231,7 +232,7 @@ class _AddTopicWidgetState extends State<AddTopicWidget> {
                         dbDateTime: selectedDate.millisecondsSinceEpoch,
                         lastUpdated: DateTime.now().millisecondsSinceEpoch
                       );
-                      int status = await topicViewModel!.addTopic(model);
+                      int status = await topicViewModel!.addTopic(context.lang, model);
                       if (status == Constants.success && context.mounted) {
                         Navigator.pop(context);
                       }
@@ -247,7 +248,7 @@ class _AddTopicWidgetState extends State<AddTopicWidget> {
                             borderRadius: BorderRadius.circular(8)
                         )
                     ),
-                    label: Text(Constants.btnCreateTopic, style: TextStyle(
+                    label: Text(context.lang.btnCreateTopic, style: TextStyle(
                         fontFamily: Constants.fontBody, fontSize: R.sp(16), fontWeight: FontWeight.bold))
                 ),
               ),
@@ -256,7 +257,7 @@ class _AddTopicWidgetState extends State<AddTopicWidget> {
               if (widget.topicModel == null) SizedBox(height: R.h(10)),
               if (widget.topicModel == null)
               Center(
-                child: Text(Constants.lblTopicHelp, style: TextStyle(
+                child: Text(context.lang.lblTopicHelp, textAlign: TextAlign.center, style: TextStyle(
                     fontFamily: Constants.fontBody, fontSize: R.sp(10), color: HexColor.fromHex(Constants.textSecondaryColor)
                 )),
               ),

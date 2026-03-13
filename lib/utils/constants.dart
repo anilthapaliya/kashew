@@ -13,73 +13,18 @@ class Constants {
   static final String settings = "/settings";
   static final String topicOnlyList = "/topic-only-list";
   static final String currencyOnlyList = "/currency-only-list";
+  static final String languageOnlyList = "/language-only-list";
 
   // App Images
   static final String imgLogo = "assets/images/kashew_logo.png";
 
-  // App Labels
-  static final String lblAppBarHome = "My Expenses";
-  static final String lblAppBarAddTopic = "Create New Topic";
-  static final String lblAppBarEditTopic = "Edit Topic";
-  static final String lblAppBarAddExpense = "Add Expense";
-  static final String lblAppBarSave = "Save";
-  static final String lblAppBarTopicList = "All Topics";
-  static final String lblAppBarSettings = "Settings";
-  static final String lblSubtitle = "Personal Expense Tracker";
-  static final String lblTotalExpense = "Total Expense";
-  static final String lblMonthlyExpense = "Monthly Expense";
-  static final String lblTopics = "Topics";
-  static final String lblRecentExpenses = "Recent Expenses";
-  static final String lblViewAll = "View All";
-  static final String lblSettings = "Settings";
-  static final String lblTopicName = "Topic Name";
-  static final String lblStartDate = "Start Date";
-  static final String lblOptional = "Optional";
-  static final String lblDescription = "Description";
-  static final String lblTopicHelp = "Topics help you organize your budget and expenses effortlessly.";
-  static final String lblCurrency = "Currency";
-  static final String lblExpenseTitle = "Title";
-  static final String lblExpenses = "All Expenses";
-  static final String lblExpenseAmount = "Amount";
-  static final String lblCategory = "Category";
-  static final String lblNotes = "Notes";
-  static final String lblDate = "Date";
-  static final String lblTopic = "Topic";
-  static final String lblNoTopics = "No topics found!";
-  static final String lblNoExpenses = "No expenses";
-  static final String lblPreferences = "Preferences";
-  static final String lblAppearance = "Appearance";
-  static final String lblCurrencySettings = "Currency Settings";
-  static final String lblAboutApp = "About App";
-  static final String lblHelpSupport = "Help & Support";
-
-  static final String btnCreateTopic = "Create Topic";
-  static final String btnAddExpense = "Add Expense";
-
-  static final String menuEditTopic = "Edit Topic";
-  static final String menuDeleteTopic = "Delete Topic";
-
-  static final String hintTopic =  "e.g., Trek to ABC";
-  static final String hintDescription = "What's this topic about?";
-  static final String hintToday = "Today";
-  static final String hintExpenseTitle = "What did you spend on?";
-  static final String hintNotes = "Add remarks or receipt details.";
-  static final String hintAmount = "0.00";
-  static final String hintLinkTopic = "Link to a topic";
-
-  static final String dialogTopicDeleteTitle = "Delete Topic";
-  static final String dialogTopicDeleteMessage = "Are you sure you want to delete this topic?\nAll related expenses will also be removed.";
-  static final String dialogDeleteConfirm = "Delete";
-  static final String dialogCancel = "Cancel";
-  static final String dialogExpenseDeleteTitle = "Delete Expense";
-  static final String dialogExpenseDeleteMessage = "Are you sure you want to delete this expense entry?";
-
-  static final String errTopicName = "Please enter a suitable topic.";
-  static final String errExpenseTitle = "Please enter a suitable title.";
-  static final String errExpenseAmount = "Please enter a valid amount.";
-
   // Settings key-value pair
   static final String settingsCurrency = "currency";
+  static final String settingsLanguage = "language";
+
+  static final String langEng = "en";
+  static final String langDe = "de";
+  static final String langEs = "es";
 
   static final int maxAmountThreshold = 9999999999;
   static final int success = 1;
