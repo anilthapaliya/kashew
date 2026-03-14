@@ -94,7 +94,7 @@ class _AddTopicWidgetState extends State<AddTopicWidget> {
                             id: widget.topicModel!.id,
                             name: topicController.text,
                             description: descriptionController.text,
-                            currency: currencyViewModel.defaultCurrency!.code,
+                            currency: currencyViewModel.defaultCurrency.code,
                             dbDateTime: selectedDate.millisecondsSinceEpoch,
                             lastUpdated: DateTime.now().millisecondsSinceEpoch);
                         int status = await topicVideModel.saveTopic(context.lang, model);
@@ -191,9 +191,9 @@ class _AddTopicWidgetState extends State<AddTopicWidget> {
                     child: DropdownMenu<CurrencyModel>(
                       enabled: !topicVideModel.isTopicAdding,
                       leadingIcon: widget.topicModel != null ? Icon(CurrencyModel.iconMap[widget.topicModel!.currency], color: HexColor.fromHex(Constants.accentColor))
-                          : currencyViewModel.defaultCurrency!.symbol != null ?
-                      Icon(currencyViewModel.defaultCurrency!.symbol, color: HexColor.fromHex(Constants.accentColor)) : null,
-                      hintText: widget.topicModel != null ? CurrencyModel.currencyMap[widget.topicModel!.currency] : currencyViewModel.defaultCurrency!.currency,
+                          : currencyViewModel.defaultCurrency.symbol != null ?
+                      Icon(currencyViewModel.defaultCurrency.symbol, color: HexColor.fromHex(Constants.accentColor)) : null,
+                      hintText: widget.topicModel != null ? CurrencyModel.currencyMap[widget.topicModel!.currency] : currencyViewModel.defaultCurrency.currency,
                       inputDecorationTheme: InputDecorationTheme(
                         filled: true,
                         fillColor: HexColor.fromHex(Constants.lightGrayColor),
@@ -228,7 +228,7 @@ class _AddTopicWidgetState extends State<AddTopicWidget> {
                       TopicModel model = TopicModel(
                         name: topicController.text,
                         description: descriptionController.text,
-                        currency: currencyViewModel.defaultCurrency!.code,
+                        currency: currencyViewModel.defaultCurrency.code,
                         dbDateTime: selectedDate.millisecondsSinceEpoch,
                         lastUpdated: DateTime.now().millisecondsSinceEpoch
                       );

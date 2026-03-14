@@ -459,6 +459,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Please enter a valid amount.'**
   String get errExpenseAmount;
+
+  /// No description provided for @lblWelcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to KASHew App'**
+  String get lblWelcome;
+
+  /// No description provided for @lblWelcomeMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Let\'s get you set up in a quick few steps.'**
+  String get lblWelcomeMessage;
+
+  /// No description provided for @lblSelectLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Select your Language'**
+  String get lblSelectLanguage;
+
+  /// No description provided for @lblSelectCurrency.
+  ///
+  /// In en, this message translates to:
+  /// **'Select your Currency'**
+  String get lblSelectCurrency;
+
+  /// No description provided for @btnGetStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Get Started'**
+  String get btnGetStarted;
+
+  /// No description provided for @lblTermsOfService.
+  ///
+  /// In en, this message translates to:
+  /// **'By continuing you agree to our Terms of Service and Privacy Policy.'**
+  String get lblTermsOfService;
 }
 
 class _AppLocalizationsDelegate

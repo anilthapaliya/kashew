@@ -59,5 +59,11 @@
   "dialogExpenseDeleteMessage": "Möchten Sie diesen Ausgabeneintrag wirklich löschen?",
   "errTopicName": "Bitte geben Sie ein geeignetes Thema ein.",
   "errExpenseTitle": "Bitte geben Sie einen geeigneten Titel ein.",
-  "errExpenseAmount": "Bitte geben Sie einen gültigen Betrag ein."
+  "errExpenseAmount": "Bitte geben Sie einen gültigen Betrag ein.",
+  "lblWelcome": "Willkommen in der KASHew App",
+  "lblWelcomeMessage": "Lassen Sie uns Sie in wenigen schnellen Schritten einrichten.",
+  "lblSelectLanguage": "Wählen Sie Ihre Sprache",
+  "lblSelectCurrency": "Wählen Sie Ihre Währung",
+  "btnGetStarted": "Loslegen",
+  "lblTermsOfService": "Indem Sie fortfahren, stimmen Sie unseren Nutzungsbedingungen und unserer Datenschutzrichtlinie zu."
 }

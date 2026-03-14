@@ -112,7 +112,7 @@ class _AddExpenseWidgetState extends State<AddExpenseWidget> {
                             int categoryId = (categoryViewModel.selectedCategory != null)
                                 ? categoryViewModel.selectedCategory!.id! : Constants.defaultCategoryId;
                             int topicId = widget.topicModel!.id!;
-                            int result = await expenseViewModel.updateExpenseByValue(context.lang, widget.expenseModel!.id!, title, amount, date, note, categoryId, topicId);
+                            int result = await expenseViewModel.updateExpenseByValue(context.lang, widget.expenseModel!.id!, title, amount, date, note, topicViewModel.selectedTopic!.currency!, categoryId, topicId);
                             if (result == Constants.success && mounted) Navigator.pop(sheetContext);
                           }
                         } : null,
@@ -314,7 +314,7 @@ class _AddExpenseWidgetState extends State<AddExpenseWidget> {
                           int categoryId = (categoryViewModel.selectedCategory != null)
                               ? categoryViewModel.selectedCategory!.id! : Constants.defaultCategoryId;
 
-                          int result = await expenseViewModel.addExpenseByValue(context.lang, title, amount, date, note, categoryId, topicId);
+                          int result = await expenseViewModel.addExpenseByValue(context.lang, title, amount, date, note, topicViewModel.selectedTopic!.currency!, categoryId, topicId);
                           if (result == Constants.success && mounted) {
                             await topicViewModel.updateLastUpdated(topicViewModel.selectedTopic!);
                             Navigator.pop(sheetContext);

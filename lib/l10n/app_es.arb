@@ -59,5 +59,11 @@
   "dialogExpenseDeleteMessage": "¿Está seguro de que desea eliminar este registro de gasto?",
   "errTopicName": "Por favor ingrese un tema válido.",
   "errExpenseTitle": "Por favor ingrese un título válido.",
-  "errExpenseAmount": "Por favor ingrese una cantidad válida."
+  "errExpenseAmount": "Por favor ingrese una cantidad válida.",
+  "lblWelcome": "Bienvenido a la aplicación KASHew",
+  "lblWelcomeMessage": "Vamos a configurarte en unos pocos pasos rápidos.",
+  "lblSelectLanguage": "Selecciona tu idioma",
+  "lblSelectCurrency": "Selecciona tu moneda",
+  "btnGetStarted": "Comenzar",
+  "lblTermsOfService": "Al continuar, aceptas nuestros Términos de servicio y Política de privacidad."
 }

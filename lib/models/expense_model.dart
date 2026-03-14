@@ -8,6 +8,7 @@ class ExpenseModel {
   static final String colCategoryId = "category_id";
   static final String colTopicId = "topic_id";
   static final String colNote = "note";
+  static final String colCurrency = "currency";
 
   int? id;
   String title;
@@ -16,11 +17,12 @@ class ExpenseModel {
   int? categoryId;
   int? topicId;
   String? note;
+  String? currency;
   final DateTime? readableDateTime;
 
   ExpenseModel({ this.id, required this.title, required this.amount,
     required this.dbDateTime, required this.categoryId, required this.topicId,
-    this.note, this.readableDateTime });
+    this.note, this.readableDateTime, this.currency });
 
   Map<String, dynamic> toMap() {
     return {
@@ -30,7 +32,8 @@ class ExpenseModel {
       colDateTime: dbDateTime,
       colCategoryId: categoryId,
       colTopicId: topicId,
-      colNote: note
+      colNote: note,
+      colCurrency: currency
     };
   }
 
@@ -43,7 +46,8 @@ class ExpenseModel {
         readableDateTime: DateTime.fromMillisecondsSinceEpoch(map[colDateTime]),
         categoryId: map[colCategoryId],
         topicId: map[colTopicId],
-        note: map[colNote]
+        note: map[colNote],
+        currency: map[colCurrency]
     );
   }
 

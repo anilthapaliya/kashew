@@ -5,6 +5,7 @@ class CurrencyModel {
   String code;
   String? currency;
   IconData? symbol;
+  static final IconData fallbackIcon = Icons.payments;
 
   CurrencyModel._(this.code, this.currency, this.symbol);
 
@@ -23,7 +24,7 @@ class CurrencyModel {
     yen: Icons.currency_yen,
     inr: Icons.currency_rupee,
     aud: Icons.attach_money,
-    xxx: Icons.payments
+    xxx: fallbackIcon
   };
 
   static final Map<String, String> currencyMap = {
@@ -31,7 +32,7 @@ class CurrencyModel {
     usd: "US Dollar",
     gbp: "Pound Sterling",
     yen: "Yen",
-    npr: "NRs",
+    npr: "Rs",
     inr: "Rupee",
     aud: "Australian Dollar",
     xxx: "XXX"

@@ -87,7 +87,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             Divider(height: 1, indent: R.w(5), endIndent: R.w(5), color: HexColor.fromHex(Constants.dividerColor)),
             Consumer<CurrencyViewModel>(builder: (context, currencyViewModel, child) {
               return settingsRow(context.lang.lblCurrencySettings, Icons.money,
-                  sideWidget(currencyViewModel.defaultCurrency!.currency!), showCurrencyList);
+                  sideWidget(currencyViewModel.defaultCurrency.currency!), showCurrencyList);
             }),
             Consumer<LanguageViewmodel>(builder: (context, languageViewModel, child) {
               return settingsRow(context.lang.lblLanguage, Icons.language,

@@ -190,4 +190,24 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get errExpenseAmount => 'Bitte geben Sie einen gültigen Betrag ein.';
+
+  @override
+  String get lblWelcome => 'Willkommen in der KASHew App';
+
+  @override
+  String get lblWelcomeMessage =>
+      'Lassen Sie uns Sie in wenigen schnellen Schritten einrichten.';
+
+  @override
+  String get lblSelectLanguage => 'Wählen Sie Ihre Sprache';
+
+  @override
+  String get lblSelectCurrency => 'Wählen Sie Ihre Währung';
+
+  @override
+  String get btnGetStarted => 'Loslegen';
+
+  @override
+  String get lblTermsOfService =>
+      'Indem Sie fortfahren, stimmen Sie unseren Nutzungsbedingungen und unserer Datenschutzrichtlinie zu.';
 }

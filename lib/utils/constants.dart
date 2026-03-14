@@ -7,6 +7,7 @@ class Constants {
 
   // Navigation Routes
   static final String splash = "/";
+  static final String welcome = "/welcome";
   static final String home = "/home";
   static final String topicDetails = "/topic-details";
   static final String expenseDetails = "/expense-details";
@@ -21,6 +22,7 @@ class Constants {
   // Settings key-value pair
   static final String settingsCurrency = "currency";
   static final String settingsLanguage = "language";
+  static final String settingsFirstRun = "firstRun";
 
   static final String langEng = "en";
   static final String langDe = "de";

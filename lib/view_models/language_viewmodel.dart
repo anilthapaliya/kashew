@@ -14,6 +14,11 @@ class LanguageViewmodel extends ChangeNotifier {
     LanguageModel(code: Constants.langEs, language: 'Espanol'),
   ];
 
+  LanguageModel getLanguage(String code) {
+
+    return languages.firstWhere((element) => element.code == code);
+  }
+
   void loadLanguage() async {
 
     String? language = await settingsRepo.getSetting(Constants.settingsLanguage);

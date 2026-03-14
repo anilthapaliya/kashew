@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widget_previews.dart';
 import 'package:kashew/utils/constants.dart';
 import 'package:kashew/utils/hex_color.dart';
 import 'package:kashew/utils/responsive.dart';
+import 'package:kashew/view_models/currency_viewmodel.dart';
 import 'package:kashew/view_models/language_viewmodel.dart';
 import 'package:kashew/view_models/splash_viewmodel.dart';
 import 'package:provider/provider.dart';
@@ -19,18 +19,21 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
 
   @override
-  void initState() {
+  void didChangeDependencies() {
+    super.didChangeDependencies();
 
-    super.initState();
-    Future.microtask(() async {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
 
-      if (!mounted) return;
       Provider.of<LanguageViewmodel>(context, listen: false).loadLanguage();
+      Provider.of<CurrencyViewModel>(context, listen: false).loadDefaultCurrency();
       final viewModel = Provider.of<SplashViewModel>(context, listen: false);
       await viewModel.initializeApp();
 
       if (!mounted) return;
-      if (viewModel.initialized) {
+      if (viewModel.showWelcome) {
+        Navigator.pushReplacementNamed(context, Constants.welcome);
+      }
+      else {
         Navigator.pushReplacementNamed(context, Constants.home);
       }
     });

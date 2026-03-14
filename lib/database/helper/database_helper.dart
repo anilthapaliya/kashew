@@ -49,6 +49,7 @@ class DatabaseHelper {
               "${ExpenseModel.colCategoryId} INTEGER,"
               "${ExpenseModel.colTopicId} INTEGER,"
               "${ExpenseModel.colNote} TEXT,"
+              "${ExpenseModel.colCurrency} TEXT,"
               "FOREIGN KEY(${ExpenseModel.colCategoryId}) REFERENCES ${CategoryModel.tableCategories}(${CategoryModel.colId}),"
               "FOREIGN KEY(${ExpenseModel.colTopicId}) REFERENCES ${TopicModel.tableTopics}(${TopicModel.colId}))";
 
@@ -96,7 +97,7 @@ class DatabaseHelper {
       TopicModel.colDescription: "All general and uncategorized expenses.",
       TopicModel.colDateTime: DateTime.now().millisecondsSinceEpoch,
       TopicModel.colLastUpdated: DateTime.now().millisecondsSinceEpoch,
-      TopicModel.colCurrency: CurrencyModel.xxx,
+      TopicModel.colCurrency: CurrencyModel.npr,
       TopicModel.colIsSystem: Constants.wahr,
     };
     await db.insert(TopicModel.tableTopics, values);

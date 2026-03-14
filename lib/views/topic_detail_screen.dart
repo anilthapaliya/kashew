@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:kashew/models/category_model.dart';
+import 'package:kashew/models/currency_model.dart';
 import 'package:kashew/models/expense_model.dart';
 import 'package:kashew/models/topic_model.dart';
 import 'package:kashew/utils/common_utils.dart';
@@ -9,6 +10,7 @@ import 'package:kashew/utils/hex_color.dart';
 import 'package:kashew/utils/localization_extension.dart';
 import 'package:kashew/utils/responsive.dart';
 import 'package:kashew/view_models/category_viewmodel.dart';
+import 'package:kashew/view_models/currency_viewmodel.dart';
 import 'package:kashew/view_models/expense_viewmodel.dart';
 import 'package:kashew/view_models/topic_viewmodel.dart';
 import 'package:kashew/views/widgets/add_expense_widget.dart';
@@ -26,6 +28,7 @@ class TopicDetailScreen extends StatefulWidget {
 class _TopicDetailScreenState extends State<TopicDetailScreen> {
 
   late TopicModel topicModel;
+  late CurrencyModel currencyModel;
   TopicViewModel? topicViewModel;
   ExpenseViewModel? expenseViewModel;
   CategoryViewModel? categoryViewModel;
@@ -44,6 +47,8 @@ class _TopicDetailScreenState extends State<TopicDetailScreen> {
       topicModel = ModalRoute
           .of(context)!.settings.arguments as TopicModel;
     }
+
+    currencyModel = context.read<CurrencyViewModel>().getCurrencyFromCode(topicModel.currency!);
 
     if (!_expensesLoaded) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -102,7 +107,8 @@ class _TopicDetailScreenState extends State<TopicDetailScreen> {
                 ),
 
                 // Expenses Section
-                Padding(
+                if (expenseViewModel.groupExpenses != null && expenseViewModel.groupExpenses!.isNotEmpty)
+                  Padding(
                   padding: EdgeInsets.symmetric(horizontal: R.w(15), vertical: R.h(10)),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -215,7 +221,17 @@ class _TopicDetailScreenState extends State<TopicDetailScreen> {
             ],
           ),
           Expanded(child: Container()),
-          Text(expense.amount.toString(), style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(12), fontWeight: FontWeight.bold, color: Colors.red)),
+          RichText(text: TextSpan(
+              style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(12), fontWeight: FontWeight.bold, color: Colors.red),
+            children: [
+              if (currencyModel.symbol == CurrencyModel.fallbackIcon)
+                TextSpan(text: currencyModel.currency)
+              else
+                WidgetSpan(child: Icon(currencyModel.symbol, size: R.w(15), color: Colors.red)),
+              WidgetSpan(child: SizedBox(width: R.w(2))),
+              TextSpan(text: expense.amount.toString()),
+            ]
+          )),
         ],
       ),
     );

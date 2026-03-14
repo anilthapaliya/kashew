@@ -6,6 +6,7 @@ import 'package:kashew/view_models/currency_viewmodel.dart';
 import 'package:kashew/view_models/expense_viewmodel.dart';
 import 'package:kashew/view_models/language_viewmodel.dart';
 import 'package:kashew/view_models/topic_viewmodel.dart';
+import 'package:kashew/view_models/welcome_viewmodel.dart';
 import 'package:kashew/views/currency_only_list_screen.dart';
 import 'package:kashew/views/home/home_screen.dart';
 import 'package:kashew/view_models/splash_viewmodel.dart';
@@ -14,6 +15,7 @@ import 'package:kashew/views/settings_screen.dart';
 import 'package:kashew/views/splash_screen.dart';
 import 'package:kashew/views/topic_detail_screen.dart';
 import 'package:kashew/views/topic_only_list_screen.dart';
+import 'package:kashew/views/welcome_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:kashew/l10n/app_localizations.dart';
@@ -27,6 +29,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => TopicViewModel()),
         ChangeNotifierProvider(create: (_) => ExpenseViewModel()),
         ChangeNotifierProvider(create: (_) => LanguageViewmodel()),
+        ChangeNotifierProvider(create: (_) => WelcomeViewModel()),
       ], child: const KashewApp())
   );
 }
@@ -61,6 +64,7 @@ class KashewApp extends StatelessWidget {
               Constants.settings: (context) => const SettingsScreen(),
               Constants.currencyOnlyList: (context) => const CurrencyListScreen(),
               Constants.languageOnlyList: (context) => const LanguageListScreen(),
+              Constants.welcome: (context) => const WelcomeScreen(),
             },
             theme: ThemeData(
               useMaterial3: true,

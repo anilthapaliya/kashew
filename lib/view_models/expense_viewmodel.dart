@@ -71,7 +71,7 @@ class ExpenseViewModel extends ChangeNotifier {
     return groups;
   }
 
-  Future<int> addExpenseByValue(AppLocalizations lang, String title, String amount, DateTime date, String note, int categoryId, int topicId) async {
+  Future<int> addExpenseByValue(AppLocalizations lang, String title, String amount, DateTime date, String note, String currency, int categoryId, int topicId) async {
 
     if (title.isEmpty) {
       isError = true;
@@ -92,7 +92,7 @@ class ExpenseViewModel extends ChangeNotifier {
       return Constants.failure;
     }
 
-    ExpenseModel expense = ExpenseModel(title: CommonUtils.capitalizeFirst(title), amount: doubleAmount, dbDateTime: date.millisecondsSinceEpoch, categoryId: categoryId, topicId: topicId, note: CommonUtils.capitalizeFirst(note));
+    ExpenseModel expense = ExpenseModel(title: CommonUtils.capitalizeFirst(title), amount: doubleAmount, dbDateTime: date.millisecondsSinceEpoch, categoryId: categoryId, topicId: topicId, note: CommonUtils.capitalizeFirst(note), currency: currency);
     return await addExpense(expense);
   }
 
@@ -121,7 +121,7 @@ class ExpenseViewModel extends ChangeNotifier {
     return Constants.failure;
   }
 
-  Future<int> updateExpenseByValue(AppLocalizations lang, int expenseId, String title, String amount, DateTime date, String note, int categoryId, int topicId) async {
+  Future<int> updateExpenseByValue(AppLocalizations lang, int expenseId, String title, String amount, DateTime date, String note, String currency, int categoryId, int topicId) async {
 
     if (title.isEmpty) {
       isError = true;
@@ -142,7 +142,7 @@ class ExpenseViewModel extends ChangeNotifier {
       return Constants.failure;
     }
 
-    ExpenseModel expense = ExpenseModel(id: expenseId, title: CommonUtils.capitalizeFirst(title), amount: doubleAmount, dbDateTime: date.millisecondsSinceEpoch, categoryId: categoryId, topicId: topicId, note: CommonUtils.capitalizeFirst(note));
+    ExpenseModel expense = ExpenseModel(id: expenseId, title: CommonUtils.capitalizeFirst(title), amount: doubleAmount, dbDateTime: date.millisecondsSinceEpoch, categoryId: categoryId, topicId: topicId, note: CommonUtils.capitalizeFirst(note), currency: currency);
     return await updateExpense(expense);
   }
 

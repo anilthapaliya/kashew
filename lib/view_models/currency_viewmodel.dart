@@ -18,7 +18,7 @@ class CurrencyViewModel extends ChangeNotifier {
     CurrencyModel(CurrencyModel.xxx),
   ];
 
-  CurrencyModel? defaultCurrency;
+  late CurrencyModel defaultCurrency;
 
   CurrencyViewModel() {
 
@@ -50,6 +50,11 @@ class CurrencyViewModel extends ChangeNotifier {
 
     defaultCurrency = model;
     notifyListeners();
+  }
+
+  CurrencyModel getCurrencyFromCode(String code) {
+
+    return currencies.firstWhere((element) => element.code == code);
   }
 
 }

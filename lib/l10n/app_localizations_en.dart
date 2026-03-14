@@ -190,4 +190,23 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errExpenseAmount => 'Please enter a valid amount.';
+
+  @override
+  String get lblWelcome => 'Welcome to KASHew App';
+
+  @override
+  String get lblWelcomeMessage => 'Let\'s get you set up in a quick few steps.';
+
+  @override
+  String get lblSelectLanguage => 'Select your Language';
+
+  @override
+  String get lblSelectCurrency => 'Select your Currency';
+
+  @override
+  String get btnGetStarted => 'Get Started';
+
+  @override
+  String get lblTermsOfService =>
+      'By continuing you agree to our Terms of Service and Privacy Policy.';
 }

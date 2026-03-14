@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kashew/models/currency_model.dart';
 import 'package:kashew/models/expense_model.dart';
 import 'package:kashew/utils/common_utils.dart';
 import 'package:kashew/utils/constants.dart';
@@ -6,6 +7,7 @@ import 'package:kashew/utils/hex_color.dart';
 import 'package:kashew/utils/localization_extension.dart';
 import 'package:kashew/utils/responsive.dart';
 import 'package:kashew/view_models/category_viewmodel.dart';
+import 'package:kashew/view_models/currency_viewmodel.dart';
 import 'package:kashew/view_models/expense_viewmodel.dart';
 import 'package:kashew/views/home/topics_widget.dart';
 import 'package:kashew/views/widgets/add_expense_widget.dart';
@@ -23,7 +25,9 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
 
-  CategoryViewModel? categoryViewModel;
+  late CategoryViewModel categoryViewModel;
+  late CurrencyViewModel currencyViewModel;
+  late CurrencyModel currencyModel;
 
   @override
   void initState() {
@@ -35,6 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     super.didChangeDependencies();
     categoryViewModel = context.read<CategoryViewModel>();
+    currencyViewModel = context.read<CurrencyViewModel>();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<ExpenseViewModel>().loadRecentExpenses();
@@ -132,6 +137,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget expenseCard(ExpenseModel expense) {
 
+    currencyModel = currencyViewModel.getCurrencyFromCode(expense.currency!);
+    IconData icon = currencyModel.symbol!;
     return Card(
       margin: EdgeInsets.only(bottom: R.w(10)),
       elevation: 0,
@@ -144,7 +151,7 @@ class _HomeScreenState extends State<HomeScreen> {
               margin: EdgeInsets.only(right: R.w(10)),
               width: R.w(30), height: R.h(30),
               decoration: BoxDecoration(borderRadius: BorderRadius.circular(30), color: HexColor.fromHex(Constants.warmWhiteColor)),
-              child: Icon(categoryViewModel!.getIconByCategoryId(expense.categoryId!), color: HexColor.fromHex(Constants.darkBgColor), size: R.w(15)),
+              child: Icon(categoryViewModel.getIconByCategoryId(expense.categoryId!), color: HexColor.fromHex(Constants.darkBgColor), size: R.w(15)),
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -154,7 +161,17 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
             Expanded(child: Container()),
-            Text(expense.amount.toString(), style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(12), fontWeight: FontWeight.bold, color: Colors.red)),
+            RichText(text: TextSpan(
+                style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(12), fontWeight: FontWeight.bold, color: Colors.red),
+                children: [
+                  if (icon == CurrencyModel.fallbackIcon)
+                    TextSpan(text: currencyModel.currency)
+                  else
+                    WidgetSpan(child: Icon(icon, size: R.w(15), color: Colors.red)),
+                  WidgetSpan(child: SizedBox(width: R.w(2))),
+                  TextSpan(text: expense.amount.toString()),
+                ]
+            )),
           ],
         ),
       ),
