@@ -1,4 +1,5 @@
 import 'package:kashew/database/helper/database_helper.dart';
+import 'package:kashew/models/expense_model.dart';
 import 'package:kashew/models/topic_model.dart';
 
 class TopicRepository {
@@ -37,6 +38,18 @@ class TopicRepository {
 
     return await dbHelper.delete(TopicModel.tableTopics,
         '${TopicModel.colId} = ?', [topicId]);
+  }
+
+  Future<Map<int, double>> getTotalExpensesTopicWise() async {
+
+    return await dbHelper.totalExpenseByTopic();
+  }
+
+  Future<double> getTotalExpenseForTopic(int topicId) async {
+
+    final result = await dbHelper
+        .totalExpenseForTopic(topicId);
+    return result;
   }
 
 }

@@ -5,9 +5,12 @@ import 'package:kashew/utils/constants.dart';
 import 'package:kashew/utils/hex_color.dart';
 import 'package:kashew/utils/localization_extension.dart';
 import 'package:kashew/utils/responsive.dart';
+import 'package:kashew/view_models/currency_viewmodel.dart';
 import 'package:kashew/view_models/topic_viewmodel.dart';
 import 'package:kashew/views/widgets/add_topic_widget.dart';
 import 'package:provider/provider.dart';
+
+import '../../models/currency_model.dart';
 
 class TopicsWidget extends StatefulWidget {
   const TopicsWidget({super.key});
@@ -105,8 +108,18 @@ class _TopicsWidgetState extends State<TopicsWidget> {
                 Text(model.name, overflow: TextOverflow.fade, maxLines: 2,
                   style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(12), fontWeight: FontWeight.bold),),
                 Text(CommonUtils.getReadableDateFromMs(model.dbDateTime), style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(10), color: HexColor.fromHex(Constants.textSecondaryColor))),
-                SizedBox(height: R.h(10)),
-                Text('\$0', style: TextStyle(fontFamily: Constants.fontTitle, fontSize: R.sp(10), fontWeight: FontWeight.bold)),
+                Expanded(child: SizedBox()),
+                RichText(text: TextSpan(
+                    style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(13), fontWeight: FontWeight.bold, color: HexColor.fromHex(Constants.pureBlackColor)),
+                    children: [
+                      if (CurrencyModel.iconMap[model.currency] == CurrencyModel.fallbackIcon)
+                        TextSpan(text: CurrencyModel.currencyMap[model.currency])
+                      else
+                        WidgetSpan(child: Icon(CurrencyModel.iconMap[model.currency] ?? CurrencyModel.fallbackIcon, size: R.w(15), color: HexColor.fromHex(Constants.pureBlackColor))),
+                      WidgetSpan(child: SizedBox(width: R.w(2))),
+                      TextSpan(text: "${model.totalExpenses}"),
+                    ]
+                )),
               ],
             ),
           ),

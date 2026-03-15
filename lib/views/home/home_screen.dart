@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kashew/models/category_model.dart';
 import 'package:kashew/models/currency_model.dart';
 import 'package:kashew/models/expense_model.dart';
 import 'package:kashew/utils/common_utils.dart';
@@ -9,6 +10,7 @@ import 'package:kashew/utils/responsive.dart';
 import 'package:kashew/view_models/category_viewmodel.dart';
 import 'package:kashew/view_models/currency_viewmodel.dart';
 import 'package:kashew/view_models/expense_viewmodel.dart';
+import 'package:kashew/view_models/home_viewmodel.dart';
 import 'package:kashew/views/home/topics_widget.dart';
 import 'package:kashew/views/widgets/add_expense_widget.dart';
 import 'package:kashew/views/widgets/add_topic_widget.dart';
@@ -23,7 +25,7 @@ class HomeScreen extends StatefulWidget {
 
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   late CategoryViewModel categoryViewModel;
   late CurrencyViewModel currencyViewModel;
@@ -32,6 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
@@ -43,7 +46,17 @@ class _HomeScreenState extends State<HomeScreen> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<ExpenseViewModel>().loadRecentExpenses();
+      context.read<HomeViewModel>().loadStats();
     });
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+
+    if (state == AppLifecycleState.resumed) {
+      context.read<ExpenseViewModel>().loadRecentExpenses();
+      context.read<HomeViewModel>().loadStats();
+    }
   }
 
   @override
@@ -66,21 +79,76 @@ class _HomeScreenState extends State<HomeScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
 
-          // Top Summary Section
-          Container(
-            width: double.infinity,
-            margin: EdgeInsets.symmetric(vertical: R.h(30), horizontal: R.w((15))),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(context.lang.lblMonthlyExpense.toUpperCase(),
-                    style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(12), fontWeight: FontWeight.w500)),
-                Text('\$9867.4', 
-                  style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(25), fontWeight: FontWeight.bold))
-              ],
-            ),
-          ),
+          // Top Summary/Stats Section
+          Consumer<HomeViewModel>(
+              builder: (context, homeViewModel, child) {
+
+                return Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: HexColor.fromHex(Constants.pureWhiteColor),
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  padding: EdgeInsets.symmetric(vertical: R.h(20), horizontal: R.w((15))),
+                  margin: EdgeInsets.symmetric(vertical: R.h(10), horizontal: R.w((15))),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (homeViewModel.topCategory != null)
+                        Row(
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Top Category".toUpperCase(),
+                                  style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(10), fontWeight: FontWeight.w500, color: HexColor.fromHex(Constants.textSecondaryColor))),
+                              Text(homeViewModel.topCategory!,
+                                  style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(20), fontWeight: FontWeight.bold)),
+                            ],
+                          ),
+                          Expanded(child: Container()),
+                          Container(
+                            width: R.w(50), height: R.h(50),
+                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(22), color: HexColor.fromHex(Constants.warmWhiteColor)),
+                            child: Icon(categoryViewModel.getIconByCategoryId(homeViewModel.categoryId!), color: HexColor.fromHex(Constants.textSecondaryColor), size: R.w(15)),
+                          )
+                        ],
+                      ),
+
+                      SizedBox(height: R.h(15)),
+
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.baseline,
+                        textBaseline: TextBaseline.alphabetic,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(Constants.kUnit,
+                              style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(12), fontWeight: FontWeight.bold, color: HexColor.fromHex(Constants.primaryColor))),
+                          SizedBox(width: R.w(5)),
+                          Text(homeViewModel.totalMonthlyExpense != null ?"${homeViewModel.totalMonthlyExpense}" : "0.00",
+                              style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(30), fontWeight: FontWeight.bold, color: HexColor.fromHex(Constants.primaryColor))),
+                          SizedBox(width: R.w(8)),
+                          Text("this month",
+                              style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(12), fontWeight: FontWeight.w500)),
+                          SizedBox(width: R.w(5)),
+                          Tooltip(
+                              message: "kU (Kashew Unit) is an internal unit that sums expenses from different currencies. It represents spending activity, not real money.",
+                              triggerMode: TooltipTriggerMode.tap,
+                              showDuration: const Duration(seconds: 10),
+                              margin: EdgeInsets.symmetric(horizontal: R.w(20)),
+                              decoration: BoxDecoration(
+                                color: Colors.black54,
+                                borderRadius: BorderRadius.circular(6)
+                              ),
+                              child: Icon(Icons.info, size: R.w(15), color: HexColor.fromHex(Constants.textSecondaryColor)))
+                        ],
+                      ),
+
+                    ],
+                  ),
+                );
+              }),
 
           // Topics Section
           Padding(
@@ -144,7 +212,7 @@ class _HomeScreenState extends State<HomeScreen> {
       elevation: 0,
       color: HexColor.fromHex(Constants.pureWhiteColor),
       child: Padding(
-        padding: EdgeInsets.symmetric(vertical: R.h(15), horizontal: R.w(Constants.stdMargin)),
+        padding: EdgeInsets.symmetric(vertical: R.h(8), horizontal: R.w(Constants.stdMargin)),
         child: Row(
           children: [
             Container(
@@ -195,6 +263,13 @@ class _HomeScreenState extends State<HomeScreen> {
         isDismissible: false,
         backgroundColor: HexColor.fromHex(Constants.warmWhiteColor),
         builder: (context) => AddExpenseWidget());
+  }
+
+  @override
+  void dispose() {
+
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 
 }

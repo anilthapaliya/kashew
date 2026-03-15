@@ -27,6 +27,12 @@ class TopicViewModel extends ChangeNotifier {
 
     isTopicLoading = true;
     topics = await topicRepo.getLatestTopics();
+    final totals = await topicRepo.getTotalExpensesTopicWise();
+
+    for (var topic in topics!) {
+      topic.totalExpenses = totals[topic.id] ?? 0;
+    }
+
     notifyListeners();
     isTopicLoading = false;
   }

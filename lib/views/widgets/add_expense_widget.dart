@@ -9,6 +9,7 @@ import 'package:kashew/utils/localization_extension.dart';
 import 'package:kashew/utils/responsive.dart';
 import 'package:kashew/view_models/category_viewmodel.dart';
 import 'package:kashew/view_models/expense_viewmodel.dart';
+import 'package:kashew/view_models/home_viewmodel.dart';
 import 'package:kashew/view_models/topic_viewmodel.dart';
 import 'package:provider/provider.dart';
 
@@ -113,6 +114,7 @@ class _AddExpenseWidgetState extends State<AddExpenseWidget> {
                                 ? categoryViewModel.selectedCategory!.id! : Constants.defaultCategoryId;
                             int topicId = widget.topicModel!.id!;
                             int result = await expenseViewModel.updateExpenseByValue(context.lang, widget.expenseModel!.id!, title, amount, date, note, topicViewModel.selectedTopic!.currency!, categoryId, topicId);
+                            reloadStats();
                             if (result == Constants.success && mounted) Navigator.pop(sheetContext);
                           }
                         } : null,
@@ -317,6 +319,7 @@ class _AddExpenseWidgetState extends State<AddExpenseWidget> {
                           int result = await expenseViewModel.addExpenseByValue(context.lang, title, amount, date, note, topicViewModel.selectedTopic!.currency!, categoryId, topicId);
                           if (result == Constants.success && mounted) {
                             await topicViewModel.updateLastUpdated(topicViewModel.selectedTopic!);
+                            reloadStats();
                             Navigator.pop(sheetContext);
                           }
                         },
@@ -363,6 +366,11 @@ class _AddExpenseWidgetState extends State<AddExpenseWidget> {
       selectedDate = date;
       dateController.text = CommonUtils.getReadableDate(selectedDate);
     }
+  }
+
+  void reloadStats() {
+
+    context.read<HomeViewModel>().loadStats();
   }
 
   @override

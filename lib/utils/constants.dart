@@ -28,6 +28,7 @@ class Constants {
   static final String langDe = "de";
   static final String langEs = "es";
 
+  static final String kUnit = "kU";
   static final int maxAmountThreshold = 9999999999;
   static final int success = 1;
   static final int failure = -1;
@@ -37,6 +38,9 @@ class Constants {
   static final int defaultTopicId = 1;
   static final String defaultCategory = CategoryModel.catOthers;
   static final int defaultCategoryId = 1;
+
+  static final String dataTotal = "total";
+  static final String dataCategory = "category";
 
   // Padding and Margin
   static final double stdMargin = 14;

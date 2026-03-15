@@ -24,6 +24,7 @@ class CurrencyModel {
     yen: Icons.currency_yen,
     inr: Icons.currency_rupee,
     aud: Icons.attach_money,
+    npr: fallbackIcon,
     xxx: fallbackIcon
   };
 

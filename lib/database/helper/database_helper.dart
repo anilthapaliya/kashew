@@ -118,6 +118,12 @@ class DatabaseHelper {
     return await db.insert(table, data, conflictAlgorithm: conflictAlgorithm);
   }
 
+  Future<List<Map<String, dynamic>>> rawQuery(String sql) async {
+
+    final db = await database;
+    return await db.rawQuery(sql);
+  }
+
   Future<List<Map<String, dynamic>>> query(String table,
       {String? where, List<dynamic>? whereArgs, String? orderBy, int? limit}) async {
 
@@ -135,6 +141,59 @@ class DatabaseHelper {
 
     final db = await database;
     return await db.delete(table, where: where, whereArgs: whereArgs);
+  }
+
+  Future<Map<int, double>> totalExpenseByTopic() async {
+
+    final db = await database;
+    final result = await db.rawQuery("SELECT ${ExpenseModel.colTopicId},"
+        " SUM(${ExpenseModel.colAmount}) as ${Constants.dataTotal} FROM ${ExpenseModel.tableExpenses}"
+        " GROUP BY ${ExpenseModel.colTopicId}");
+    Map<int, double> totals = {};
+    for (var row in result) {
+      totals[row[ExpenseModel.colTopicId] as int] = (row[Constants.dataTotal] ?? 0) as double;
+    }
+
+    return totals;
+  }
+
+  Future<double> totalExpenseForTopic(int topicId) async {
+
+    final db = await database;
+    final result = await db
+        .rawQuery("SELECT SUM(${ExpenseModel.colAmount}) AS ${Constants.dataTotal} FROM "
+        "${ExpenseModel.tableExpenses} WHERE ${ExpenseModel.colTopicId} = $topicId");
+    return (result.first[Constants.dataTotal] as double);
+  }
+
+  Future<double> totalExpenseOfTheMonth(int start, int end) async {
+
+    final db = await database;
+    final query = "SELECT SUM(${ExpenseModel.colAmount}) AS ${Constants.dataTotal} FROM "
+        "${ExpenseModel.tableExpenses} WHERE ${ExpenseModel.colDateTime} >= ? AND ${ExpenseModel.colDateTime} < ?";
+    final result = await db.rawQuery(query, [start, end]);
+    return (result.first[Constants.dataTotal] ?? 0) as double;
+  }
+
+  Future<Map<String, dynamic>?> getTopCategory(int start, int end) async {
+
+    final db = await database;
+    final query = "SELECT ${ExpenseModel.colCategoryId}, c.${CategoryModel.colCategoryName} AS category, "
+        "SUM(${ExpenseModel.colAmount}) AS ${Constants.dataTotal} "
+        "FROM ${ExpenseModel.tableExpenses} e JOIN ${CategoryModel.tableCategories} c "
+        "ON e.${ExpenseModel.colCategoryId} = c.${CategoryModel.colId} "
+        "WHERE ${ExpenseModel.colDateTime} >= ? AND "
+        "${ExpenseModel.colDateTime} < ? GROUP BY ${ExpenseModel.colTopicId} ORDER BY ${Constants.dataTotal} DESC LIMIT 1";
+    final result = await db.rawQuery(query, [start, end]);
+    if (result.isEmpty) return null;
+
+    Map<String, dynamic> response = {
+      ExpenseModel.colCategoryId: result.first[ExpenseModel.colCategoryId],
+      Constants.dataTotal: result.first[Constants.dataTotal],
+      Constants.dataCategory: result.first[Constants.dataCategory]
+    };
+
+    return response;
   }
 
 }

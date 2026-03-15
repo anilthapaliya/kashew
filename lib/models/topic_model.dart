@@ -19,8 +19,10 @@ class TopicModel {
   int lastUpdated;
   int? isSystem;
 
-  TopicModel({ this.id, required this.name, this.description,
-    this.currency, required this.dbDateTime, required this.lastUpdated, this.isSystem = 0 });
+  double totalExpenses;
+
+  TopicModel({ this.id, required this.name, this.description, this.currency,
+    required this.dbDateTime, required this.lastUpdated, this.isSystem = 0, this.totalExpenses = 0 });
 
   Map<String, dynamic> toMap() {
     return {

@@ -4,6 +4,7 @@ import 'package:kashew/utils/responsive.dart';
 import 'package:kashew/view_models/category_viewmodel.dart';
 import 'package:kashew/view_models/currency_viewmodel.dart';
 import 'package:kashew/view_models/expense_viewmodel.dart';
+import 'package:kashew/view_models/home_viewmodel.dart';
 import 'package:kashew/view_models/language_viewmodel.dart';
 import 'package:kashew/view_models/topic_viewmodel.dart';
 import 'package:kashew/view_models/welcome_viewmodel.dart';
@@ -30,6 +31,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => ExpenseViewModel()),
         ChangeNotifierProvider(create: (_) => LanguageViewmodel()),
         ChangeNotifierProvider(create: (_) => WelcomeViewModel()),
+        ChangeNotifierProvider(create: (_) => HomeViewModel()),
       ], child: const KashewApp())
   );
 }

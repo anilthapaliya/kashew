@@ -204,7 +204,7 @@ class _TopicDetailScreenState extends State<TopicDetailScreen> {
   Widget expenseCard(ExpenseModel expense, IconData icon) {
 
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: R.h(15), horizontal: R.w(Constants.stdMargin)),
+      padding: EdgeInsets.symmetric(vertical: R.h(8), horizontal: R.w(Constants.stdMargin)),
       child: Row(
         children: [
           Container(
