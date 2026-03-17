@@ -209,4 +209,14 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get lblTermsOfService =>
       'By continuing you agree to our Terms of Service and Privacy Policy.';
+
+  @override
+  String get lblTopCategory => 'Top Category';
+
+  @override
+  String get lblThisMonth => 'this month';
+
+  @override
+  String get tooltipKUnit =>
+      'kU (Kashew Unit) is an internal unit that sums expenses from different currencies. It represents spending activity, not real money.';
 }

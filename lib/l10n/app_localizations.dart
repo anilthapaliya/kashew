@@ -495,6 +495,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'By continuing you agree to our Terms of Service and Privacy Policy.'**
   String get lblTermsOfService;
+
+  /// No description provided for @lblTopCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Top Category'**
+  String get lblTopCategory;
+
+  /// No description provided for @lblThisMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'this month'**
+  String get lblThisMonth;
+
+  /// No description provided for @tooltipKUnit.
+  ///
+  /// In en, this message translates to:
+  /// **'kU (Kashew Unit) is an internal unit that sums expenses from different currencies. It represents spending activity, not real money.'**
+  String get tooltipKUnit;
 }
 
 class _AppLocalizationsDelegate

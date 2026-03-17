@@ -30,6 +30,7 @@ class Constants {
 
   static final String kUnit = "kU";
   static final int maxAmountThreshold = 9999999999;
+  static final int splashDelay = 1; // in seconds
   static final int success = 1;
   static final int failure = -1;
   static final int wahr = 1;

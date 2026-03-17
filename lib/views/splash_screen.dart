@@ -27,7 +27,7 @@ class _SplashScreenState extends State<SplashScreen> {
       Provider.of<LanguageViewmodel>(context, listen: false).loadLanguage();
       Provider.of<CurrencyViewModel>(context, listen: false).loadDefaultCurrency();
       final viewModel = Provider.of<SplashViewModel>(context, listen: false);
-      await viewModel.initializeApp();
+      await viewModel.initializeApp(Constants.splashDelay);
 
       if (!mounted) return;
       if (viewModel.showWelcome) {

@@ -101,7 +101,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text("Top Category".toUpperCase(),
+                              Text(context.lang.lblTopCategory.toUpperCase(),
                                   style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(10), fontWeight: FontWeight.w500, color: HexColor.fromHex(Constants.textSecondaryColor))),
                               Text(homeViewModel.topCategory!,
                                   style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(20), fontWeight: FontWeight.bold)),
@@ -129,11 +129,11 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                           Text(homeViewModel.totalMonthlyExpense != null ?"${homeViewModel.totalMonthlyExpense}" : "0.00",
                               style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(30), fontWeight: FontWeight.bold, color: HexColor.fromHex(Constants.primaryColor))),
                           SizedBox(width: R.w(8)),
-                          Text("this month",
+                          Text(context.lang.lblThisMonth,
                               style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(12), fontWeight: FontWeight.w500)),
                           SizedBox(width: R.w(5)),
                           Tooltip(
-                              message: "kU (Kashew Unit) is an internal unit that sums expenses from different currencies. It represents spending activity, not real money.",
+                              message: context.lang.tooltipKUnit,
                               triggerMode: TooltipTriggerMode.tap,
                               showDuration: const Duration(seconds: 10),
                               margin: EdgeInsets.symmetric(horizontal: R.w(20)),

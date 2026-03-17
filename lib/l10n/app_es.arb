@@ -65,5 +65,8 @@
   "lblSelectLanguage": "Selecciona tu idioma",
   "lblSelectCurrency": "Selecciona tu moneda",
   "btnGetStarted": "Comenzar",
-  "lblTermsOfService": "Al continuar, aceptas nuestros Términos de servicio y Política de privacidad."
+  "lblTermsOfService": "Al continuar, aceptas nuestros Términos de servicio y Política de privacidad.",
+  "lblTopCategory": "Categoría principal",
+  "lblThisMonth": "este mes",
+  "tooltipKUnit": "kU (Unidad Kashew) es una unidad interna que suma gastos de diferentes monedas. Representa la actividad de gasto, no dinero real."
 }

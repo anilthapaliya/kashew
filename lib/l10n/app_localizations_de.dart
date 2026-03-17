@@ -210,4 +210,14 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get lblTermsOfService =>
       'Indem Sie fortfahren, stimmen Sie unseren Nutzungsbedingungen und unserer Datenschutzrichtlinie zu.';
+
+  @override
+  String get lblTopCategory => 'Top-Kategorie';
+
+  @override
+  String get lblThisMonth => 'dieser Monat';
+
+  @override
+  String get tooltipKUnit =>
+      'kU (Kashew-Einheit) ist eine interne Einheit, die Ausgaben aus verschiedenen Währungen zusammenfasst. Sie stellt die Ausgabentätigkeit dar, ist aber kein echtes Geld.';
 }

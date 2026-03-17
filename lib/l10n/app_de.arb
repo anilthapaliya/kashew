@@ -65,5 +65,8 @@
   "lblSelectLanguage": "Wählen Sie Ihre Sprache",
   "lblSelectCurrency": "Wählen Sie Ihre Währung",
   "btnGetStarted": "Loslegen",
-  "lblTermsOfService": "Indem Sie fortfahren, stimmen Sie unseren Nutzungsbedingungen und unserer Datenschutzrichtlinie zu."
+  "lblTermsOfService": "Indem Sie fortfahren, stimmen Sie unseren Nutzungsbedingungen und unserer Datenschutzrichtlinie zu.",
+  "lblTopCategory": "Top-Kategorie",
+  "lblThisMonth": "dieser Monat",
+  "tooltipKUnit": "kU (Kashew-Einheit) ist eine interne Einheit, die Ausgaben aus verschiedenen Währungen zusammenfasst. Sie stellt die Ausgabentätigkeit dar, ist aber kein echtes Geld."
 }
