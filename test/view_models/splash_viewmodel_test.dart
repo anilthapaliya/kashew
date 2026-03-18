@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kashew/view_models/splash_viewmodel.dart';
 
-import '../database/repositories/setting_repository.dart';
+import '../database/repositories/setting_repository_test.dart';
 
 void main() {
 
@@ -9,7 +9,7 @@ void main() {
   late TestSettingsRepository testRepo;
   bool notified = false;
 
-  setUp(() {
+  setUpAll(() {
     testRepo = TestSettingsRepository(value: "test");
     viewModel = SplashViewModel(settingsRepo: testRepo);
     viewModel.addListener(() {

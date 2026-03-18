@@ -6,9 +6,12 @@ import 'package:kashew/utils/constants.dart';
 
 class WelcomeViewModel extends ChangeNotifier {
 
-  final SettingsRepository settingsRepo = SettingsRepository();
+  final SettingsRepository settingsRepository;
   LanguageModel? languageModel;
   CurrencyModel? currencyModel;
+
+  WelcomeViewModel({ SettingsRepository? settingsRepo }) :
+        settingsRepository = settingsRepo ?? SettingsRepository();
 
   void setLanguage(LanguageModel languageModel) {
     this.languageModel = languageModel;
@@ -20,9 +23,14 @@ class WelcomeViewModel extends ChangeNotifier {
 
   Future<void> saveSettings() async {
 
-    await settingsRepo.setSetting(Constants.settingsLanguage, languageModel!.code);
-    await settingsRepo.setSetting(Constants.settingsCurrency, currencyModel!.code);
-    await settingsRepo.setSetting(Constants.settingsFirstRun, "YES");
+    if (languageModel != null && currencyModel != null) {
+      await settingsRepository.setSetting(Constants.settingsLanguage, languageModel!.code);
+      await settingsRepository.setSetting(Constants.settingsCurrency, currencyModel!.code);
+      await settingsRepository.setSetting(Constants.settingsFirstRun, "YES");
+      return;
+    }
+
+    throw Exception("Language or Currency not set.");
   }
 
 }

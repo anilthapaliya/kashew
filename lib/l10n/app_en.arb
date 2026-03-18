@@ -68,5 +68,6 @@
   "lblTermsOfService": "By continuing you agree to our Terms of Service and Privacy Policy.",
   "lblTopCategory": "Top Category",
   "lblThisMonth": "this month",
-  "tooltipKUnit": "kU (Kashew Unit) is an internal unit that sums expenses from different currencies. It represents spending activity, not real money."
+  "tooltipKUnit": "kU (Kashew Unit) is an internal unit that sums expenses from different currencies. It represents spending activity, not real money.",
+  "snackFailToSave": "Unable to save the settings."
 }

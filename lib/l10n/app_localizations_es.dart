@@ -220,4 +220,7 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get tooltipKUnit =>
       'kU (Unidad Kashew) es una unidad interna que suma gastos de diferentes monedas. Representa la actividad de gasto, no dinero real.';
+
+  @override
+  String get snackFailToSave => 'No se pudieron guardar los ajustes.';
 }

@@ -68,5 +68,6 @@
   "lblTermsOfService": "Al continuar, aceptas nuestros Términos de servicio y Política de privacidad.",
   "lblTopCategory": "Categoría principal",
   "lblThisMonth": "este mes",
-  "tooltipKUnit": "kU (Unidad Kashew) es una unidad interna que suma gastos de diferentes monedas. Representa la actividad de gasto, no dinero real."
+  "tooltipKUnit": "kU (Unidad Kashew) es una unidad interna que suma gastos de diferentes monedas. Representa la actividad de gasto, no dinero real.",
+  "snackFailToSave": "No se pudieron guardar los ajustes."
 }

@@ -513,6 +513,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'kU (Kashew Unit) is an internal unit that sums expenses from different currencies. It represents spending activity, not real money.'**
   String get tooltipKUnit;
+
+  /// No description provided for @snackFailToSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to save the settings.'**
+  String get snackFailToSave;
 }
 
 class _AppLocalizationsDelegate

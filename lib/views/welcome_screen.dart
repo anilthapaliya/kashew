@@ -152,9 +152,15 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     width: double.infinity,
                     child: ElevatedButton.icon(
                         onPressed: () async {
-                          await welcomeViewModel.saveSettings();
-                          if (mounted) {
-                            Navigator.pushReplacementNamed(context, Constants.home);
+                          try {
+                            await welcomeViewModel.saveSettings();
+                            if (mounted) {
+                              Navigator.pushReplacementNamed(context, Constants.home);
+                            }
+                          } on Exception catch (e) {
+                            if (!mounted) return;
+                            final snackBar = SnackBar(content: Text(context.lang.snackFailToSave));
+                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
                           }
                         },
                         icon: Icon(Icons.arrow_forward_rounded, size: R.w(20)),

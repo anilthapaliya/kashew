@@ -220,4 +220,8 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get tooltipKUnit =>
       'kU (Kashew-Einheit) ist eine interne Einheit, die Ausgaben aus verschiedenen Währungen zusammenfasst. Sie stellt die Ausgabentätigkeit dar, ist aber kein echtes Geld.';
+
+  @override
+  String get snackFailToSave =>
+      'Die Einstellungen konnten nicht gespeichert werden.';
 }

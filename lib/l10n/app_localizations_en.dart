@@ -219,4 +219,7 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get tooltipKUnit =>
       'kU (Kashew Unit) is an internal unit that sums expenses from different currencies. It represents spending activity, not real money.';
+
+  @override
+  String get snackFailToSave => 'Unable to save the settings.';
 }
