@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:kashew/database/repositories/setting_repository.dart';
 import 'package:kashew/models/currency_model.dart';
-import 'package:kashew/models/settings_model.dart';
 import 'package:kashew/utils/constants.dart';
 
 class CurrencyViewModel extends ChangeNotifier {
 
-  final SettingsRepository settingsRepo = SettingsRepository();
+  late final SettingsRepository settingsRepo;
   final List<CurrencyModel> currencies = [
     CurrencyModel(CurrencyModel.npr),
     CurrencyModel(CurrencyModel.eur),
@@ -20,8 +19,9 @@ class CurrencyViewModel extends ChangeNotifier {
 
   late CurrencyModel defaultCurrency;
 
-  CurrencyViewModel() {
+  CurrencyViewModel({ SettingsRepository? settingsRepo }) {
 
+    this.settingsRepo = settingsRepo ?? SettingsRepository();
     defaultCurrency = currencies[0];
     notifyListeners();
   }
@@ -31,7 +31,8 @@ class CurrencyViewModel extends ChangeNotifier {
     String? value = await settingsRepo.getSetting(Constants.settingsCurrency);
 
     if (value != null) {
-      defaultCurrency = currencies.firstWhere((element) => element.code == value);
+      defaultCurrency = currencies.firstWhere((element) => element.code == value,
+      orElse: () => currencies[0]);
     } else {
       defaultCurrency = currencies[0];
     }
@@ -54,7 +55,7 @@ class CurrencyViewModel extends ChangeNotifier {
 
   CurrencyModel getCurrencyFromCode(String code) {
 
-    return currencies.firstWhere((element) => element.code == code);
+    return currencies.firstWhere((element) => element.code == code, orElse: () => currencies[0]);
   }
 
 }

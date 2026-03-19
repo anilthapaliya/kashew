@@ -4,9 +4,12 @@ import 'package:kashew/models/category_model.dart';
 
 class CategoryViewModel extends ChangeNotifier {
 
-  final CategoryRepository categoryRepo = CategoryRepository();
+  final CategoryRepository categoryRepo;
   List<CategoryModel>? categories;
   CategoryModel? selectedCategory;
+
+  CategoryViewModel({ CategoryRepository? categoryRepo }) :
+      categoryRepo = categoryRepo ??= CategoryRepository();
 
   Future<void> loadCategories() async {
 

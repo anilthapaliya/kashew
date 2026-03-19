@@ -5,7 +5,7 @@ import 'package:kashew/utils/constants.dart';
 
 class LanguageViewmodel extends ChangeNotifier {
 
-  SettingsRepository settingsRepo = SettingsRepository();
+  SettingsRepository settingsRepo;
   Locale _locale = const Locale('en');
   Locale get locale => _locale;
   List<LanguageModel> languages = [
@@ -14,12 +14,15 @@ class LanguageViewmodel extends ChangeNotifier {
     LanguageModel(code: Constants.langEs, language: 'Espanol'),
   ];
 
+  LanguageViewmodel({ SettingsRepository? settingsRepo}) :
+      settingsRepo = settingsRepo ??= SettingsRepository();
+
   LanguageModel getLanguage(String code) {
 
     return languages.firstWhere((element) => element.code == code);
   }
 
-  void loadLanguage() async {
+  Future<void> loadLanguage() async {
 
     String? language = await settingsRepo.getSetting(Constants.settingsLanguage);
     if (language == null) {
@@ -31,7 +34,7 @@ class LanguageViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void changeLanguage(String code) async {
+  Future<void> changeLanguage(String code) async {
 
     await settingsRepo.setSetting(Constants.settingsLanguage, code);
     _locale = Locale(code);

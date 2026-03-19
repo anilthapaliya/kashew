@@ -5,7 +5,7 @@ import 'package:kashew/utils/constants.dart';
 
 class HomeViewModel extends ChangeNotifier {
 
-  HomeRepository homeRepo = HomeRepository();
+  late final HomeRepository homeRepo;
   DateTime today = DateTime.now();
   late DateTime monthStart;
   late DateTime nextMonthStart;
@@ -14,18 +14,21 @@ class HomeViewModel extends ChangeNotifier {
   String? topCategory;
   double? topCategoryAmount;
 
-  HomeViewModel() {
+  HomeViewModel({ HomeRepository? homeRepo }) {
 
+    this.homeRepo = homeRepo ?? HomeRepository();
     monthStart = DateTime(today.year, today.month, 1);
     nextMonthStart = DateTime(today.year, today.month + 1, 1);
   }
 
-  void loadStats() async {
+  Future<void> loadStats() async {
 
     totalMonthlyExpense = await homeRepo.getTotalMonthlyExpense(
         monthStart.millisecondsSinceEpoch, nextMonthStart.millisecondsSinceEpoch);
+
     Map<String, dynamic>? data = await homeRepo.getTopCategory(
         monthStart.millisecondsSinceEpoch, nextMonthStart.millisecondsSinceEpoch);
+
     if (data != null) {
       categoryId = data[ExpenseModel.colCategoryId];
       topCategory = data[Constants.dataCategory];

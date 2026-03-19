@@ -172,7 +172,7 @@ class DatabaseHelper {
     final query = "SELECT SUM(${ExpenseModel.colAmount}) AS ${Constants.dataTotal} FROM "
         "${ExpenseModel.tableExpenses} WHERE ${ExpenseModel.colDateTime} >= ? AND ${ExpenseModel.colDateTime} < ?";
     final result = await db.rawQuery(query, [start, end]);
-    return (result.first[Constants.dataTotal] ?? 0) as double;
+    return (result.first[Constants.dataTotal] ?? 0.0) as double;
   }
 
   Future<Map<String, dynamic>?> getTopCategory(int start, int end) async {
