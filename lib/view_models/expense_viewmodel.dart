@@ -8,7 +8,7 @@ import 'package:kashew/utils/constants.dart';
 
 class ExpenseViewModel extends ChangeNotifier {
 
-  ExpenseRepository expenseRepo = ExpenseRepository();
+  final ExpenseRepository expenseRepo;
   int? _currentTopicId;
   List<ExpenseGroup>? groupExpenses;
   List<ExpenseModel>? recentExpenses;
@@ -17,6 +17,9 @@ class ExpenseViewModel extends ChangeNotifier {
   bool isError = false;
   String? errorTitle = "";
   String? errorAmount = "";
+
+  ExpenseViewModel({ ExpenseRepository? expenseRepo }) :
+      expenseRepo = expenseRepo ??= ExpenseRepository();
 
   void setCurrentTopicId(int topicId) {
     _currentTopicId = topicId;

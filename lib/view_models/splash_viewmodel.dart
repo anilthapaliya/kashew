@@ -26,6 +26,7 @@ class SplashViewModel extends ChangeNotifier {
     else {
       _showWelcome = false;
     }
+
     notifyListeners();
   }
 

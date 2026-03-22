@@ -7,13 +7,16 @@ import 'package:kashew/utils/constants.dart';
 
 class TopicViewModel extends ChangeNotifier {
 
-  TopicRepository topicRepo = TopicRepository();
+  final TopicRepository topicRepo;
   List<TopicModel>? topics;
   TopicModel? _selectedTopic;
   bool isTopicLoading = false;
   bool isTopicAdding = false;
   bool isError = false;
   String? errorMessage = "";
+
+  TopicViewModel({ TopicRepository? topicRepo }) :
+      topicRepo = topicRepo ??= TopicRepository();
 
   TopicModel? get selectedTopic => _selectedTopic;
 
