@@ -3,7 +3,7 @@ import 'package:kashew/database/repositories/setting_repository.dart';
 import 'package:kashew/models/language_model.dart';
 import 'package:kashew/utils/constants.dart';
 
-class LanguageViewmodel extends ChangeNotifier {
+class LanguageViewModel extends ChangeNotifier {
 
   SettingsRepository settingsRepo;
   Locale _locale = const Locale('en');
@@ -14,7 +14,7 @@ class LanguageViewmodel extends ChangeNotifier {
     LanguageModel(code: Constants.langEs, language: 'Espanol'),
   ];
 
-  LanguageViewmodel({ SettingsRepository? settingsRepo}) :
+  LanguageViewModel({ SettingsRepository? settingsRepo}) :
       settingsRepo = settingsRepo ??= SettingsRepository();
 
   LanguageModel getLanguage(String code) {

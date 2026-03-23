@@ -24,12 +24,16 @@ import 'package:kashew/l10n/app_localizations.dart';
 void main() {
   runApp(
       MultiProvider(providers: [
-        ChangeNotifierProvider(create: (_) => SplashViewModel()),
         ChangeNotifierProvider(create: (_) => CurrencyViewModel()),
+        ChangeNotifierProvider(create: (_) => LanguageViewModel()),
+        ChangeNotifierProxyProvider2
+        <LanguageViewModel, CurrencyViewModel, SplashViewModel>
+          (create: (_) => SplashViewModel(currencyVM: CurrencyViewModel(), languageVM: LanguageViewModel()),
+            update: (_, lVM, cVM, _) => SplashViewModel(languageVM: lVM, currencyVM: cVM)),
+        //ChangeNotifierProvider(create: (_) => SplashViewModel()),
         ChangeNotifierProvider(create: (_) => CategoryViewModel()),
         ChangeNotifierProvider(create: (_) => TopicViewModel()),
         ChangeNotifierProvider(create: (_) => ExpenseViewModel()),
-        ChangeNotifierProvider(create: (_) => LanguageViewmodel()),
         ChangeNotifierProvider(create: (_) => WelcomeViewModel()),
         ChangeNotifierProvider(create: (_) => HomeViewModel()),
       ], child: const KashewApp())
@@ -46,7 +50,7 @@ class KashewApp extends StatelessWidget {
     // Initialize the Responsive class.
     R.init(context);
 
-    return Consumer<LanguageViewmodel>(
+    return Consumer<LanguageViewModel>(
         builder: (context, language, child) {
           return MaterialApp(
             debugShowCheckedModeBanner: false,

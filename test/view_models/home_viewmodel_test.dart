@@ -16,6 +16,7 @@ void main() {
   bool notified = false;
 
   setUp(() {
+    notified = false;
     mockRepo = MockHomeRepository();
     viewModel = HomeViewModel(homeRepo: mockRepo);
 

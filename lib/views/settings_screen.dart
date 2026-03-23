@@ -89,7 +89,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               return settingsRow(context.lang.lblCurrencySettings, Icons.money,
                   sideWidget(currencyViewModel.defaultCurrency.currency!), showCurrencyList);
             }),
-            Consumer<LanguageViewmodel>(builder: (context, languageViewModel, child) {
+            Consumer<LanguageViewModel>(builder: (context, languageViewModel, child) {
               return settingsRow(context.lang.lblLanguage, Icons.language,
                   sideWidget(languageViewModel.locale.languageCode), showLanguageList);
             }),

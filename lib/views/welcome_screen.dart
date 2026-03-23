@@ -26,7 +26,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       WelcomeViewModel welcomeViewModel = context.read<WelcomeViewModel>();
       welcomeViewModel.currencyModel = context.read<CurrencyViewModel>().defaultCurrency;
-      welcomeViewModel.languageModel = context.read<LanguageViewmodel>().getLanguage(Constants.langEng);
+      welcomeViewModel.languageModel = context.read<LanguageViewModel>().getLanguage(Constants.langEng);
     });
   }
 
@@ -38,7 +38,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         backgroundColor: HexColor.fromHex(Constants.warmWhiteColor),
       ),
       backgroundColor: HexColor.fromHex(Constants.warmWhiteColor),
-      body: Consumer3<WelcomeViewModel, LanguageViewmodel, CurrencyViewModel>(
+      body: Consumer3<WelcomeViewModel, LanguageViewModel, CurrencyViewModel>(
           builder: (context, welcomeViewModel, languageViewModel, currencyViewModel, child) {
 
             return SingleChildScrollView(

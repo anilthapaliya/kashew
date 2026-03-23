@@ -11,12 +11,13 @@ import 'language_viewmodel_test.mocks.dart';
 void main() {
 
   late MockSettingsRepository mockRepo;
-  late LanguageViewmodel viewModel;
+  late LanguageViewModel viewModel;
   bool notified = false;
 
   setUp(() {
+    notified = false;
     mockRepo = MockSettingsRepository();
-    viewModel = LanguageViewmodel(settingsRepo: mockRepo);
+    viewModel = LanguageViewModel(settingsRepo: mockRepo);
     viewModel.addListener(() {
       notified = true;
     });

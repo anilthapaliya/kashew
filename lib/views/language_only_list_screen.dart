@@ -16,13 +16,13 @@ class LanguageListScreen extends StatefulWidget {
 
 class _LanguageListScreenState extends State<LanguageListScreen> {
 
-  late LanguageViewmodel languageViewmodel;
+  late LanguageViewModel languageViewmodel;
 
   @override
   void didChangeDependencies() {
 
     super.didChangeDependencies();
-    languageViewmodel = Provider.of<LanguageViewmodel>(context, listen: false);
+    languageViewmodel = Provider.of<LanguageViewModel>(context, listen: false);
   }
 
   @override
@@ -53,7 +53,7 @@ class _LanguageListScreenState extends State<LanguageListScreen> {
                       fontSize: R.sp(14), fontWeight: FontWeight.bold, color: HexColor.fromHex(Constants.darkBgColor))),
             ),
             SizedBox(height: R.h(10)),
-            Consumer<LanguageViewmodel>(
+            Consumer<LanguageViewModel>(
                 builder: (context, languageViewModel, child) {
                   return Card(
                     elevation: 0,

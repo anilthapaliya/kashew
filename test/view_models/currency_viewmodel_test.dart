@@ -15,6 +15,7 @@ void main() {
   bool notified = false;
 
   setUp(() {
+    notified = false;
     mockRepo = MockSettingsRepository();
     viewModel = CurrencyViewModel(settingsRepo: mockRepo);
 

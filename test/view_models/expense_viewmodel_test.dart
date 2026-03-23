@@ -15,6 +15,7 @@ void main() {
   bool notified = false;
 
   setUp(() {
+    notified = false;
     mockRepo = MockExpenseRepository();
     viewModel = ExpenseViewModel(expenseRepo: mockRepo);
     viewModel.addListener(() {

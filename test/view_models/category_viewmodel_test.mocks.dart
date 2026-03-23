@@ -3,14 +3,12 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i5;
+import 'dart:async' as _i4;
 
-import 'package:flutter/material.dart' as _i3;
 import 'package:kashew/database/helper/database_helper.dart' as _i2;
-import 'package:kashew/database/repositories/category_repository.dart' as _i4;
-import 'package:kashew/models/category_model.dart' as _i6;
+import 'package:kashew/database/repositories/category_repository.dart' as _i3;
+import 'package:kashew/models/category_model.dart' as _i5;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:mockito/src/dummies.dart' as _i7;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -33,16 +31,11 @@ class _FakeDatabaseHelper_0 extends _i1.SmartFake
     : super(parent, parentInvocation);
 }
 
-class _FakeIconData_1 extends _i1.SmartFake implements _i3.IconData {
-  _FakeIconData_1(Object parent, Invocation parentInvocation)
-    : super(parent, parentInvocation);
-}
-
 /// A class which mocks [CategoryRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockCategoryRepository extends _i1.Mock
-    implements _i4.CategoryRepository {
+    implements _i3.CategoryRepository {
   MockCategoryRepository() {
     _i1.throwOnMissingStub(this);
   }
@@ -59,48 +52,12 @@ class MockCategoryRepository extends _i1.Mock
           as _i2.DatabaseHelper);
 
   @override
-  _i5.Future<List<_i6.CategoryModel>> getCategories() =>
+  _i4.Future<List<_i5.CategoryModel>> getCategories() =>
       (super.noSuchMethod(
             Invocation.method(#getCategories, []),
-            returnValue: _i5.Future<List<_i6.CategoryModel>>.value(
-              <_i6.CategoryModel>[],
+            returnValue: _i4.Future<List<_i5.CategoryModel>>.value(
+              <_i5.CategoryModel>[],
             ),
           )
-          as _i5.Future<List<_i6.CategoryModel>>);
-}
-
-/// A class which mocks [CategoryModel].
-///
-/// See the documentation for Mockito's code generation for more information.
-class MockCategoryModel extends _i1.Mock implements _i6.CategoryModel {
-  MockCategoryModel() {
-    _i1.throwOnMissingStub(this);
-  }
-
-  @override
-  String get categoryName =>
-      (super.noSuchMethod(
-            Invocation.getter(#categoryName),
-            returnValue: _i7.dummyValue<String>(
-              this,
-              Invocation.getter(#categoryName),
-            ),
-          )
-          as String);
-
-  @override
-  _i3.IconData get icon =>
-      (super.noSuchMethod(
-            Invocation.getter(#icon),
-            returnValue: _FakeIconData_1(this, Invocation.getter(#icon)),
-          )
-          as _i3.IconData);
-
-  @override
-  Map<String, dynamic> toMap() =>
-      (super.noSuchMethod(
-            Invocation.method(#toMap, []),
-            returnValue: <String, dynamic>{},
-          )
-          as Map<String, dynamic>);
+          as _i4.Future<List<_i5.CategoryModel>>);
 }

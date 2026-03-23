@@ -23,19 +23,10 @@ class _SplashScreenState extends State<SplashScreen> {
     super.didChangeDependencies();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final viewModel = context.read<SplashViewModel>();
+      final route = await viewModel.initializeApp(Constants.splashDelay);
 
-      Provider.of<LanguageViewmodel>(context, listen: false).loadLanguage();
-      Provider.of<CurrencyViewModel>(context, listen: false).loadDefaultCurrency();
-      final viewModel = Provider.of<SplashViewModel>(context, listen: false);
-      await viewModel.initializeApp(Constants.splashDelay);
-
-      if (!mounted) return;
-      if (viewModel.showWelcome) {
-        Navigator.pushReplacementNamed(context, Constants.welcome);
-      }
-      else {
-        Navigator.pushReplacementNamed(context, Constants.home);
-      }
+      if (mounted) Navigator.pushReplacementNamed(context, route);
     });
   }
 
@@ -48,10 +39,10 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(Constants.imgLogo, width: R.w(120)),
+            Image.asset(
+                key: const Key("splash-image"),
+                Constants.imgLogo, width: R.w(120)),
             SizedBox(height: R.h(20)),
-            /*Text(Constants.lblSubtitle.toUpperCase(), style: TextStyle(fontFamily: Constants.fontBody,
-                color: HexColor.fromHex(Constants.textSecondaryColor), fontSize: R.sp(15), fontWeight: FontWeight.w500)),*/
           ],
         ),
       ),
