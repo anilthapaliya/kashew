@@ -30,11 +30,15 @@ void main() {
         <LanguageViewModel, CurrencyViewModel, SplashViewModel>
           (create: (_) => SplashViewModel(currencyVM: CurrencyViewModel(), languageVM: LanguageViewModel()),
             update: (_, lVM, cVM, _) => SplashViewModel(languageVM: lVM, currencyVM: cVM)),
+        ChangeNotifierProxyProvider2
+        <LanguageViewModel, CurrencyViewModel, WelcomeViewModel>
+          (create: (_) => WelcomeViewModel(languageVM: LanguageViewModel(), currencyVM: CurrencyViewModel()),
+            update: (_, lVM, cVM, _) => WelcomeViewModel(languageVM: lVM, currencyVM: cVM)),
         //ChangeNotifierProvider(create: (_) => SplashViewModel()),
+        //ChangeNotifierProvider(create: (_) => WelcomeViewModel()),
         ChangeNotifierProvider(create: (_) => CategoryViewModel()),
         ChangeNotifierProvider(create: (_) => TopicViewModel()),
         ChangeNotifierProvider(create: (_) => ExpenseViewModel()),
-        ChangeNotifierProvider(create: (_) => WelcomeViewModel()),
         ChangeNotifierProvider(create: (_) => HomeViewModel()),
       ], child: const KashewApp())
   );

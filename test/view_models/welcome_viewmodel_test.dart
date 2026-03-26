@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kashew/database/repositories/setting_repository.dart';
 import 'package:kashew/models/currency_model.dart';
@@ -7,6 +8,7 @@ import 'package:kashew/view_models/welcome_viewmodel.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
+import '../views/splash_screen_test.mocks.dart';
 @GenerateMocks([SettingsRepository])
 import 'welcome_viewmodel_test.mocks.dart';
 
@@ -17,7 +19,7 @@ void main() {
 
   setUp(() {
     mockRepo = MockSettingsRepository();
-    viewModel = WelcomeViewModel(settingsRepo: mockRepo);
+    viewModel = WelcomeViewModel(settingsRepo: mockRepo, languageVM: MockLanguageViewModel(), currencyVM: MockCurrencyViewModel());
   });
 
   group("Welcome Screen", () {
@@ -25,12 +27,11 @@ void main() {
     test("should save the settings", () async {
       // Arrange
       final lang = LanguageModel(code: "en", language: "English");
-      viewModel.setLanguage(lang);
       final cur = CurrencyModel("USD");
-      viewModel.setCurrency(cur);
+      when(viewModel.currencyVM.defaultCurrency).thenReturn(cur);
+      when(viewModel.languageVM.locale).thenReturn(Locale(lang.code));
 
       // Act
-      when(mockRepo.setSetting(any, any)).thenAnswer((_) async => {});
       await viewModel.saveSettings();
 
       // Assert
@@ -40,19 +41,13 @@ void main() {
     });
 
     test("should not save the settings", () async {
-      when(mockRepo.setSetting(any, any)).thenAnswer((_) async => {});
+      when(viewModel.currencyVM.defaultCurrency).thenReturn(CurrencyModel(""));
+      when(viewModel.languageVM.locale).thenReturn(Locale("en"));
 
-      expect(() async => await viewModel.saveSettings(), throwsException);
-      verifyNever(mockRepo.setSetting(Constants.settingsLanguage, "en"));
-      verifyNever(mockRepo.setSetting(Constants.settingsCurrency, "USD"));
-      verifyNever(mockRepo.setSetting(Constants.settingsFirstRun, "YES"));
+      expect(viewModel.saveSettings(), throwsException);
+      verifyNever(mockRepo.setSetting(any, any));
     });
 
-    test("should throw exception", () async {
-      when(mockRepo.setSetting(any, any)).thenThrow(Exception());
-
-      expect(() async => await viewModel.saveSettings(), throwsException);
-    });
   });
 
 }

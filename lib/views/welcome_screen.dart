@@ -24,9 +24,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
     super.didChangeDependencies();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      WelcomeViewModel welcomeViewModel = context.read<WelcomeViewModel>();
-      welcomeViewModel.currencyModel = context.read<CurrencyViewModel>().defaultCurrency;
-      welcomeViewModel.languageModel = context.read<LanguageViewModel>().getLanguage(Constants.langEng);
+      context.read<WelcomeViewModel>().loadDefaults();
     });
   }
 
@@ -38,8 +36,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         backgroundColor: HexColor.fromHex(Constants.warmWhiteColor),
       ),
       backgroundColor: HexColor.fromHex(Constants.warmWhiteColor),
-      body: Consumer3<WelcomeViewModel, LanguageViewModel, CurrencyViewModel>(
-          builder: (context, welcomeViewModel, languageViewModel, currencyViewModel, child) {
+      body: Consumer3<LanguageViewModel, CurrencyViewModel, WelcomeViewModel>(
+          builder: (context, languageViewModel, currencyViewModel, welcomeViewModel, child) {
 
             return SingleChildScrollView(
               child: Padding(
@@ -68,12 +66,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   // Language Section
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: R.w(15), vertical: R.h(10)),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(context.lang.lblSelectLanguage, style: TextStyle(fontFamily: Constants.fontTitle, fontSize: R.sp(18), fontWeight: FontWeight.bold),),
-                      ],
-                    ),
+                    child: Text(context.lang.lblSelectLanguage, overflow: TextOverflow.fade,
+                      style: TextStyle(fontFamily: Constants.fontTitle, fontSize: R.sp(18), fontWeight: FontWeight.bold),),
                   ),
                   Row(
                     children: [
@@ -97,7 +91,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         }).toList(),
                         onSelected: (value) {
                           languageViewModel.changeLanguage(value!.code);
-                          welcomeViewModel.setLanguage(value);
                         },
                       ),
                       ),
@@ -108,12 +101,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   SizedBox(height: R.h(20)),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: R.w(15), vertical: R.h(10)),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(context.lang.lblSelectCurrency, style: TextStyle(fontFamily: Constants.fontTitle, fontSize: R.sp(18), fontWeight: FontWeight.bold),),
-                      ],
-                    ),
+                    child: Text(context.lang.lblSelectCurrency, style: TextStyle(fontFamily: Constants.fontTitle, fontSize: R.sp(18), fontWeight: FontWeight.bold),),
                   ),
                   Row(
                     children: [
@@ -140,7 +128,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           }).toList(),
                           onSelected: (value) {
                             currencyViewModel.selectCurrency(value!);
-                            welcomeViewModel.setCurrency(value);
                           },
                         ),
                       ),

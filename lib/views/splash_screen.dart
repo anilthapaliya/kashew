@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:kashew/utils/constants.dart';
 import 'package:kashew/utils/hex_color.dart';
 import 'package:kashew/utils/responsive.dart';
-import 'package:kashew/view_models/currency_viewmodel.dart';
-import 'package:kashew/view_models/language_viewmodel.dart';
 import 'package:kashew/view_models/splash_viewmodel.dart';
 import 'package:provider/provider.dart';
 
