@@ -96,6 +96,12 @@ void main() {
     await tester.pumpAndSettle();
 
     verify(currencyVM.selectCurrency(any)).called(1);
+
+    // Tap on Get Started button
+    await tester.tap(find.byType(ElevatedButton));
+    await tester.pumpAndSettle();
+    verify(mockWelcomeVM.saveSettings()).called(1);
+    expect(find.text("Home"), findsOneWidget);
   });
 
 }

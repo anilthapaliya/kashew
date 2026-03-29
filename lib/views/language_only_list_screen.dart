@@ -7,94 +7,128 @@ import 'package:kashew/utils/responsive.dart';
 import 'package:kashew/view_models/language_viewmodel.dart';
 import 'package:provider/provider.dart';
 
-class LanguageListScreen extends StatefulWidget {
+class LanguageListScreen extends StatelessWidget {
+
   const LanguageListScreen({super.key});
-
-  @override
-  State<LanguageListScreen> createState() => _LanguageListScreenState();
-}
-
-class _LanguageListScreenState extends State<LanguageListScreen> {
-
-  late LanguageViewModel languageViewmodel;
-
-  @override
-  void didChangeDependencies() {
-
-    super.didChangeDependencies();
-    languageViewmodel = Provider.of<LanguageViewModel>(context, listen: false);
-  }
 
   @override
   Widget build(BuildContext context) {
 
+    final languageViewmodel = Provider.of<LanguageViewModel>(context, listen: false);
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(context.lang.lblAppBarLanguageList, overflow: TextOverflow.fade,
-            textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontTitle,
-                fontSize: R.sp(16), fontWeight: FontWeight.bold, color: HexColor.fromHex(Constants.darkBgColor))),
+        title: Text(
+          context.lang.lblAppBarLanguageList,
+          overflow: TextOverflow.fade,
+          style: TextStyle(
+            fontFamily: Constants.fontTitle,
+            fontSize: R.sp(16),
+            fontWeight: FontWeight.bold,
+            color: HexColor.fromHex(Constants.darkBgColor),
+          ),
+        ),
       ),
       backgroundColor: HexColor.fromHex(Constants.warmWhiteColor),
-      body: Container(
-        height: MediaQuery.of(context).size.height,
-        padding: EdgeInsets.symmetric(vertical: R.h(30), horizontal: R.w(Constants.stdMargin)),
-        decoration: BoxDecoration(
-          color: HexColor.fromHex(Constants.warmWhiteColor),
+
+      body: Padding(
+        padding: EdgeInsets.symmetric(
+          vertical: R.h(30),
+          horizontal: R.w(Constants.stdMargin),
         ),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
               padding: EdgeInsets.symmetric(horizontal: R.w(20)),
-              child: Text(context.lang.lblLanguage, overflow: TextOverflow.fade,
-                  textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontBody,
-                      fontSize: R.sp(14), fontWeight: FontWeight.bold, color: HexColor.fromHex(Constants.darkBgColor))),
+              child: Text(
+                context.lang.lblLanguage,
+                style: TextStyle(
+                  fontFamily: Constants.fontBody,
+                  fontSize: R.sp(14),
+                  fontWeight: FontWeight.bold,
+                  color: HexColor.fromHex(Constants.darkBgColor),
+                ),
+              ),
             ),
+
             SizedBox(height: R.h(10)),
-            Consumer<LanguageViewModel>(
+
+            Expanded(
+              child: Consumer<LanguageViewModel>(
                 builder: (context, languageViewModel, child) {
                   return Card(
                     elevation: 0,
                     color: HexColor.fromHex(Constants.pureWhiteColor),
-                    child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ListView.separated(
-                              shrinkWrap: true,
-                              itemCount: languageViewModel.languages.length,
-                              itemBuilder: (context, index) {
-                                return singleTopic(languageViewModel.languages[index]);
-                              },
-                              separatorBuilder: (context, index) =>
-                                  Divider(height: 1, indent: R.w(20), endIndent: R.w(20), color: HexColor.fromHex(Constants.dividerColor))),
-                        ]),
+
+                    child: ListView.separated(
+                      key: const Key('language-list'),
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      itemCount: languageViewModel.languages.length,
+                      itemBuilder: (context, index) {
+                        final lang = languageViewModel.languages[index];
+
+                        return _LanguageItem(
+                          key: Key('language-item-${lang.code}'), // ✅ stable finder
+                          language: lang,
+                          onTap: () {
+                            languageViewmodel.changeLanguage(lang.code);
+                            Navigator.pop(context, lang);
+                          },
+                        );
+                      },
+
+                      separatorBuilder: (_, _) => Divider(
+                        height: 1,
+                        indent: R.w(20),
+                        endIndent: R.w(20),
+                        color: HexColor.fromHex(Constants.dividerColor)),
+                    ),
                   );
-                }),
+                },
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget singleTopic(LanguageModel language) {
+}
+
+class _LanguageItem extends StatelessWidget {
+
+  final LanguageModel language;
+  final VoidCallback onTap;
+
+  const _LanguageItem({
+    super.key,
+    required this.language,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
 
     return InkWell(
-      onTap: () {
-        languageViewmodel.changeLanguage(language.code);
-        Navigator.pop(context, language);
-      },
+      onTap: onTap,
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: R.h(15), horizontal: R.w(20)),
+        padding: EdgeInsets.symmetric(
+          vertical: R.h(15),
+          horizontal: R.w(20),
+        ),
         child: Row(
           children: [
-            //Icon(language.symbol!, color: HexColor.fromHex(Constants.textSecondaryColor)),
-            //SizedBox(width: R.w(20)),
-            Text(language.language, overflow: TextOverflow.fade,
-                textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontBody,
-                    fontSize: R.sp(14), color: HexColor.fromHex(Constants.darkBgColor))),
+            Text(
+              language.language,
+              overflow: TextOverflow.fade,
+              style: TextStyle(
+                fontFamily: Constants.fontBody,
+                fontSize: R.sp(14),
+                color: HexColor.fromHex(Constants.darkBgColor),
+              ),
+            ),
           ],
         ),
       ),
