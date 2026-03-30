@@ -14,8 +14,6 @@ class LanguageListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final languageViewmodel = Provider.of<LanguageViewModel>(context, listen: false);
-
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -31,7 +29,6 @@ class LanguageListScreen extends StatelessWidget {
         ),
       ),
       backgroundColor: HexColor.fromHex(Constants.warmWhiteColor),
-
       body: Padding(
         padding: EdgeInsets.symmetric(
           vertical: R.h(30),
@@ -42,12 +39,9 @@ class LanguageListScreen extends StatelessWidget {
           children: [
             Padding(
               padding: EdgeInsets.symmetric(horizontal: R.w(20)),
-              child: Text(
-                context.lang.lblLanguage,
-                style: TextStyle(
-                  fontFamily: Constants.fontBody,
-                  fontSize: R.sp(14),
-                  fontWeight: FontWeight.bold,
+              child: Text(context.lang.lblLanguage, overflow: TextOverflow.fade,
+                textAlign: TextAlign.left, style: TextStyle(
+                  fontFamily: Constants.fontBody, fontSize: R.sp(14), fontWeight: FontWeight.bold,
                   color: HexColor.fromHex(Constants.darkBgColor),
                 ),
               ),
@@ -61,7 +55,6 @@ class LanguageListScreen extends StatelessWidget {
                   return Card(
                     elevation: 0,
                     color: HexColor.fromHex(Constants.pureWhiteColor),
-
                     child: ListView.separated(
                       key: const Key('language-list'),
                       physics: const AlwaysScrollableScrollPhysics(),
@@ -70,19 +63,17 @@ class LanguageListScreen extends StatelessWidget {
                         final lang = languageViewModel.languages[index];
 
                         return _LanguageItem(
-                          key: Key('language-item-${lang.code}'), // ✅ stable finder
+                          key: Key('language-item-${lang.code}'),
                           language: lang,
                           onTap: () {
-                            languageViewmodel.changeLanguage(lang.code);
+                            languageViewModel.changeLanguage(lang.code);
                             Navigator.pop(context, lang);
                           },
                         );
                       },
 
                       separatorBuilder: (_, _) => Divider(
-                        height: 1,
-                        indent: R.w(20),
-                        endIndent: R.w(20),
+                        height: 1, indent: R.w(20), endIndent: R.w(20),
                         color: HexColor.fromHex(Constants.dividerColor)),
                     ),
                   );
@@ -114,22 +105,13 @@ class _LanguageItem extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.symmetric(
-          vertical: R.h(15),
-          horizontal: R.w(20),
-        ),
-        child: Row(
-          children: [
-            Text(
-              language.language,
-              overflow: TextOverflow.fade,
-              style: TextStyle(
-                fontFamily: Constants.fontBody,
-                fontSize: R.sp(14),
-                color: HexColor.fromHex(Constants.darkBgColor),
-              ),
-            ),
-          ],
+        padding: EdgeInsets.symmetric(vertical: R.h(15), horizontal: R.w(20)),
+        child: Text(
+          language.language, overflow: TextOverflow.fade,
+          style: TextStyle(
+            fontFamily: Constants.fontBody, fontSize: R.sp(14),
+            color: HexColor.fromHex(Constants.darkBgColor),
+          ),
         ),
       ),
     );

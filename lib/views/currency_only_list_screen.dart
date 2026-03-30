@@ -7,24 +7,9 @@ import 'package:kashew/utils/responsive.dart';
 import 'package:kashew/view_models/currency_viewmodel.dart';
 import 'package:provider/provider.dart';
 
-class CurrencyListScreen extends StatefulWidget {
+class CurrencyListScreen extends StatelessWidget {
+
   const CurrencyListScreen({super.key});
-
-  @override
-  State<CurrencyListScreen> createState() => _CurrencyListScreenState();
-}
-
-class _CurrencyListScreenState extends State<CurrencyListScreen> {
-
-  late CurrencyViewModel currencyViewModel;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    currencyViewModel = Provider.of<CurrencyViewModel>(context, listen: false);
-    currencyViewModel.loadDefaultCurrency();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,14 +22,12 @@ class _CurrencyListScreenState extends State<CurrencyListScreen> {
                 fontSize: R.sp(16), fontWeight: FontWeight.bold, color: HexColor.fromHex(Constants.darkBgColor))),
       ),
       backgroundColor: HexColor.fromHex(Constants.warmWhiteColor),
-      body: Container(
-        height: MediaQuery.of(context).size.height,
-        padding: EdgeInsets.symmetric(vertical: R.h(30), horizontal: R.w(Constants.stdMargin)),
-        decoration: BoxDecoration(
-          color: HexColor.fromHex(Constants.warmWhiteColor),
+      body: Padding(
+        padding: EdgeInsets.symmetric(
+          vertical: R.h(30),
+          horizontal: R.w(Constants.stdMargin),
         ),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
@@ -53,49 +36,71 @@ class _CurrencyListScreenState extends State<CurrencyListScreen> {
                   textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontBody,
                       fontSize: R.sp(14), fontWeight: FontWeight.bold, color: HexColor.fromHex(Constants.darkBgColor))),
             ),
+
             SizedBox(height: R.h(10)),
-            Consumer<CurrencyViewModel>(
-                builder: (context, currencyViewModel, child) {
-                  return Card(
-                    elevation: 0,
-                    color: HexColor.fromHex(Constants.pureWhiteColor),
-                    child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ListView.separated(
-                              shrinkWrap: true,
-                              itemCount: currencyViewModel.currencies.length,
-                              itemBuilder: (context, index) {
-                                return singleTopic(currencyViewModel.currencies[index]);
-                              },
-                              separatorBuilder: (context, index) =>
-                                  Divider(height: 1, indent: R.w(20), endIndent: R.w(20), color: HexColor.fromHex(Constants.dividerColor))),
-                        ]),
-                  );
-                }),
+
+            Expanded(
+              child: Consumer<CurrencyViewModel>(
+                  builder: (context, currencyViewModel, child) {
+                    return Card(
+                      elevation: 0,
+                      color: HexColor.fromHex(Constants.pureWhiteColor),
+                      child: ListView.separated(
+                          key: const Key('currency-list'),
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          itemCount: currencyViewModel.currencies.length,
+                          itemBuilder: (context, index) {
+                            final currency = currencyViewModel.currencies[index];
+
+                            return _CurrencyItem(
+                                key: Key('currency-item-${currency.code}'),
+                                currency: currency,
+                                onTap: () {
+                                  currencyViewModel.selectCurrency(currency);
+                                  Navigator.pop(context, currency);
+                                });
+                          },
+                          separatorBuilder: (context, index) =>
+                              Divider(height: 1, indent: R.w(20), endIndent: R.w(20),
+                                  color: HexColor.fromHex(Constants.dividerColor))),
+                    );
+                  }),
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget singleTopic(CurrencyModel currency) {
+}
+
+class _CurrencyItem extends StatelessWidget {
+
+  final CurrencyModel currency;
+  final VoidCallback onTap;
+
+  const _CurrencyItem({
+    super.key,
+    required this.currency,
+    required this.onTap
+  });
+
+  @override
+  Widget build(BuildContext context) {
 
     return InkWell(
-      onTap: () {
-        currencyViewModel.setDefaultCurrency(currency);
-        Navigator.pop(context, currency);
-      },
+      onTap: onTap,
       child: Container(
         padding: EdgeInsets.symmetric(vertical: R.h(15), horizontal: R.w(20)),
         child: Row(
           children: [
             Icon(currency.symbol!, color: HexColor.fromHex(Constants.textSecondaryColor)),
             SizedBox(width: R.w(20)),
-            Text("${currency.currency!} (${currency.code})", overflow: TextOverflow.fade,
-                textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontBody,
-                    fontSize: R.sp(14), color: HexColor.fromHex(Constants.darkBgColor))),
+            Flexible(
+              child: Text("${currency.currency!} (${currency.code})", overflow: TextOverflow.fade,
+                  softWrap: false, textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontBody,
+                      fontSize: R.sp(14), color: HexColor.fromHex(Constants.darkBgColor))),
+            ),
           ],
         ),
       ),

@@ -49,9 +49,9 @@ void main() {
           ChangeNotifierProvider<LanguageViewModel>.value(value: mockLanguageVM)
         ],
         child: MaterialApp(
-          routes: {
-            Constants.home : (_) => const Scaffold(body: Text("Home"))
-          },
+            routes: {
+              Constants.home : (_) => const Scaffold(body: Text("Home"))
+            },
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             locale: const Locale('en'),
@@ -84,6 +84,7 @@ void main() {
     await tester.tap(find.text('Mexican').hitTestable());
     await tester.pumpAndSettle();
     verify(mockLanguageVM.changeLanguage('mx')).called(1);
+
   });
 
 }
