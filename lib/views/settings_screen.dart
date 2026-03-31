@@ -117,6 +117,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget settingsRow(String title, IconData icon, Widget? sideWidget, Function onTap) {
 
     return InkWell(
+      key: Key(title),
       onTap: () => onTap(),
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: R.h(15), horizontal: R.w(Constants.stdMargin)),
@@ -128,38 +129,45 @@ class _SettingsScreenState extends State<SettingsScreen> {
               decoration: BoxDecoration(borderRadius: BorderRadius.circular(30), color: HexColor.fromHex(Constants.warmWhiteColor)),
               child: Icon(icon, color: HexColor.fromHex(Constants.textSecondaryColor), size: R.w(15)),
             ),
-            Text(title, overflow: TextOverflow.fade,
-                textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontBody,
-                    fontSize: R.sp(14), color: HexColor.fromHex(Constants.darkBgColor))),
+            Expanded(
+              child: Text(title, overflow: TextOverflow.ellipsis, maxLines: 1,
+                  textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontBody,
+                      fontSize: R.sp(14), color: HexColor.fromHex(Constants.darkBgColor))),
+            ),
+
             if (sideWidget != null)
-            const Spacer(),
-            ?sideWidget,
+              ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: R.w(50)),
+                  child: sideWidget),
           ],
         ),
       ),
     );
   }
 
-  void changeAppearance() {
-    print("Appearance");
-  }
-
   Widget sideWidget(String value) {
 
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        Text(
-          value,
-          overflow: TextOverflow.fade,
-          textAlign: TextAlign.right,
-          style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(13), color: HexColor.fromHex(Constants.textSecondaryColor)),
-        ),
-        SizedBox(width: R.w(4)),
-        Icon(Icons.keyboard_arrow_right_rounded, color: HexColor.fromHex(Constants.textSecondaryColor)),
-      ],
+    return ConstrainedBox(
+      constraints: BoxConstraints(maxWidth: R.w(50)),
+      child: Wrap(
+        alignment: WrapAlignment.end,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        children: [
+          ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: R.w(50)),
+            child: Text(value, overflow: TextOverflow.ellipsis, textAlign: TextAlign.right, maxLines: 1,
+              style: TextStyle(fontFamily: Constants.fontBody, fontSize: R.sp(13), color: HexColor.fromHex(Constants.textSecondaryColor)),
+            ),
+          ),
+          SizedBox(width: R.w(4)),
+          Icon(Icons.keyboard_arrow_right_rounded, color: HexColor.fromHex(Constants.textSecondaryColor)),
+        ],
+      ),
     );
+  }
+
+  void changeAppearance() {
+    print("Appearance");
   }
 
   void showCurrencyList() async {
