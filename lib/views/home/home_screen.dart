@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kashew/models/category_model.dart';
 import 'package:kashew/models/currency_model.dart';
 import 'package:kashew/models/expense_model.dart';
+import 'package:kashew/models/topic_model.dart';
 import 'package:kashew/utils/common_utils.dart';
 import 'package:kashew/utils/constants.dart';
 import 'package:kashew/utils/hex_color.dart';
@@ -262,7 +263,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         isScrollControlled: true,
         isDismissible: false,
         backgroundColor: HexColor.fromHex(Constants.warmWhiteColor),
-        builder: (context) => AddExpenseWidget());
+        builder: (context) => AddExpenseWidget(onSelectTopic: () async {
+          return await Navigator.pushNamed(context, Constants.topicOnlyList) as TopicModel?;
+        }));
   }
 
   @override

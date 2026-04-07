@@ -358,7 +358,9 @@ class _TopicDetailScreenState extends State<TopicDetailScreen> {
         isScrollControlled: true,
         isDismissible: false,
         backgroundColor: HexColor.fromHex(Constants.warmWhiteColor),
-        builder: (context) => AddExpenseWidget(topicModel: topicModel));
+        builder: (context) => AddExpenseWidget(topicModel: topicModel, onSelectTopic: () async {
+          return await Navigator.pushNamed(context, Constants.topicOnlyList) as TopicModel?;
+        }));
   }
 
   void showEditExpensePopup(ExpenseModel model) async {
@@ -368,7 +370,9 @@ class _TopicDetailScreenState extends State<TopicDetailScreen> {
     isScrollControlled: true,
     isDismissible: false,
     backgroundColor: HexColor.fromHex(Constants.warmWhiteColor),
-        builder: (context) => AddExpenseWidget(topicModel: topicModel, expenseModel: model));
+        builder: (context) => AddExpenseWidget(topicModel: topicModel, expenseModel: model, onSelectTopic: () async {
+          return await Navigator.pushNamed(context, Constants.topicOnlyList) as TopicModel?;
+        }));
   }
 
   Future<bool?> showExpenseDeleteDialog(BuildContext context, ExpenseModel expense) async {

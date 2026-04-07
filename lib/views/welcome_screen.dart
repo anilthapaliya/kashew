@@ -20,9 +20,9 @@ class WelcomeScreen extends StatefulWidget {
 class _WelcomeScreenState extends State<WelcomeScreen> {
 
   @override
-  void didChangeDependencies() {
+  void initState() {
 
-    super.didChangeDependencies();
+    super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       context.read<WelcomeViewModel>().loadDefaults();
     });

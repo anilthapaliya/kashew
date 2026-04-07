@@ -17,8 +17,8 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
+  void initState() {
+    super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final viewModel = context.read<SplashViewModel>();
