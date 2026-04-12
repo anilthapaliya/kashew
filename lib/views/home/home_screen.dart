@@ -77,6 +77,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         ),
       ),
       body: Column(
+        key: const Key("home-body"),
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
 

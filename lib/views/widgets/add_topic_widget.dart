@@ -87,7 +87,7 @@ class _AddTopicWidgetState extends State<AddTopicWidget> {
                   // Top Row
                   Row(
                     children: [
-                      IconButton(onPressed: () => Navigator.pop(context), icon: Icon(Icons.close)),
+                      IconButton(key: const Key("close-button"), onPressed: () => Navigator.pop(context), icon: Icon(Icons.close)),
                       const Expanded(child: SizedBox()),
                       Text(key: const Key("header"), widget.topicModel != null ? context.lang.lblAppBarEditTopic : context.lang.lblAppBarAddTopic,
                           textAlign: TextAlign.center, style: TextStyle(fontFamily: Constants.fontTitle,

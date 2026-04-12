@@ -104,7 +104,7 @@ class _AddExpenseWidgetState extends State<AddExpenseWidget> {
                       // Top Row
                       Row(
                         children: [
-                          IconButton(onPressed: () => Navigator.pop(context), icon: Icon(Icons.close)),
+                          IconButton(key: const Key("close-button"), onPressed: () => Navigator.pop(context), icon: Icon(Icons.close)),
                           const Expanded(child: SizedBox()),
                           Expanded(
                             child: Text(key: const Key("header"), context.lang.lblAppBarAddExpense, textAlign: TextAlign.center, style: TextStyle(fontFamily: Constants.fontTitle,
