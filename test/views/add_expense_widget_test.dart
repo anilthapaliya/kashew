@@ -48,7 +48,7 @@ void main() {
 
   group("Add Expense UI", () {
 
-    testWidgets("should load fine.", (tester) async {
+    testWidgets("should load fine", (tester) async {
 
       await tester.pumpWidget(_getMaterialApp(mockExpenseVM, mockCategoryVM, mockTopicVM, mockHomeVM));
       await tester.pumpAndSettle();

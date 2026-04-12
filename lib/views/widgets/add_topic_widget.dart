@@ -28,6 +28,7 @@ class _AddTopicWidgetState extends State<AddTopicWidget> {
   late final TextEditingController dateController;
   late final TextEditingController descriptionController;
   DateTime selectedDate = DateTime.now();
+  bool _initialized = false;
 
   @override
   void initState() {
@@ -42,20 +43,24 @@ class _AddTopicWidgetState extends State<AddTopicWidget> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    context.read<CurrencyViewModel>();
-    context.read<CategoryViewModel>().loadCategories();
+    if (_initialized) return;
+
     topicViewModel = context.read<TopicViewModel>();
+    _initialized = true;
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) => initialize());
+  }
 
-      if (widget.topicModel != null) {
-        topicController.text = widget.topicModel!.name;
-        dateController.text = widget.topicModel!.readableDateTime;
-        descriptionController.text = widget.topicModel!.description!;
-      }
+  void initialize() {
 
-      if (widget.topicModel == null) dateController.text = "${CommonUtils.getReadableDate(selectedDate)} (Today)";
-    });
+    context.read<CategoryViewModel>().loadCategories();
+    if (widget.topicModel != null) {
+      topicController.text = widget.topicModel!.name;
+      dateController.text = widget.topicModel!.readableDateTime;
+      descriptionController.text = widget.topicModel!.description!;
+    }
+
+    if (widget.topicModel == null) dateController.text = "${CommonUtils.getReadableDate(selectedDate)} (Today)";
   }
 
   @override
@@ -70,199 +75,208 @@ class _AddTopicWidgetState extends State<AddTopicWidget> {
           return const Center(child: CircularProgressIndicator());
         }
 
-        return Container(
-          height: MediaQuery.of(context).size.height,
-          padding: EdgeInsets.symmetric(vertical: R.h(30), horizontal: R.w(Constants.stdMargin)),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-
-              // Top Row
-              Row(
+        return SizedBox.expand(
+          child: SingleChildScrollView(
+            key: const Key('scroll-view'),
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: R.h(30), horizontal: R.w(Constants.stdMargin)),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  IconButton(onPressed: () => Navigator.pop(context), icon: Icon(Icons.close)),
-                  const Expanded(child: SizedBox()),
-                  Text(widget.topicModel != null ? context.lang.lblAppBarEditTopic : context.lang.lblAppBarAddTopic,
-                      textAlign: TextAlign.center, style: TextStyle(fontFamily: Constants.fontTitle,
-                      fontSize: R.sp(16), fontWeight: FontWeight.bold, color: HexColor.fromHex(Constants.darkBgColor))),
-                  const Expanded(child: SizedBox()),
-                  widget.topicModel != null ?
-                  InkWell(
-                    onTap: widget.topicModel != null ? () async {
-                      if (!topicVideModel.isTopicAdding) {
-                        TopicModel model = TopicModel(
-                            id: widget.topicModel!.id,
+
+                  // Top Row
+                  Row(
+                    children: [
+                      IconButton(onPressed: () => Navigator.pop(context), icon: Icon(Icons.close)),
+                      const Expanded(child: SizedBox()),
+                      Text(key: const Key("header"), widget.topicModel != null ? context.lang.lblAppBarEditTopic : context.lang.lblAppBarAddTopic,
+                          textAlign: TextAlign.center, style: TextStyle(fontFamily: Constants.fontTitle,
+                          fontSize: R.sp(16), fontWeight: FontWeight.bold, color: HexColor.fromHex(Constants.darkBgColor))),
+                      const Expanded(child: SizedBox()),
+                      widget.topicModel != null ?
+                      InkWell(
+                        onTap: widget.topicModel != null ? () async {
+                          if (!topicVideModel.isTopicAdding) {
+                            TopicModel model = TopicModel(
+                                id: widget.topicModel!.id,
+                                name: topicController.text,
+                                description: descriptionController.text,
+                                currency: currencyViewModel.defaultCurrency.code,
+                                dbDateTime: selectedDate.millisecondsSinceEpoch,
+                                lastUpdated: DateTime.now().millisecondsSinceEpoch);
+                            int status = await topicVideModel.saveTopic(context.lang, model);
+                            if (status == Constants.success && context.mounted) Navigator.pop(context, model);
+                          }
+                      } : null,
+                      child: Text(context.lang.lblAppBarSave,
+                          textAlign: TextAlign.center, style: TextStyle(fontFamily: Constants.fontTitle,
+                              fontSize: R.sp(14), fontWeight: FontWeight.bold, color: HexColor.fromHex(Constants.textSecondaryColor))),) :
+                      IconButton(onPressed: null, icon: Icon(Icons.circle, color: HexColor.fromHex(Constants.warmWhiteColor))),
+                    ],
+                  ),
+
+                  // Topic
+                  SizedBox(height: R.h(40)),
+                  Text(context.lang.lblTopicName, textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontTitle,
+                      fontSize: R.sp(12), fontWeight: FontWeight.bold, color: HexColor.fromHex(Constants.darkBgColor))),
+                  TextField(
+                    key: const Key('topic-text-field'),
+                    controller: topicController,
+                    enabled: !topicVideModel.isTopicAdding,
+                    maxLength: 30,
+                    decoration: InputDecoration(
+                        hintText: context.lang.hintTopic,
+                        errorText: (topicViewModel != null && topicViewModel!.isError) ? topicViewModel!.errorMessage : null,
+                        errorStyle: TextStyle(fontFamily: Constants.fontBody, color: Colors.red, fontSize: R.sp(10)),
+                        filled: true,
+                        fillColor: HexColor.fromHex(Constants.lightGrayColor),
+                        border: OutlineInputBorder(borderSide: BorderSide.none, borderRadius: BorderRadius.circular(4))),
+                  ),
+
+                  // Start date
+                  /*SizedBox(height: R.h(20)),
+                  Text(Constants.lblStartDate, textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontTitle,
+                      fontSize: R.sp(12), fontWeight: FontWeight.bold, color: HexColor.fromHex(Constants.darkBgColor))),
+                  TextField(
+                    controller: dateController,
+                    readOnly: true,
+                    onTap: !topicVideModel.isTopicAdding ? _datePicker : null,
+                    decoration: InputDecoration(
+                        hintText: Constants.hintToday,
+                        suffixIcon: Icon(Icons.calendar_month),
+                        filled: true,
+                        fillColor: HexColor.fromHex(Constants.lightGrayColor),
+                        border: OutlineInputBorder(borderSide: BorderSide.none, borderRadius: BorderRadius.circular(4))),
+                  ),*/
+
+                  // Description
+                  SizedBox(height: R.h(20)),
+                  Row(
+                    children: [
+                      Text(context.lang.lblDescription, textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontTitle,
+                          fontSize: R.sp(12), fontWeight: FontWeight.bold, color: HexColor.fromHex(Constants.darkBgColor))),
+                      const Expanded(child: SizedBox()),
+                      Text(context.lang.lblOptional, textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontTitle,
+                          fontSize: R.sp(10), color: HexColor.fromHex(Constants.darkBgColor))),
+                    ],
+                  ),
+                  TextField(
+                    key: const Key('desc-text-field'),
+                    controller: descriptionController,
+                    enabled: !topicVideModel.isTopicAdding,
+                    keyboardType: TextInputType.multiline,
+                    maxLines: 4, minLines: 4, maxLength: 100,
+                    decoration: InputDecoration(
+                        hintText: context.lang.hintDescription,
+                        filled: true,
+                        fillColor: HexColor.fromHex(Constants.lightGrayColor),
+                        border: OutlineInputBorder(borderSide: BorderSide.none, borderRadius: BorderRadius.circular(4))),
+                  ),
+
+                  // Choose Currency
+                  SizedBox(height: R.h(20)),
+                  Row(
+                    children: [
+                      Expanded(
+                          flex: 5,
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Text(context.lang.lblCurrency, textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontTitle,
+                                    fontSize: R.sp(12), fontWeight: FontWeight.bold, color: HexColor.fromHex(Constants.darkBgColor))),
+                              ),
+                              const Spacer(),
+                              Expanded(
+                                child: Text(context.lang.lblOptional, textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontTitle,
+                                    fontSize: R.sp(10), color: HexColor.fromHex(Constants.darkBgColor))),
+                              ),
+                            ],
+                          )),
+                      Expanded(flex: 5, child: SizedBox()),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 5,
+                        child: DropdownMenu<CurrencyModel>(
+                          enabled: !topicVideModel.isTopicAdding,
+                          leadingIcon: widget.topicModel != null ? Icon(CurrencyModel.iconMap[widget.topicModel!.currency], color: HexColor.fromHex(Constants.accentColor))
+                              : currencyViewModel.defaultCurrency.symbol != null ?
+                          Icon(currencyViewModel.defaultCurrency.symbol, color: HexColor.fromHex(Constants.accentColor)) : null,
+                          hintText: widget.topicModel != null ? CurrencyModel.currencyMap[widget.topicModel!.currency] : currencyViewModel.defaultCurrency.currency,
+                          inputDecorationTheme: InputDecorationTheme(
+                            filled: true,
+                            fillColor: HexColor.fromHex(Constants.lightGrayColor),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide.none,
+                            ),
+                          ),
+                          dropdownMenuEntries: currencyViewModel.currencies.map((cur) {
+                            return DropdownMenuEntry<CurrencyModel>(
+                              value: cur,
+                              label: cur.currency!,
+                              leadingIcon: Icon(cur.symbol, color: HexColor.fromHex(Constants.accentColor)),
+                            );
+                          }).toList(),
+                          onSelected: (value) {
+                            currencyViewModel.selectCurrency(value!);
+                          },
+                        ),
+                      ),
+                      Expanded(flex: 5, child: SizedBox()),
+                    ],
+                  ),
+
+                  // Button
+                  if (widget.topicModel == null) SizedBox(height: R.h(70)),
+                  if (widget.topicModel == null)
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton.icon(
+                        key: const Key('add-topic-button'),
+                        onPressed: topicVideModel.isTopicAdding ? null : () async {
+                          TopicModel model = TopicModel(
                             name: topicController.text,
                             description: descriptionController.text,
                             currency: currencyViewModel.defaultCurrency.code,
                             dbDateTime: selectedDate.millisecondsSinceEpoch,
-                            lastUpdated: DateTime.now().millisecondsSinceEpoch);
-                        int status = await topicVideModel.saveTopic(context.lang, model);
-                        if (status == Constants.success && context.mounted) Navigator.pop(context, model);
-                      }
-                  } : null,
-                  child: Text(context.lang.lblAppBarSave,
-                      textAlign: TextAlign.center, style: TextStyle(fontFamily: Constants.fontTitle,
-                          fontSize: R.sp(14), fontWeight: FontWeight.bold, color: HexColor.fromHex(Constants.textSecondaryColor))),) :
-                  IconButton(onPressed: null, icon: Icon(Icons.circle, color: HexColor.fromHex(Constants.warmWhiteColor))),
-                ],
-              ),
-
-              // Topic
-              SizedBox(height: R.h(40)),
-              Text(context.lang.lblTopicName, textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontTitle,
-                  fontSize: R.sp(12), fontWeight: FontWeight.bold, color: HexColor.fromHex(Constants.darkBgColor))),
-              TextField(
-                controller: topicController,
-                enabled: !topicVideModel.isTopicAdding,
-                maxLength: 30,
-                decoration: InputDecoration(
-                    hintText: context.lang.hintTopic,
-                    errorText: (topicViewModel != null && topicViewModel!.isError) ? topicViewModel!.errorMessage : null,
-                    errorStyle: TextStyle(fontFamily: Constants.fontBody, color: Colors.red, fontSize: R.sp(10)),
-                    filled: true,
-                    fillColor: HexColor.fromHex(Constants.lightGrayColor),
-                    border: OutlineInputBorder(borderSide: BorderSide.none, borderRadius: BorderRadius.circular(4))),
-              ),
-
-              // Start date
-              /*SizedBox(height: R.h(20)),
-              Text(Constants.lblStartDate, textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontTitle,
-                  fontSize: R.sp(12), fontWeight: FontWeight.bold, color: HexColor.fromHex(Constants.darkBgColor))),
-              TextField(
-                controller: dateController,
-                readOnly: true,
-                onTap: !topicVideModel.isTopicAdding ? _datePicker : null,
-                decoration: InputDecoration(
-                    hintText: Constants.hintToday,
-                    suffixIcon: Icon(Icons.calendar_month),
-                    filled: true,
-                    fillColor: HexColor.fromHex(Constants.lightGrayColor),
-                    border: OutlineInputBorder(borderSide: BorderSide.none, borderRadius: BorderRadius.circular(4))),
-              ),*/
-
-              // Description
-              SizedBox(height: R.h(20)),
-              Row(
-                children: [
-                  Text(context.lang.lblDescription, textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontTitle,
-                      fontSize: R.sp(12), fontWeight: FontWeight.bold, color: HexColor.fromHex(Constants.darkBgColor))),
-                  const Expanded(child: SizedBox()),
-                  Text(context.lang.lblOptional, textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontTitle,
-                      fontSize: R.sp(10), color: HexColor.fromHex(Constants.darkBgColor))),
-                ],
-              ),
-              TextField(
-                controller: descriptionController,
-                enabled: !topicVideModel.isTopicAdding,
-                keyboardType: TextInputType.multiline,
-                maxLines: 4,
-                minLines: 4,
-                maxLength: 100,
-                decoration: InputDecoration(
-                    hintText: context.lang.hintDescription,
-                    filled: true,
-                    fillColor: HexColor.fromHex(Constants.lightGrayColor),
-                    border: OutlineInputBorder(borderSide: BorderSide.none, borderRadius: BorderRadius.circular(4))),
-              ),
-
-              // Choose Currency
-              SizedBox(height: R.h(20)),
-              Row(
-                children: [
-                  Expanded(
-                      flex: 5,
-                      child: Row(
-                        children: [
-                          Text(context.lang.lblCurrency, textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontTitle,
-                              fontSize: R.sp(12), fontWeight: FontWeight.bold, color: HexColor.fromHex(Constants.darkBgColor))),
-                          const Expanded(child: SizedBox()),
-                          Text(context.lang.lblOptional, textAlign: TextAlign.left, style: TextStyle(fontFamily: Constants.fontTitle,
-                              fontSize: R.sp(10), color: HexColor.fromHex(Constants.darkBgColor))),
-                        ],
-                      )),
-                  Expanded(flex: 5, child: SizedBox()),
-                ],
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    flex: 5,
-                    child: DropdownMenu<CurrencyModel>(
-                      enabled: !topicVideModel.isTopicAdding,
-                      leadingIcon: widget.topicModel != null ? Icon(CurrencyModel.iconMap[widget.topicModel!.currency], color: HexColor.fromHex(Constants.accentColor))
-                          : currencyViewModel.defaultCurrency.symbol != null ?
-                      Icon(currencyViewModel.defaultCurrency.symbol, color: HexColor.fromHex(Constants.accentColor)) : null,
-                      hintText: widget.topicModel != null ? CurrencyModel.currencyMap[widget.topicModel!.currency] : currencyViewModel.defaultCurrency.currency,
-                      inputDecorationTheme: InputDecorationTheme(
-                        filled: true,
-                        fillColor: HexColor.fromHex(Constants.lightGrayColor),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide.none,
+                            lastUpdated: DateTime.now().millisecondsSinceEpoch
+                          );
+                          int status = await topicViewModel!.addTopic(context.lang, model);
+                          if (status == Constants.success && context.mounted) {
+                            Navigator.pop(context);
+                          }
+                        },
+                        icon: topicVideModel.isTopicAdding ? CircularProgressIndicator()
+                            : Icon(Icons.arrow_forward_rounded, size: R.w(20)),
+                        style: ElevatedButton.styleFrom(
+                            padding: EdgeInsets.symmetric(vertical: R.h(10), horizontal: R.w(30)),
+                            backgroundColor: HexColor.fromHex(Constants.primaryColor),
+                            foregroundColor: HexColor.fromHex(Constants.warmWhiteColor),
+                            iconAlignment: IconAlignment.end,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8)
+                            )
                         ),
-                      ),
-                      dropdownMenuEntries: currencyViewModel.currencies.map((cur) {
-                        return DropdownMenuEntry<CurrencyModel>(
-                          value: cur,
-                          label: cur.currency!,
-                          leadingIcon: Icon(cur.symbol, color: HexColor.fromHex(Constants.accentColor)),
-                        );
-                      }).toList(),
-                      onSelected: (value) {
-                        currencyViewModel.selectCurrency(value!);
-                      },
+                        label: Text(context.lang.btnCreateTopic, style: TextStyle(
+                            fontFamily: Constants.fontBody, fontSize: R.sp(16), fontWeight: FontWeight.bold))
                     ),
                   ),
-                  Expanded(flex: 5, child: SizedBox()),
+
+                  // Help text
+                  if (widget.topicModel == null) SizedBox(height: R.h(10)),
+                  if (widget.topicModel == null)
+                  Center(
+                    child: Text(context.lang.lblTopicHelp, textAlign: TextAlign.center, style: TextStyle(
+                        fontFamily: Constants.fontBody, fontSize: R.sp(10), color: HexColor.fromHex(Constants.textSecondaryColor)
+                    )),
+                  ),
+
                 ],
               ),
-
-              // Button
-              if (widget.topicModel == null) SizedBox(height: R.h(70)),
-              if (widget.topicModel == null)
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                    onPressed: topicVideModel.isTopicAdding ? null : () async {
-                      TopicModel model = TopicModel(
-                        name: topicController.text,
-                        description: descriptionController.text,
-                        currency: currencyViewModel.defaultCurrency.code,
-                        dbDateTime: selectedDate.millisecondsSinceEpoch,
-                        lastUpdated: DateTime.now().millisecondsSinceEpoch
-                      );
-                      int status = await topicViewModel!.addTopic(context.lang, model);
-                      if (status == Constants.success && context.mounted) {
-                        Navigator.pop(context);
-                      }
-                    },
-                    icon: topicVideModel.isTopicAdding ? CircularProgressIndicator()
-                        : Icon(Icons.arrow_forward_rounded, size: R.w(20)),
-                    style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(vertical: R.h(10), horizontal: R.w(30)),
-                        backgroundColor: HexColor.fromHex(Constants.primaryColor),
-                        foregroundColor: HexColor.fromHex(Constants.warmWhiteColor),
-                        iconAlignment: IconAlignment.end,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8)
-                        )
-                    ),
-                    label: Text(context.lang.btnCreateTopic, style: TextStyle(
-                        fontFamily: Constants.fontBody, fontSize: R.sp(16), fontWeight: FontWeight.bold))
-                ),
-              ),
-
-              // Help text
-              if (widget.topicModel == null) SizedBox(height: R.h(10)),
-              if (widget.topicModel == null)
-              Center(
-                child: Text(context.lang.lblTopicHelp, textAlign: TextAlign.center, style: TextStyle(
-                    fontFamily: Constants.fontBody, fontSize: R.sp(10), color: HexColor.fromHex(Constants.textSecondaryColor)
-                )),
-              ),
-
-            ],
+            ),
           ),
         );
       }
